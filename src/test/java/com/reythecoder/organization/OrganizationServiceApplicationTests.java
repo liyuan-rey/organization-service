@@ -1,10 +1,10 @@
-package com.reythecoder.oms;
+package com.reythecoder.organization;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OmsApplicationTests {
+class OrganizationServiceApplicationTests  {
 
 	@Test
 	void contextLoads() {

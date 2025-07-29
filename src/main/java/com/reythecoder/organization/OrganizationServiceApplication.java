@@ -1,13 +1,13 @@
-package com.reythecoder.oms;
+package com.reythecoder.organization;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class OmsApplication {
+public class OrganizationServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(OmsApplication.class, args);
+		SpringApplication.run(OrganizationServiceApplication.class, args);
 	}
 
 }
