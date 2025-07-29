@@ -204,3 +204,152 @@ public class OrganizationServiceImpl {
 - Testing: INFO level with essential logging
 - Production: WARN level with structured logging
 - Use Spring profiles for environment-specific configuration
+
+### Externalized Version Properties
+
+The project uses externalized version properties defined in `gradle.properties` for centralized dependency management.
+
+#### Version Property Structure
+```properties
+### organization-service 自定义配置 ###
+
+### 版本约定 ###
+javaVersion=17
+
+# Spring Boot
+springBootVersion=3.5.4
+springDependencyManagementVersion=1.1.7
+lombokPluginVersion=8.14
+
+# External dependencies
+mapstructVersion=1.6.3
+logstashLogbackEncoderVersion=7.4
+
+### 项目配置 ###
+defaultProjectGroup=com.reythecoder
+defaultProjectVersion=0.0.1-SNAPSHOT
+```
+
+#### Using Version Properties in Build Files
+In `build.gradle`, reference properties using `${property.name}` syntax:
+
+```gradle
+dependencies {
+    // Spring Boot managed dependencies
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    
+    // External dependencies with version properties
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    
+    // Logstash encoder
+    implementation 'net.logstash.logback:logstash-logback-encoder:${logstashLogbackEncoderVersion}'
+}
+
+// Use project properties
+group = "${defaultProjectGroup}"
+version = "${defaultProjectVersion}"
+```
+
+#### Version Management Guidelines
+1. **Spring Boot Dependencies**: Use Spring Boot's dependency management when possible
+2. **External Dependencies**: Define version properties for dependencies not managed by Spring Boot
+3. **Naming Convention**: Use `Version` suffix for version properties (e.g., `mapstructVersion`)
+4. **Group Related Properties**: Comment sections clearly (e.g., `# Spring Boot`, `# External dependencies`)
+5. **Chinese Comments**: The project uses Chinese comments for internal documentation
+
+#### Adding New Dependencies
+1. Check if the dependency is managed by Spring Boot BOM
+2. If not managed, add version property to `gradle.properties`
+3. Reference the property in `build.gradle` using `${propertyName}`
+4. Update documentation in the appropriate section
+
+#### Repository Configuration
+The project uses mirror repositories for faster dependency resolution:
+- Aliyun Maven Repository: `https://maven.aliyun.com/repository/public`
+- Tencent Maven Repository: `https://mirrors.cloud.tencent.com/maven/`
+
+#### Build Performance Optimization
+Gradle performance settings in `gradle.properties`:
+- Parallel builds enabled: `org.gradle.parallel=true`
+- Daemon enabled: `org.gradle.daemon=true`
+- Build cache enabled: `org.gradle.caching=true`
+- JVM memory optimized: `org.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8`
+
+### Git Commit Message Best Practices
+
+Follow the Conventional Commits specification for clear, consistent commit messages:
+
+#### Commit Message Format
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+#### Commit Types
+- **feat**: A new feature
+- **fix**: A bug fix
+- **docs**: Documentation only changes
+- **style**: Code style changes (formatting, missing semi-colons, etc.)
+- **refactor**: Code refactoring (neither bug fix nor feature)
+- **perf**: Performance improvements
+- **test**: Adding or modifying tests
+- **chore**: Maintenance tasks, build process, auxiliary tools, libraries
+
+#### Subject Line Rules
+- Use imperative mood: "Add feature" not "Added feature"
+- Keep under 50 characters
+- Capitalize first letter
+- No period at the end
+- Include scope when applicable: `feat(controller): Add organization endpoint`
+
+#### Body Guidelines
+- Wrap at 72 characters
+- Explain what and why, not how
+- Use bullet points for multiple changes
+- Include motivation and context
+
+#### Breaking Changes
+- Add `BREAKING CHANGE:` footer with description
+- Use `feat` type with `!` after type/scope: `feat(api)!: Remove deprecated endpoint`
+
+#### Examples
+**Good:**
+```
+feat(service): Add organization creation functionality
+
+- Implement createOrganization method with validation
+- Add business logic for duplicate name checking
+- Integrate with database repository layer
+
+Closes #123
+```
+
+**Bad:**
+```
+Added organization creation
+fixed some bugs
+updated dependencies
+```
+
+#### Footer Usage
+- Reference issues: `Closes #123`, `Fixes #456`
+- Add breaking change notices
+- Include co-authorship for collaborative work
+- Add sign-off when required
+
+#### Commit Message Workflow
+1. Stage changes with `git add`
+2. Create commit with clear message
+3. Verify with `git log --oneline -5`
+4. Push to remote when ready
+
+🤖 Generated commits should include attribution line:
+```
+🤖 Generated with [Claude Code](https://claude.ai/code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
