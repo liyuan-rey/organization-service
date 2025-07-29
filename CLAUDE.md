@@ -26,7 +26,7 @@ This is a Spring Boot application for Organization Management Service, named "or
 - **Database**: PostgreSQL with Spring Data JPA
 - **Build Tool**: Gradle
 - **Java Version**: 17
-- **Additional**: Lombok for code generation, MapStruct for object mapping
+- **Additional**: Lombok for code generation, MapStruct for object mapping, Logback for logging, Logstash for JSON logging
 
 ### Package Structure
 ```
@@ -141,3 +141,66 @@ Follow Spring Boot conventions for REST controllers:
 - Implement `@ControllerAdvice` for global exception handling
 - Use appropriate HTTP status codes for different error types
 - Provide consistent error response format
+
+### Logging Best Practices
+Follow comprehensive logging strategy throughout the application:
+
+#### Logging Configuration
+- Use Logback as the logging framework (default in Spring Boot)
+- Configure logging in `logback-spring.xml` for advanced features
+- Use profile-specific logging configurations
+- Implement both console and file logging
+- Add JSON logging for centralized log management
+
+#### Logging Levels
+- **ERROR**: Critical errors that require immediate attention
+- **WARN**: Unexpected situations that don't stop the application
+- **INFO**: Important business events and application lifecycle
+- **DEBUG**: Detailed information for troubleshooting
+- **TRACE**: Very detailed information for development
+
+#### Logger Usage
+```java
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class OrganizationServiceImpl {
+    
+    public void createOrganization(Organization organization) {
+        log.info("Creating organization: {}", organization.getName());
+        try {
+            // Business logic
+            log.debug("Organization created successfully with ID: {}", organization.getId());
+        } catch (Exception e) {
+            log.error("Failed to create organization: {}", organization.getName(), e);
+            throw e;
+        }
+    }
+}
+```
+
+#### Logging Patterns
+- Use structured logging with consistent message formats
+- Include relevant context in log messages
+- Log at appropriate entry/exit points
+- Log exceptions with stack traces
+- Use parameterized logging for performance
+
+#### Performance Logging
+- Log slow operations with timing information
+- Monitor database query performance
+- Track external API calls
+- Log business metrics and KPIs
+
+#### Security Logging
+- Log authentication attempts (success/failure)
+- Log authorization decisions
+- Audit sensitive operations
+- Don't log sensitive data (passwords, tokens, PII)
+
+#### Environment-Specific Logging
+- Development: DEBUG level with detailed logging
+- Testing: INFO level with essential logging
+- Production: WARN level with structured logging
+- Use Spring profiles for environment-specific configuration
