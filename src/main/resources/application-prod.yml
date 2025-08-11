@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB:organization_db}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${POSTGRES_DB:organization_db}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
     hikari:
@@ -9,7 +9,8 @@ spring:
       idle-timeout: 300000
       max-lifetime: 600000
       connection-timeout: 30000
-
+      connection-test-query: SELECT 1
+      validation-timeout: 5000
   jpa:
     hibernate:
       ddl-auto: validate
@@ -20,25 +21,32 @@ spring:
         format_sql: false
         jdbc:
           time_zone: UTC
-
-server:
-  port: ${SERVER_PORT:8080}
-  servlet:
-    context-path: /
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info
-  endpoint:
-    health:
-      show-details: WHEN_AUTHORIZED
-
-logging:
-  level:
-    root: WARN
-    com.reythecoder.organization: WARN
-    org.springframework.web: WARN
-    org.hibernate.SQL: WARN
-    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+        globally_quoted_identifiers: true
+  server:
+    port: ${SERVER_PORT:8080}
+    servlet:
+      context-path: /
+    error:
+      include-message: never
+      include-binding-errors: never
+      include-stacktrace: never
+      include-exception: false
+    compression:
+      enabled: true
+      mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+      min-response-size: 1024
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info
+    endpoint:
+      health:
+        show-details: when_authorized
+  logging:
+    level:
+      root: WARN
+      com.reythecoder.organization: WARN
+      org.springframework.web: WARN
+      org.hibernate.SQL: WARN
+      org.hibernate.type.descriptor.sql.BasicBinder: WARN
