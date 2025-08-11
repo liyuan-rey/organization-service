@@ -1,17 +1,15 @@
 spring:
-  application:
-    name: organization-service
   datasource:
     url: jdbc:postgresql://localhost:5432/${POSTGRES_DB:organization_db}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
-    driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5
       idle-timeout: 300000
       max-lifetime: 600000
       connection-timeout: 30000
+
   jpa:
     hibernate:
       ddl-auto: validate
@@ -22,7 +20,7 @@ spring:
         format_sql: true
         jdbc:
           time_zone: UTC
-  
+
 server:
   port: ${SERVER_PORT:8080}
   servlet:
@@ -44,14 +42,3 @@ logging:
     org.springframework.web: ${LOGGING_LEVEL_SPRING_WEB:INFO}
     org.hibernate.SQL: ${LOGGING_LEVEL_HIBERNATE_SQL:INFO}
     org.hibernate.type.descriptor.sql.BasicBinder: ${LOGGING_LEVEL_HIBERNATE_BINDER:INFO}
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
-  file:
-    name: logs/organization-service.log
-  logback:
-    rollingpolicy:
-      max-file-size: 10MB
-      max-history: 30
-      total-size-cap: 1GB
-      file-name-pattern: logs/organization-service-%d{yyyy-MM-dd}.%i.log

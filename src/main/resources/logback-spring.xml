@@ -1,76 +1,224 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_PATH" value="logs"/>
-    <property name="LOG_FILE" value="organization-service"/>
+    <springProfile name="local">
+        <property name="LOG_PATH" value="logs"/>
+        <property name="LOG_FILE" value="organization-service"/>
+        
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_FILE}.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/${LOG_FILE}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>10MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>1GB</totalSizeCap>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        
+        <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_FILE}-json.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/${LOG_FILE}-json-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>10MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>1GB</totalSizeCap>
+            </rollingPolicy>
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <fieldNames>
+                    <timestamp>@timestamp</timestamp>
+                    <version>[ignore]</version>
+                    <level>level</level>
+                    <thread>thread</thread>
+                    <logger>logger</logger>
+                    <message>message</message>
+                    <stackTrace>stack_trace</stackTrace>
+                </fieldNames>
+                <customFields>{"service":"organization-service","version":"0.0.1-SNAPSHOT","environment":"local"}</customFields>
+            </encoder>
+        </appender>
+        
+        <logger name="com.reythecoder.organization" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON_FILE"/>
+        </logger>
+        
+        <logger name="org.springframework.web" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON_FILE"/>
+        </logger>
+        
+        <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON_FILE"/>
+        </logger>
+        
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON_FILE"/>
+        </logger>
+        
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON_FILE"/>
+        </root>
+    </springProfile>
     
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+    <springProfile name="dev">
+        <property name="LOG_PATH" value="logs"/>
+        <property name="LOG_FILE" value="organization-service"/>
+        
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_FILE}.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/${LOG_FILE}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>10MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>1GB</totalSizeCap>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        
+        <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_FILE}-json.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/${LOG_FILE}-json-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>10MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>1GB</totalSizeCap>
+            </rollingPolicy>
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <fieldNames>
+                    <timestamp>@timestamp</timestamp>
+                    <version>[ignore]</version>
+                    <level>level</level>
+                    <thread>thread</thread>
+                    <logger>logger</logger>
+                    <message>message</message>
+                    <stackTrace>stack_trace</stackTrace>
+                </fieldNames>
+                <customFields>{"service":"organization-service","version":"0.0.1-SNAPSHOT","environment":"dev"}</customFields>
+            </encoder>
+        </appender>
+        
+        <logger name="com.reythecoder.organization" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON_FILE"/>
+        </logger>
+        
+        <logger name="org.springframework.web" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON_FILE"/>
+        </logger>
+        
+        <logger name="org.hibernate.SQL" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON_FILE"/>
+        </logger>
+        
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON_FILE"/>
+        </logger>
+        
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON_FILE"/>
+        </root>
+    </springProfile>
     
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/${LOG_FILE}.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/${LOG_FILE}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>10MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>1GB</totalSizeCap>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
-    
-    <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/${LOG_FILE}-json.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/${LOG_FILE}-json-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>10MB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>1GB</totalSizeCap>
-        </rollingPolicy>
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <fieldNames>
-                <timestamp>@timestamp</timestamp>
-                <version>[ignore]</version>
-                <level>level</level>
-                <thread>thread</thread>
-                <logger>logger</logger>
-                <message>message</message>
-                <stackTrace>stack_trace</stackTrace>
-            </fieldNames>
-            <customFields>{"service":"organization-service","version":"0.0.1-SNAPSHOT"}</customFields>
-        </encoder>
-    </appender>
-    
-    <logger name="com.reythecoder.organization" level="DEBUG" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
-        <appender-ref ref="JSON_FILE"/>
-    </logger>
-    
-    <logger name="org.springframework.web" level="INFO" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
-        <appender-ref ref="JSON_FILE"/>
-    </logger>
-    
-    <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
-        <appender-ref ref="JSON_FILE"/>
-    </logger>
-    
-    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" additivity="false">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
-        <appender-ref ref="JSON_FILE"/>
-    </logger>
-    
-    <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
-        <appender-ref ref="JSON_FILE"/>
-    </root>
+    <springProfile name="prod">
+        <property name="LOG_PATH" value="logs"/>
+        <property name="LOG_FILE" value="organization-service"/>
+        
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_FILE}.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/${LOG_FILE}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>10MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>1GB</totalSizeCap>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        
+        <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_FILE}-json.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/${LOG_FILE}-json-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>10MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>1GB</totalSizeCap>
+            </rollingPolicy>
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <fieldNames>
+                    <timestamp>@timestamp</timestamp>
+                    <version>[ignore]</version>
+                    <level>level</level>
+                    <thread>thread</thread>
+                    <logger>logger</logger>
+                    <message>message</message>
+                    <stackTrace>stack_trace</stackTrace>
+                </fieldNames>
+                <customFields>{"service":"organization-service","version":"0.0.1-SNAPSHOT","environment":"prod"}</customFields>
+            </encoder>
+        </appender>
+        
+        <logger name="com.reythecoder.organization" level="WARN" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON_FILE"/>
+        </logger>
+        
+        <logger name="org.springframework.web" level="WARN" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON_FILE"/>
+        </logger>
+        
+        <logger name="org.hibernate.SQL" level="WARN" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON_FILE"/>
+        </logger>
+        
+        <root level="WARN">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="JSON_FILE"/>
+        </root>
+    </springProfile>
 </configuration>

@@ -5,6 +5,7 @@ logs/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+db/data/
 
 ### STS ###
 .apt_generated
@@ -39,3 +40,11 @@ out/
 
 ### Local settings ###
 .claude/settings.local.json
+
+### Environment files ###
+.env
+.env.local
+.env.*.local
+
+### Docker ###
+docker-compose.override.yml
