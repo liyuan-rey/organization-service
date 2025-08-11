@@ -22,31 +22,34 @@ spring:
         jdbc:
           time_zone: UTC
         globally_quoted_identifiers: true
-  server:
-    port: ${SERVER_PORT:8080}
-    servlet:
-      context-path: /
-    error:
-      include-message: never
-      include-binding-errors: never
-      include-stacktrace: never
-      include-exception: false
-    compression:
-      enabled: true
-      mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
-      min-response-size: 1024
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: health,info
-    endpoint:
-      health:
-        show-details: when_authorized
-  logging:
-    level:
-      root: WARN
-      com.reythecoder.organization: WARN
-      org.springframework.web: WARN
-      org.hibernate.SQL: WARN
-      org.hibernate.type.descriptor.sql.BasicBinder: WARN
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+    include-exception: false
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: WHEN_AUTHORIZED
+
+logging:
+  level:
+    root: WARN
+    com.reythecoder.organization: WARN
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN

@@ -23,6 +23,7 @@ A Spring Boot application for Organization Management Service.
 The application supports environment-specific configurations using `.env` files:
 
 1. Copy the example environment file:
+
    ```bash
    cp .env.example .env.local
    ```
@@ -135,6 +136,7 @@ The application supports multiple configuration profiles:
 - `application-prod.yml`: Production environment configuration (to be created)
 
 Environment variables can be set in:
+
 - `.env.local`: Local development environment variables
 - `.env.example`: Template for environment variables
 

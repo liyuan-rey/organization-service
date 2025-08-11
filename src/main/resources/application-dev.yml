@@ -22,27 +22,29 @@ spring:
         jdbc:
           time_zone: UTC
         globally_quoted_identifiers: true
-  server:
-    port: ${SERVER_PORT:8080}
-    servlet:
-      context-path: /
-    error:
-      include-message: on_param
-      include-binding-errors: on_param
-      include-stacktrace: on_param
-      include-exception: false
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: health,info,metrics,loggers,env,configprops
-    endpoint:
-      health:
-        show-details: when_authorized
-  logging:
-    level:
-      root: ${LOGGING_LEVEL_ROOT:INFO}
-      com.reythecoder.organization: ${LOGGING_LEVEL_COM_REYTHECODER_ORGANIZATION:INFO}
-      org.springframework.web: ${LOGGING_LEVEL_SPRING_WEB:INFO}
-      org.hibernate.SQL: ${LOGGING_LEVEL_HIBERNATE_SQL:INFO}
-      org.hibernate.type.descriptor.sql.BasicBinder: ${LOGGING_LEVEL_HIBERNATE_BINDER:INFO}
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /
+  error:
+    include-message: ON_PARAM
+    include-binding-errors: ON_PARAM
+    include-stacktrace: ON_PARAM
+    include-exception: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers,env,configprops
+  endpoint:
+    health:
+      show-details: WHEN_AUTHORIZED
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT:INFO}
+    com.reythecoder.organization: ${LOGGING_LEVEL_COM_REYTHECODER_ORGANIZATION:INFO}
+    org.springframework.web: ${LOGGING_LEVEL_SPRING_WEB:INFO}
+    org.hibernate.SQL: ${LOGGING_LEVEL_HIBERNATE_SQL:INFO}
+    org.hibernate.type.descriptor.sql.BasicBinder: ${LOGGING_LEVEL_HIBERNATE_BINDER:INFO}

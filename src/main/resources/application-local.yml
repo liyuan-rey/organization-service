@@ -22,27 +22,30 @@ spring:
         jdbc:
           time_zone: UTC
         globally_quoted_identifiers: true
-  server:
-    port: ${SERVER_PORT:8080}
-    servlet:
-      context-path: /
-    error:
-      include-message: always
-      include-binding-errors: always
-      include-stacktrace: on_param
-      include-exception: false
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: health,info,metrics,loggers,env,configprops
-    endpoint:
-      health:
-        show-details: always
-  logging:
-    level:
-      root: ${LOGGING_LEVEL_ROOT:INFO}
-      com.reythecoder.organization: ${LOGGING_LEVEL_COM_REYTHECODER_ORGANIZATION:DEBUG}
-      org.springframework.web: INFO
-      org.hibernate.SQL: DEBUG
-      org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: ON_PARAM
+    include-exception: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers,env,configprops
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT:INFO}
+    com.reythecoder.organization: ${LOGGING_LEVEL_COM_REYTHECODER_ORGANIZATION:DEBUG}
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
