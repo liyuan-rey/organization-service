@@ -76,12 +76,18 @@ src/test/java/com/reythecoder/organization/
     └── OrganizationIntegrationTest.java
 
 src/main/resources/
-├── application.yml                            # Main configuration
-├── application-dev.yml                        # Development profile
-├── application-prod.yml                       # Production profile
-└── db/
-    └── migration/                             # Database migration files
-        └── V1__Create_organization_table.sql
+├── application.yml                            # Main configuration with common settings
+├── application-local.yml                      # Local development profile with environment-specific settings
+├── application-dev.yml                        # Development profile with environment-specific settings
+└── application-prod.yml                       # Production profile with environment-specific settings
+
+db/
+└── migration/                             # Database migration files
+    └── V1__Create_organization_table.sql
+
+./
+├── .env                                       # Environment variables for local development (not committed)
+└── .env.example                               # Template for environment variables
 ```
 
 ### Current State
@@ -92,12 +98,14 @@ The project is in early development stage with basic Spring Boot structure. The 
 
 ### Database Configuration
 
-The application is configured for PostgreSQL but connection details need to be added to `application.yml`. You'll need to configure:
+The application is configured for PostgreSQL with a multi-environment approach:
 
-- `spring.datasource.url`
-- `spring.datasource.username`
-- `spring.datasource.password`
-- `spring.jpa.hibernate.ddl-auto`
+- Common database settings (driver, connection pool) are configured in `application.yml`
+- Environment-specific connection details (url, username, password) are configured in profile-specific files:
+  - `application-local.yml` for local development
+  - `application-dev.yml` for development environment
+  - `application-prod.yml` for production environment
+- Sensitive values (username, password) are injected via environment variables
 
 ## Development Guidelines
 
@@ -147,8 +155,17 @@ Follow Spring Boot conventions for REST controllers:
 
 ### Configuration Management
 
+- Follow Spring Boot best practices for multi-environment configuration:
+  - Keep common configurations in `application.yml`
+  - Place environment-specific configurations in `application-{profile}.yml`
+  - Use environment variables for sensitive values like database credentials
+  - Leverage Spring Boot's configuration hierarchy where profile-specific configs override default configs
+- Manage sensitive configuration values:
+  - Store sensitive values in environment variables, not in configuration files
+  - Use `.env` files for local development only
+  - Never commit sensitive values to version control
+  - Use `.env.example` as a template for required environment variables
 - Place configuration classes in the `config` package
-- Use profile-specific configurations (`application-{profile}.yml`)
 - Separate database, security, and other configurations
 - Use `@ConfigurationProperties` for external configuration
 

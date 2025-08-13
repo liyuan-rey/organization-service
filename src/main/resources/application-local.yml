@@ -1,51 +1,5 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB:organization_db}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${POSTGRES_DB:organization_db}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
-    hikari:
-      maximum-pool-size: 20
-      minimum-idle: 5
-      idle-timeout: 300000
-      max-lifetime: 600000
-      connection-timeout: 30000
-      connection-test-query: SELECT 1
-      validation-timeout: 5000
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-        jdbc:
-          time_zone: UTC
-        globally_quoted_identifiers: true
-
-server:
-  port: ${SERVER_PORT:8080}
-  servlet:
-    context-path: /
-  error:
-    include-message: always
-    include-binding-errors: always
-    include-stacktrace: ON_PARAM
-    include-exception: false
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,loggers,env,configprops
-  endpoint:
-    health:
-      show-details: always
-
-logging:
-  level:
-    root: ${LOGGING_LEVEL_ROOT:INFO}
-    com.reythecoder.organization: ${LOGGING_LEVEL_COM_REYTHECODER_ORGANIZATION:DEBUG}
-    org.springframework.web: INFO
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
