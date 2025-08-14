@@ -18,19 +18,7 @@ A Spring Boot application for Organization Management Service.
 - Gradle
 - Docker (optional, for local development environment)
 
-### Environment Configuration
-
-The application supports environment-specific configurations using `.env` files:
-
-1. Copy the example environment file:
-
-   ```bash
-   cp .env.example .env.local
-   ```
-
-2. Customize the values in `.env.local` for your local development environment.
-
-### Installation
+### Build
 
 1. Clone the repository:
 
@@ -44,9 +32,25 @@ The application supports environment-specific configurations using `.env` files:
    cd organization-service
    ```
 
-3. Configure environment variables by copying `.env.example` to `.env.local` and modifying as needed.
+3. Configure environment variables by copying `.env.example` to `.env` and modifying as needed.
 
-4. (Optional) Start the Docker PostgreSQL environment:
+   ```bash
+   cp .env.example .env
+
+   # You can customize the values in `.env` for your local development environment.
+   ```
+
+4. Build the project:
+
+   ```bash
+   ./gradlew build
+   ```
+
+### Running with Docker Environment
+
+To run the application with the Docker PostgreSQL environment:
+
+1. Start the Docker PostgreSQL environment:
 
    ```bash
    docker-compose up -d
@@ -57,45 +61,21 @@ The application supports environment-specific configurations using `.env` files:
    - Username: `postgres`
    - Password: `postgres`
 
-5. Build the project:
-
-   ```bash
-   ./gradlew build
-   ```
-
-### Running the Application
-
-Start the application using Gradle:
-
-```bash
-./gradlew bootRun
-```
-
-To run with a specific profile:
-
-```bash
-SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
-```
-
-The application will start on port 8080.
-
-### Running with Docker Environment
-
-To run the application with the Docker PostgreSQL environment:
-
-1. Start the PostgreSQL database:
-
-   ```bash
-   docker-compose up -d
-   ```
-
 2. The database will automatically initialize with the scripts in the `./db/init-scripts` directory.
 
-3. Start the application:
+3. Start the application using Gradle:
 
    ```bash
    ./gradlew bootRun
    ```
+
+   To run with a specific profile:
+
+   ```bash
+   SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
+   ```
+
+   The application will start on port 8080.
 
 4. To stop the Docker environment:
 
@@ -103,56 +83,9 @@ To run the application with the Docker PostgreSQL environment:
    docker-compose down
    ```
 
-### Testing
+## Project Architecture
 
-Run all tests:
-
-```bash
-./gradlew test
-```
-
-## Project Structure
-
-```plain
-src/main/java/com/reythecoder/organization/
-├── OrganizationServiceApplication.java  # Main application class
-├── config/                             # Configuration classes
-├── controller/                         # REST controllers
-├── service/                            # Business logic layer
-├── repository/                         # Data access layer
-├── entity/                             # JPA entities
-├── mapper/                             # MapStruct mappers
-├── exception/                          # Custom exceptions
-└── utils/                              # Utility classes
-```
-
-## Configuration Files
-
-The application supports multiple configuration profiles:
-
-- `application.yml`: Base configuration
-- `application-local.yml`: Local development configuration
-- `application-dev.yml`: Development environment configuration (to be created)
-- `application-prod.yml`: Production environment configuration (to be created)
-
-Environment variables can be set in:
-
-- `.env.local`: Local development environment variables
-- `.env.example`: Template for environment variables
-
-## API Endpoints
-
-(TBD - Endpoints will be documented as they are implemented)
-
-## Logging
-
-The application uses Logback for logging with the following configuration:
-
-- Console and file logging enabled
-- Log files are stored in the `logs/` directory
-- Rolling policy: 10MB max file size, 30 days retention
-- JSON logging support via Logstash encoder
-- Profile-specific logging configurations (local, dev, prod)
+See [Project Architecture](docs/project-architecture.md)
 
 ## Development
 
@@ -162,11 +95,31 @@ The application uses Logback for logging with the following configuration:
 - Use Lombok to reduce boilerplate code
 - Use MapStruct for entity-DTO mapping
 
-### Build Process
+### Essential Commands
 
-- Use `./gradlew build` to compile and package the application
-- Use `./gradlew test` to run tests
-- Use `./gradlew check` to run all quality checks
+- `./gradlew build` - Build and package the application
+- `./gradlew test` - Run all tests
+- `./gradlew bootRun` - Start the application
+- `./gradlew clean` - Clean build artifacts
+- `./gradlew check` - Run all quality checks including tests
+
+To run with a specific profile:
+
+```bash
+SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
+```
+
+### Testing
+
+- `./gradlew test` - Run all tests
+- `./gradlew test --tests *SpecificTestClass` - Run specific test class
+- `./gradlew test --info` - Run tests with detailed output
+
+Run tests with a specific profile:
+
+```bash
+SPRING_PROFILES_ACTIVE=local ./gradlew test
+```
 
 ## Contributing
 
