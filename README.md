@@ -53,7 +53,7 @@ To run the application with the Docker PostgreSQL environment:
 1. Start the Docker PostgreSQL environment:
 
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
 
    The database will be available at `localhost:5432` with:
@@ -69,10 +69,10 @@ To run the application with the Docker PostgreSQL environment:
    ./gradlew bootRun
    ```
 
-   To run with a specific profile:
+   To run with a specific environment:
 
    ```bash
-   SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
+   env -S "$(grep -v '^#' .env | xargs)" ./gradlew bootRun
    ```
 
    The application will start on port 8080.
@@ -80,7 +80,7 @@ To run the application with the Docker PostgreSQL environment:
 4. To stop the Docker environment:
 
    ```bash
-   docker-compose down
+   docker compose down
    ```
 
 ## Project Architecture
@@ -97,10 +97,10 @@ See [Project Architecture](docs/project-architecture.md)
 - `./gradlew clean` - Clean build artifacts
 - `./gradlew check` - Run all quality checks including tests
 
-To run with a specific profile:
+To run with specified environment:
 
 ```bash
-SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
+env -S "$(grep -v '^#' .env | xargs)" ./gradlew bootRun
 ```
 
 ### Testing
