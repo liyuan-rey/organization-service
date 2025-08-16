@@ -34,8 +34,8 @@
 ## Project-Specific Conventions
 
 1. **Database Design Deliverables**
-   - Database creation scripts with foreign key relationships (format: `xxxxx.design.sql`)
-   - Database creation scripts without foreign key relationships (format: `xxxxx.sql`) with indexes preserved
+   - Database creation scripts with foreign key relationships (format: `*.design.sql`)
+   - Database creation scripts without foreign key relationships (format: `*.sql`) with indexes preserved
 
 2. **Primary Keys**
    - All table primary key ID values are generated using 64-bit snowflake algorithm (not UUIDs)
@@ -48,15 +48,16 @@
 
 4. **Table Naming Convention**
    - Schema: `organization`
-   - Business data tables: `b_xxxx_yyyy`
-   - Relationship tables: `r_xxxx_yyyy`
-   - Dictionary tables: `d_xxxx_yyyy`
-   - Statistical ledger tables: `s_xxxx_yyyy`
+   - Business data tables: `b_org_*`
+   - Relationship tables: `r_org_*`
+   - Dictionary tables: `d_org_*`
+   - Statistical ledger tables: `s_org_*`
    - Tables are named by system and function with appropriate prefixes
 
 5. **Required Fields**
-   - All tables must have `id`, `update_time`, and `tenant_id` fields
-   - Use Spring JPA's built-in optimistic locking capability for `update_time`
+   - All tables must have `id`, `created_at`, `updated_at` and `tenant_id` fields
+   - `updated_at` automatically updated on data modification
+   - Use Spring JPA's built-in optimistic locking capability for `updated_at`
 
 6. **Dictionary Fields**
    - Simple dictionary values stored as char type with meaningful single letters
@@ -64,9 +65,3 @@
 
 7. **Sort Fields**
    - Sort fields named as `sort`
-
-8. **Maintenance Fields**
-   - Key business tables include `maintainer` and `maintain_time` fields:
-     - `maintainer`: Data maintainer (selected by user during operator changes)
-     - `maintain_time`: Automatically updated on data modification
-

@@ -1,10 +1,8 @@
 # Git Instructions
 
-## Git Commit Message Best Practices
-
 Follow the Conventional Commits specification for clear, consistent commit messages:
 
-### Commit Message Format
+## Commit Message Format
 
 ```plain
 <type>(<scope>): <subject>
@@ -14,7 +12,7 @@ Follow the Conventional Commits specification for clear, consistent commit messa
 <footer>
 ```
 
-### Commit Types
+## Commit Types
 
 - **feat**: A new feature
 - **fix**: A bug fix
@@ -25,7 +23,7 @@ Follow the Conventional Commits specification for clear, consistent commit messa
 - **test**: Adding or modifying tests
 - **chore**: Maintenance tasks, build process, auxiliary tools, libraries
 
-### Subject Line Rules
+## Subject Line Rules
 
 - Use imperative mood: "Add feature" not "Added feature"
 - Keep under 50 characters
@@ -33,19 +31,19 @@ Follow the Conventional Commits specification for clear, consistent commit messa
 - No period at the end
 - Include scope when applicable: `feat(controller): Add organization endpoint`
 
-### Body Guidelines
+## Body Guidelines
 
 - Wrap at 72 characters
 - Explain what and why, not how
 - Use bullet points for multiple changes
 - Include motivation and context
 
-### Breaking Changes
+## Breaking Changes
 
 - Add `BREAKING CHANGE:` footer with description
 - Use `feat` type with `!` after type/scope: `feat(api)!: Remove deprecated endpoint`
 
-### Examples
+## Examples
 
 **Good:**
 
@@ -67,14 +65,14 @@ fixed some bugs
 updated dependencies
 ```
 
-### Footer Usage
+## Footer Usage
 
 - Reference issues: `Closes #123`, `Fixes #456`
 - Add breaking change notices
 - Include co-authorship for collaborative work
 - Add sign-off when required
 
-### Commit Message Workflow
+## Commit Message Workflow
 
 1. Stage changes with `git add`
 2. Create commit with clear message

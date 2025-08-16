@@ -94,4 +94,3 @@ The application uses Logback for logging with the following configuration:
 - Rolling policy: 10MB max file size, 30 days retention
 - JSON logging support via Logstash encoder
 - Profile-specific logging configurations (local, dev, prod)
-

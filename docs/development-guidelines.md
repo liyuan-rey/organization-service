@@ -1,5 +1,11 @@
 # Development Guidelines
 
+## Code Style
+
+- Follow standard Java naming conventions
+- Use Lombok to reduce boilerplate code
+- Use MapStruct for entity-DTO mapping
+
 ## Entity and Repository Pattern
 
 When adding new domain objects:
@@ -24,8 +30,6 @@ Follow Spring Boot conventions for REST controllers:
 
 - Use `@RestController` for API endpoints in the `controller` package
 - Implement service layer for business logic (interface in `service`, implementation in `service/impl`)
-- Use proper HTTP status codes and error handling
-- Implement global exception handling in `exception/GlobalExceptionHandler.java`
 - Create separate DTOs for requests and responses
 
 ## Service Layer Architecture
@@ -74,6 +78,7 @@ The application is configured for PostgreSQL with a multi-environment approach:
 ## Exception Handling
 
 - Create custom exceptions in the `exception` package
+- Implement global exception handling in `exception/GlobalExceptionHandler.java`
 - Implement `@ControllerAdvice` for global exception handling
 - Use appropriate HTTP status codes for different error types
 - Provide consistent error response format
@@ -155,7 +160,7 @@ The project uses externalized version properties defined in `gradle.properties` 
 
 ### Version Property Structure
 
-```properties
+```conf
 ### organization-service 自定义配置 ###
 
 ### 版本约定 ###
@@ -179,7 +184,7 @@ defaultProjectVersion=0.0.1-SNAPSHOT
 
 In `build.gradle`, reference properties using `${property.name}` syntax:
 
-```gradle
+```groovy
 dependencies {
     // Spring Boot managed dependencies
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -203,7 +208,6 @@ version = "${defaultProjectVersion}"
 2. **External Dependencies**: Define version properties for dependencies not managed by Spring Boot
 3. **Naming Convention**: Use `Version` suffix for version properties (e.g., `mapstructVersion`)
 4. **Group Related Properties**: Comment sections clearly (e.g., `# Spring Boot`, `# External dependencies`)
-5. **Chinese Comments**: The project uses Chinese comments for internal documentation
 
 ### Adding New Dependencies
 
@@ -227,7 +231,3 @@ Gradle performance settings in `gradle.properties`:
 - Daemon enabled: `org.gradle.daemon=true`
 - Build cache enabled: `org.gradle.caching=true`
 - JVM memory optimized: `org.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8`
-
-## Git Commit Message Best Practices
-
-See @git-instructions.md

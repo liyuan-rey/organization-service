@@ -2,7 +2,7 @@
 
 A Spring Boot application for Organization Management Service.
 
-## Tech Stack
+## Technology Stack
 
 - **Framework**: Spring Boot 3.5.4
 - **Language**: Java 17
@@ -36,9 +36,9 @@ A Spring Boot application for Organization Management Service.
 
    ```bash
    cp .env.example .env
-
-   # You can customize the values in `.env` for your local development environment.
    ```
+
+   You can customize the values in `.env` for your local development environment.
 
 4. Build the project:
 
@@ -88,12 +88,6 @@ To run the application with the Docker PostgreSQL environment:
 See [Project Architecture](docs/project-architecture.md)
 
 ## Development
-
-### Code Style
-
-- Follow standard Java naming conventions
-- Use Lombok to reduce boilerplate code
-- Use MapStruct for entity-DTO mapping
 
 ### Essential Commands
 
