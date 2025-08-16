@@ -14,7 +14,7 @@ See: @docs/project-architecture.md
 
 ## Database Design Conventions
 
-See: @docs/database-design-conventions.md
+See: @docs/database-design-develop-guide-for-postgresql.md
 
 ## Development Guidelines
 
