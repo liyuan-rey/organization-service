@@ -1,28 +1,28 @@
-# CLAUDE.md
+# QWEN.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Qwen Code (github.com/QwenLM/qwen-code) when working with code in this repository.
 
 ## Project Overview
 
 This is a Spring Boot application for Organization Management Service, named "organization-service".
 
-Reference: @README.md
+Reference: @./README.md
 
 ## Project Architecture
 
-See: @docs/project-architecture.md
+See: @./docs/project-architecture.md
 
 ## Database Design Conventions
 
-See: @docs/database-design-develop-guide-for-postgresql.md
+See: @./docs/database-design-develop-guide-for-postgresql.md
 
 ## Development Guidelines
 
-See: @docs/development-guidelines.md
+See: @./docs/development-guidelines.md
 
 ## Additional Instructions
 
-Git instructions: @docs/git-instructions.md
+Git instructions: @./docs/git-instructions.md
 
 ## Current State
 
