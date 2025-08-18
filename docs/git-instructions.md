@@ -78,21 +78,3 @@ updated dependencies
 2. Create commit with clear message
 3. Verify with `git log --oneline -5`
 4. Push to remote when ready
-
-Generated commits should include attribution line:
-
-If using Claude Code:
-
-```plain
-🤖 Generated with [Claude Code](https://claude.ai/code)
-
-Co-Authored-By: Claude <noreply@anthropic.com>
-```
-
-If using Qwen Code:
-
-```plain
-🤖 Generated with [Qwen Code](https://github.com/QwenLM/qwen-code)
-
-Co-Authored-By: Qwen <noreply@qwen.ai>
-```
