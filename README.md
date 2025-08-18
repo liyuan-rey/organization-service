@@ -112,7 +112,7 @@ env -S "$(grep -v '^#' .env | xargs)" ./gradlew bootRun
 Run tests with a specific profile:
 
 ```bash
-SPRING_PROFILES_ACTIVE=local ./gradlew test
+env -S "$(grep -v '^#' .env | xargs)" ./gradlew test
 ```
 
 ## Contributing
