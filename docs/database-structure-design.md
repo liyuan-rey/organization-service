@@ -10,7 +10,7 @@
 
 ```sql
 CREATE TABLE IF NOT EXISTS b_org_department (
-    id BIGINT PRIMARY KEY, -- Primary key using Snowflake algorithm
+    id UUID PRIMARY KEY, -- Primary key using 128-bit UUID v7 algorithm
     name VARCHAR(255) NOT NULL DEFAULT '', -- Department name
     english_name VARCHAR(255) NOT NULL DEFAULT '', -- Department English name
     short_name VARCHAR(100) NOT NULL DEFAULT '', -- Department short name
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS b_org_department (
     postal_code VARCHAR(20) NOT NULL DEFAULT '', -- Postal code
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT '2000-01-01 00:00:00', -- Record creation time
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT '2000-01-01 00:00:00', -- Record last update time
-    tenant_id BIGINT NOT NULL DEFAULT 0 -- Tenant identifier for multi-tenant data isolation
+    tenant_id UUID NOT NULL DEFAULT 0 -- Tenant identifier for multi-tenant data isolation
 );
 ```
 
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS b_org_department (
 
 ```sql
 CREATE TABLE IF NOT EXISTS b_org_personnel (
-    id BIGINT PRIMARY KEY, -- Primary key using Snowflake algorithm
+    id UUID PRIMARY KEY, -- Primary key using 128-bit UUID v7 algorithm
     name VARCHAR(100) NOT NULL DEFAULT '', -- Personnel name
     gender CHAR(1) NOT NULL DEFAULT '', -- Personnel gender (M/F)
     id_card VARCHAR(18) NOT NULL DEFAULT '', -- ID card number
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS b_org_personnel (
     photo BYTEA, -- Personnel photo (binary data)
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT '2000-01-01 00:00:00', -- Record creation time
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT '2000-01-01 00:00:00', -- Record last update time
-    tenant_id BIGINT NOT NULL DEFAULT 0 -- Tenant identifier for multi-tenant data isolation
+    tenant_id UUID NOT NULL DEFAULT 0 -- Tenant identifier for multi-tenant data isolation
 );
 ```
 
@@ -49,12 +49,12 @@ CREATE TABLE IF NOT EXISTS b_org_personnel (
 
 ```sql
 CREATE TABLE IF NOT EXISTS b_org_group (
-    id BIGINT PRIMARY KEY, -- Primary key using Snowflake algorithm
+    id UUID PRIMARY KEY, -- Primary key using 128-bit UUID v7 algorithm
     name VARCHAR(100) NOT NULL DEFAULT '', -- Group name
     description TEXT NOT NULL DEFAULT '', -- Group description
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT '2000-01-01 00:00:00', -- Record creation time
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT '2000-01-01 00:00:00', -- Record last update time
-    tenant_id BIGINT NOT NULL DEFAULT 0 -- Tenant identifier for multi-tenant data isolation
+    tenant_id UUID NOT NULL DEFAULT 0 -- Tenant identifier for multi-tenant data isolation
 );
 ```
 
@@ -64,11 +64,11 @@ CREATE TABLE IF NOT EXISTS b_org_group (
 
 ```sql
 CREATE TABLE IF NOT EXISTS r_org_entity_relation (
-    id BIGINT PRIMARY KEY, -- Primary key using Snowflake algorithm
+    id UUID PRIMARY KEY, -- Primary key using 128-bit UUID v7 algorithm
     source_type VARCHAR(20) NOT NULL, -- Source entity type: 'personnel', 'department', 'group'
-    source_id BIGINT NOT NULL, -- Source entity ID
+    source_id UUID NOT NULL, -- Source entity ID
     target_type VARCHAR(20) NOT NULL, -- Target entity type: 'personnel', 'department', 'group'
-    target_id BIGINT NOT NULL, -- Target entity ID
+    target_id UUID NOT NULL, -- Target entity ID
     relation_type VARCHAR(50) NOT NULL, -- Relation type: 'belongs_to', 'member_of', 'contains', 'parent_of', 'child_of'
     level INTEGER DEFAULT 0, -- Hierarchy level (for hierarchy relationships)
     path VARCHAR(500) DEFAULT '', -- Path information, e.g., "1,5,23" represents the path from root to current node
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS r_org_entity_relation (
     attributes JSONB, -- Extended attributes for storing additional relationship information
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT '2000-01-01 00:00:00', -- Record creation time
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT '2000-01-01 00:00:00', -- Record last update time
-    tenant_id BIGINT NOT NULL DEFAULT 0 -- Tenant identifier for multi-tenant data isolation
+    tenant_id UUID NOT NULL DEFAULT 0 -- Tenant identifier for multi-tenant data isolation
 );
 ```
 
@@ -98,9 +98,9 @@ CREATE TABLE IF NOT EXISTS r_org_entity_relation (
 | 字段名        | 类型         | 说明                                                             |
 | ------------- | ------------ | ---------------------------------------------------------------- |
 | source_type   | VARCHAR(20)  | 源实体类型（personnel, department, group）                       |
-| source_id     | BIGINT       | 源实体ID                                                         |
+| source_id     | UUID       | 源实体ID                                                         |
 | target_type   | VARCHAR(20)  | 目标实体类型（personnel, department, group）                     |
-| target_id     | BIGINT       | 目标实体ID                                                       |
+| target_id     | UUID       | 目标实体ID                                                       |
 | relation_type | VARCHAR(50)  | 关系类型（belongs_to, member_of, contains, parent_of, child_of） |
 | level         | INTEGER      | 层级深度（用于层级关系）                                         |
 | path          | VARCHAR(500) | 路径信息，表示从根到当前节点的完整路径                           |

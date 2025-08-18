@@ -126,7 +126,7 @@ When selecting data types, they should be chosen based on actual business requir
 
 ### 4.1 Primary Key Generation Strategy
 
-The primary key ID values for all tables should be generated using the 64-bit Snowflake algorithm, rather than UUID. This strategy ensures global uniqueness and trend-increasing nature of the primary keys, which is beneficial for database performance optimization.
+The primary key ID values for all tables should be generated using the 128-bit UUID v7 algorithm. This strategy ensures global uniqueness and trend-increasing nature of the primary keys, which is beneficial for database performance optimization.
 
 ### 4.2 NULL Value Handling Standards
 
