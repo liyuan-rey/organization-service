@@ -21,7 +21,7 @@ configurations {
 }
 
 repositories {
-	maven { url "${aliyunMavenRepository}"	}
+	maven { url = "${aliyunMavenRepository}"	}
 	mavenCentral()
 }
 
@@ -37,7 +37,6 @@ dependencies {
 	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation "org.mapstruct:mapstruct:${mapstructVersion}"
 	testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
@@ -47,5 +46,6 @@ tasks.named('test') {
 }
 
 compileJava {
-	options.compilerArgs += ['-Amapstruct.suppressGeneratorTimestamp=true', '-Amapstruct.suppressGeneratorVersionComment=true']
+	// options.compilerArgs += ['-Amapstruct.suppressGeneratorTimestamp=true', '-Amapstruct.suppressGeneratorVersionComment=true']
+	options.compilerArgs += ['-Amapstruct.suppressGeneratorTimestamp=true']
 }
