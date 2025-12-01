@@ -8,9 +8,3 @@ pluginManagement {
 }
 
 rootProject.name = 'organization-service'
-
-System.setProperty('http.proxyHost', '127.0.0.1')
-System.setProperty('http.proxyPort', '10808')
-System.setProperty('https.proxyHost', '127.0.0.1')
-System.setProperty('https.proxyPort', '10808')
-
