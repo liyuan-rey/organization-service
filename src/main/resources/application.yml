@@ -22,7 +22,7 @@ spring:
         "[jdbc]":
           "[time_zone]": UTC
         "[globally_quoted_identifiers]": true
-  
+
 server:
   port: ${SERVER_PORT:8080}
   servlet:

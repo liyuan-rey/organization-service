@@ -8,6 +8,8 @@ plugins {
 group = "${defaultProjectGroup}"
 version = "${defaultProjectVersion}"
 
+// 设定编译工具 JDK 版本和源代码兼容性版本
+// 参考官方文档：https://docs.gradle.org/current/userguide/toolchains.html
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(javaVersion)
@@ -39,10 +41,38 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	testImplementation "org.junit.jupiter:junit-jupiter"
+	testImplementation "org.testcontainers:testcontainers:${testcontainersVersion}"
+	testImplementation "org.testcontainers:testcontainers-junit-jupiter:${testcontainersVersion}"
+	testImplementation "org.testcontainers:testcontainers-postgresql:${testcontainersVersion}"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = Integer.parseInt("${javaVersion}")
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+
+	// 确保 Docker 可用
+    doFirst {
+        try {
+            def proc = "docker info".execute()
+            proc.waitFor()
+            if (proc.exitValue() != 0) {
+                throw new GradleException("Docker is not available. Please start Docker daemon.")
+            }
+        } catch (IOException e) {
+            throw new GradleException("Failed to check Docker availability: ${e.message}")
+        }
+    }
+    
+    // 设置测试系统属性
+    systemProperty 'spring.profiles.active', 'test'
+    
+    // 添加测试 JVM 参数（Java 21 特性）
+    jvmArgs '--enable-preview'
 }
 
 compileJava {
