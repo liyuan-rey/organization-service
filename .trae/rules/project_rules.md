@@ -1,5 +1,11 @@
 # 项目规则
 
+## 语言
+
+- 使用中文
+- 所有英文技术术语（如 Java、Spring Boot、RESTful API、DTO、JPA、MapStruct 等等）保持英文不变
+- 中文和英文混排时确保留有一个空格
+
 ## 技术栈
 
 - **数据库**: PostgreSQL 15.x
@@ -13,80 +19,65 @@
 
 ## 项目目录结构
 
-```plain
-src/main/java/com/reythecoder/organization/
-├── config/          # 配置类
-├── controller/      # 控制器层
-├── dto/             # 数据传输对象
-│   ├── request/     # 请求DTO
-│   └── response/    # 响应DTO
-├── entity/          # 实体类
-├── exception/       # 异常处理
-├── mapper/          # MapStruct映射器
-├── repository/      # 数据访问层
-└── service/         # 业务逻辑层
-    └── impl/        # 业务逻辑实现
-```
-
-以下是一个示例：
+以下是项目的目录结构约定，包含示例文件：
 
 ```plain
 src/main/java/com/reythecoder/organization/
-├── OrganizationServiceApplication.java         # Main application class
-├── config/                                     # Configuration classes
-│   ├── DatabaseConfig.java                     # Database configuration
-│   ├── SecurityConfig.java                     # Security configuration
-│   └── TestcontainersConfig.java               # Testcontainers configuration
-├── controller/                                 # Controller layer
-│   ├── OrganizationController.java             # RESTful API endpoints
-├── dto/                                        # DTO classes
-│   ├── request/                                # Request DTOs
-│   │   ├── OrganizationCreateReq.java          # Create request DTO
-│   │   └── OrganizationUpdateReq.java          # Update request DTO
-│   └── response/                               # Response DTOs
-│       ├── OrganizationRsp.java                # Response DTO
-│       └── ApiResponse.java                    # Generic API response
-├── entity/                                     # JPA entities
-│   └── OrganizationEntity.java                 # Entity class
-├── exception/                                  # Custom exceptions
-│   ├── ApiException.java                       # Custom API exception
-│   └── GlobalExceptionHandler.java             # Global exception handler
-├── mapper/                                     # MapStruct mappers
-│   └── OrganizationMapper.java                 # Entity-DTO mapper
-├── repository/                                 # Data access layer
-│   └── OrganizationRepository.java             # JPA repository
-├── service/                                    # Business logic layer
-│   ├── OrganizationService.java                # Service interface
-│   └── impl/                                   # Service implementations
-│       └── OrganizationServiceImpl.java
-└── utils/                                      # Utility classes
-    └── DateUtils.java
+├── OrganizationServiceApplication.java         # 主应用类
+├── config/                                     # 配置类目录
+│   ├── DatabaseConfig.java                     # 数据库配置类
+│   ├── SecurityConfig.java                     # 安全配置类
+│   └── TestcontainersConfig.java               # Testcontainers 配置类
+├── controller/                                 # 控制器层目录
+│   └── OrganizationController.java             # RESTful API 端点类
+├── dto/                                        # DTO 类目录
+│   ├── request/                                # 请求 DTO 类目录
+│   │   ├── OrganizationCreateReq.java          # 创建请求 DTO 类
+│   │   └── OrganizationUpdateReq.java          # 更新请求 DTO 类
+│   └── response/                               # 响应 DTO 类目录
+│       ├── OrganizationRsp.java                # 响应 DTO 类
+│       └── ApiResponse.java                    # 通用 API 响应类
+├── entity/                                     # JPA 实体目录
+│   └── OrganizationEntity.java                 # 实体类
+├── exception/                                  # 异常处理目录
+│   ├── ApiException.java                       # 自定义 API 异常类
+│   └── GlobalExceptionHandler.java             # 全局异常处理器类
+├── mapper/                                     # MapStruct 映射器目录
+│   └── OrganizationMapper.java                 # Entity-DTO 映射器类
+├── repository/                                 # 数据访问层目录
+│   └── OrganizationRepository.java             # JPA 仓库类
+├── service/                                    # 业务逻辑层目录
+│   ├── OrganizationService.java                # 服务接口类
+│   └── impl/                                   # 服务实现类目录
+│       └── OrganizationServiceImpl.java        # 服务实现类
+└── utils/                                      # 工具类目录
+    └── DateUtils.java                          # 日期工具类
 
 src/test/java/com/reythecoder/organization/
-├── controller/                                 # Controller tests
-│   └── OrganizationControllerTest.java
-├── service/                                    # Service tests
-│   └── OrganizationServiceTest.java
-├── repository/                                 # Repository tests
-│   └── OrganizationRepositoryTest.java
-└── integration/                                # Integration tests
-    └── OrganizationIntegrationTest.java
+├── controller/                                 # 控制器层测试目录
+│   └── OrganizationControllerTest.java         # 控制器测试类
+├── service/                                    # 业务逻辑层测试目录
+│   └── OrganizationServiceTest.java            # 服务测试类
+├── repository/                                 # 数据访问层测试目录
+│   └── OrganizationRepositoryTest.java         # Repository 测试类
+└── integration/                                # 集成测试目录
+    └── OrganizationIntegrationTest.java        # 集成测试类
 
 src/main/resources/
-├── application.yml                    # Main configuration with common settings
-├── application-test.yml               # Test profile with environment-specific settings
-├── application-dev.yml                # Development profile with environment-specific settings
-└── application-prod.yml               # Production profile with environment-specific settings
+├── application.yml                    # 包含通用设置的主配置文件
+├── application-test.yml               # 测试环境特定设置的配置文件
+├── application-dev.yml                # 开发环境特定设置的配置文件
+└── application-prod.yml               # 生产环境特定设置的配置文件
 
 db/
-├── data/                                       # Database data files
-├── init-scripts/                               # Database initialization scripts
-└── migration/                                  # Database migration files
+├── data/                                       # 数据库数据文件目录
+├── init-scripts/                               # 数据库初始化脚本目录
+└── migration/                                  # 数据库迁移文件目录
     └── V1__Create_organization_table.sql
 
 ./
-├── .env                               # Environment variables for local development (not committed)
-└── .env.example                       # Template for environment variables
+├── .env                               # 本地开发的环境变量文件（不提交）
+└── .env.example                       # 环境变量模板文件
 ```
 
 ## 技术规范
@@ -98,10 +89,10 @@ db/
 - 遵循 RESTful API 设计规范
   - 分页查询参数：page, size, sort
   - 排序参数：sort=field,asc|desc
-- 统一返回JSON结构：{status: integer, message: string, data: Object | Array<any>}
+- 统一返回JSON结构：`{status: integer, message: string, data: Object | Array<any>}`
   - ApiResponse 类：统一封装 API 响应，包含 status、message 和 data 字段
   - status：是 HTTP 状态码的超集，包含了更多的自定义状态码，例如 40000 表示业务逻辑错误
-  - message：对状态码的描述
+  - message：对应状态码，对返回情况进行描述，例如 "成功"、"失败"、"参数错误" 等
   - data：实际返回的数据，根据不同的 API 接口而变化
     - 当请求成功时，data 字段包含实际返回的数据
     - 当请求失败时，data 字段为空对象 {} 或空数组 []，具体根据业务逻辑而定
@@ -111,3 +102,7 @@ db/
 - 优雅的实现日志处理：
   - Logback 记录日志，
   - Logstash 输出 JSON 日志
+
+## Git 提交规范
+
+参考 [git-instructions.md](../../docs/git-instructions.md)
