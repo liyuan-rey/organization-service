@@ -1,4 +1,4 @@
-package com.reythecoder.organization;
+package com.reythecoder.organization.integration;
 
 // import java.sql.Connection;
 // import java.sql.DriverManager;
