@@ -37,14 +37,14 @@ src/main/java/com/reythecoder/organization/
 │   ├── DatabaseConfig.java                     # Database configuration
 │   ├── SecurityConfig.java                     # Security configuration
 │   └── TestcontainersConfig.java               # Testcontainers configuration
-├── controller/                                 # controllers
-│   ├── OrganizationController.java             # Organization endpoints
+├── controller/                                 # Controller layer
+│   ├── OrganizationController.java             # RESTful API endpoints
 ├── dto/                                        # DTO classes
 │   ├── request/                                # Request DTOs
-│   │   ├── OrganizationCreateReq.java          # Create organization request
-│   │   └── OrganizationUpdateReq.java          # Update organization request
+│   │   ├── OrganizationCreateReq.java          # Create request DTO
+│   │   └── OrganizationUpdateReq.java          # Update request DTO
 │   └── response/                               # Response DTOs
-│       ├── OrganizationRsp.java                # Response class
+│       ├── OrganizationRsp.java                # Response DTO
 │       └── ApiResponse.java                    # Generic API response
 ├── entity/                                     # JPA entities
 │   └── OrganizationEntity.java                 # Entity class
@@ -79,9 +79,9 @@ src/main/resources/
 └── application-prod.yml               # Production profile with environment-specific settings
 
 db/
-├── data/                                     # Database data files
-├── init-scripts/                             # Database initialization scripts
-└── migration/                                # Database migration files
+├── data/                                       # Database data files
+├── init-scripts/                               # Database initialization scripts
+└── migration/                                  # Database migration files
     └── V1__Create_organization_table.sql
 
 ./

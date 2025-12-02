@@ -1,8 +1,5 @@
 package com.reythecoder.organization.dto.response;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public record ApiResponse<T>(
         int status,
         String message,

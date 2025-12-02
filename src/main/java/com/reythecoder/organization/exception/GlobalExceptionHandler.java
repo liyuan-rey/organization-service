@@ -48,8 +48,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ApiResponse<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         logger.error("参数类型不匹配异常: {}", e.getMessage(), e);
-        String errorMessage = String.format("参数 '%s' 类型不匹配，期望类型: %s",
-                e.getName(), e.getRequiredType().getSimpleName());
+        var expectedType = e.getRequiredType();
+        String typeName = expectedType != null ? expectedType.getSimpleName() : "未知";
+        String errorMessage = String.format("参数 '%s' 类型不匹配，期望类型: %s", e.getName(), typeName);
         return ApiResponse.error(HttpStatus.BAD_REQUEST.value(), errorMessage);
     }
 
