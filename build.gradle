@@ -63,7 +63,9 @@ tasks.withType(Test) {
 tasks.register("testIntegration", Test) {
     group = "verification"
     description = "Runs integration tests with Testcontainers"
-	dependsOn(tasks.named('test'))
+	// dependsOn(tasks.named('test'))
+
+    systemProperty 'spring.profiles.active', 'test'
 
     // 仅运行带 @Tag("integration") 的测试类
     useJUnitPlatform {
