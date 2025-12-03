@@ -16,6 +16,11 @@ java {
 	}
 }
 
+tasks.withType(JavaCompile).configureEach {
+    options.release = Integer.parseInt("${javaVersion}")
+}
+
+// for mapstruct-processor
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -49,14 +54,23 @@ dependencies {
 	testImplementation "org.testcontainers:testcontainers-postgresql:${testcontainersVersion}"
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.release = Integer.parseInt("${javaVersion}")
+tasks.withType(Test) {
+    // 所有 Test 类型任务共享的配置
+    systemProperty 'spring.profiles.active', 'test'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+// 添加集成测试任务
+tasks.register("testIntegration", Test) {
+    group = "verification"
+    description = "Runs integration tests with Testcontainers"
+	dependsOn(tasks.named('test'))
 
-	// 确保 Docker 可用
+    // 仅运行带 @Tag("integration") 的测试类
+    useJUnitPlatform {
+        includeTags "integration"
+    }
+
+    // 确保 Docker 可用
     doFirst {
         try {
             def proc = "docker info".execute()
@@ -68,12 +82,12 @@ tasks.named('test') {
             throw new GradleException("Failed to check Docker availability: ${e.message}")
         }
     }
-    
-    // 设置测试系统属性
-    systemProperty 'spring.profiles.active', 'test'
-    
-    // 添加测试 JVM 参数（Java 21 特性）
-    jvmArgs '--enable-preview'
+}
+
+tasks.named('test') {
+	useJUnitPlatform {
+		excludeTags "integration"
+	}
 }
 
 compileJava {

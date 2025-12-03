@@ -1,5 +1,9 @@
 package com.reythecoder.organization.integration;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Tag;
+
 // import java.sql.Connection;
 // import java.sql.DriverManager;
 
@@ -13,11 +17,10 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @Testcontainers
 @SpringBootTest
 @ActiveProfiles("test")
+@Tag("integration")
 class OrganizationServiceApplicationTests {
 
 	@Container
@@ -39,7 +42,7 @@ class OrganizationServiceApplicationTests {
 
 	@Test
 	void test() {
-		assertThat(postgres.isRunning()).isTrue();
+		assertTrue(postgres.isRunning(), "PostgreSQL container should be running");
 	}
 
 	@Test
