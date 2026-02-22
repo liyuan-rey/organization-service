@@ -34,10 +34,15 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// migration from 3.x to 4.0, following:
+	// https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide
+	// https://github.com/FasterXML/jackson/wiki/Jackson-Release-3.0#major-changesfeatures-in-30
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 	implementation "net.logstash.logback:logstash-logback-encoder:${logstashLogbackEncoderVersion}"
 	implementation "io.github.robsonkades:uuidv7:${uuidv7Version}"
@@ -47,14 +52,19 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 
 	// Testing dependencies
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+	testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+
+	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+	testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
+	testImplementation 'org.testcontainers:testcontainers-postgresql'
+
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
 	testImplementation "org.junit.jupiter:junit-jupiter"
-	testImplementation "org.testcontainers:testcontainers:${testcontainersVersion}"
-	testImplementation "org.testcontainers:testcontainers-junit-jupiter:${testcontainersVersion}"
-	testImplementation "org.testcontainers:testcontainers-postgresql:${testcontainersVersion}"
 }
 
 tasks.withType(Test) {

@@ -1,6 +1,6 @@
 package com.reythecoder.organization.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.reythecoder.organization.dto.request.DepartmentCreateReq;
 import com.reythecoder.organization.dto.request.DepartmentUpdateReq;
 import com.reythecoder.organization.dto.response.DepartmentRsp;
@@ -9,18 +9,12 @@ import com.reythecoder.organization.service.DepartmentService;
 import io.github.robsonkades.uuidv7.UUIDv7;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-
-// TODO: Spring Boot 4.0 - @MockBean 包路径变化，暂时使用 @Mock
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.time.OffsetDateTime;
 import java.util.Collections;
@@ -31,20 +25,17 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-// TODO: Spring Boot 4.0 - Controller 测试需要修复
-// @SpringBootTest 会尝试连接数据库，导致测试失败
-@Disabled("Spring Boot 4.0 compatibility - @MockBean and @WebMvcTest package changes")
-@SpringBootTest
+@WebMvcTest(DepartmentController.class)
 class DepartmentControllerTest {
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
+    private MockMvc mockMvc;
 
-    @Mock
+    @MockitoBean
     private DepartmentService departmentService;
 
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private UUID departmentId;
     private DepartmentRsp departmentRsp;
@@ -53,9 +44,6 @@ class DepartmentControllerTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(new DepartmentController(null)).build();
-
         departmentId = UUIDv7.randomUUID();
         OffsetDateTime now = OffsetDateTime.now();
         UUID tenantId = UUIDv7.randomUUID();
