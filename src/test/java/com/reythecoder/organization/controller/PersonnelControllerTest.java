@@ -1,6 +1,6 @@
 package com.reythecoder.organization.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.reythecoder.organization.dto.request.PersonnelCreateReq;
 import com.reythecoder.organization.dto.request.PersonnelUpdateReq;
 import com.reythecoder.organization.dto.response.PersonnelRsp;
