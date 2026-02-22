@@ -36,19 +36,26 @@ public record DepartmentEntity(
         @Column(name = "update_time", nullable = false) OffsetDateTime updateTime,
 
         @Column(name = "tenant_id", nullable = false) @JdbcTypeCode(SqlTypes.VARCHAR) UUID tenantId) {
-    // 默认构造函数，用于JPA
+
+    // JPA requires a no-args constructor for proxying
     public DepartmentEntity {
+        // Only set defaults for new entities (when id is null)
         if (id == null) {
             id = UUIDv7.randomUUID();
+            createTime = createTime != null ? createTime : OffsetDateTime.now();
+            updateTime = updateTime != null ? updateTime : OffsetDateTime.now();
+            tenantId = tenantId != null ? tenantId : UUID.fromString("00000000-0000-0000-0000-000000000000");
         }
-        if (createTime == null) {
-            createTime = OffsetDateTime.now();
-        }
-        if (updateTime == null) {
-            updateTime = OffsetDateTime.now();
-        }
-        if (tenantId == null) {
-            tenantId = UUID.fromString("00000000-0000-0000-0000-000000000000");
-        }
+    }
+
+    // No-args constructor for JPA/Hibernate
+    public DepartmentEntity() {
+        this(
+            null,
+            "", "", "", "", "", "", "", "", "",
+            OffsetDateTime.now(),
+            OffsetDateTime.now(),
+            UUID.fromString("00000000-0000-0000-0000-000000000000")
+        );
     }
 }
