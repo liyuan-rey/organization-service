@@ -3,7 +3,7 @@ plugins {
 	id 'org.springframework.boot' version "${springBootVersion}"
 	id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
 	id 'com.github.ben-manes.versions' version '0.51.0'
-	// id 'io.freefair.lombok' version "${lombokPluginVersion}"
+	id 'io.freefair.lombok' version "${lombokPluginVersion}"
 }
 
 group = "${defaultProjectGroup}"
@@ -46,8 +46,8 @@ dependencies {
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 	implementation "net.logstash.logback:logstash-logback-encoder:${logstashLogbackEncoderVersion}"
 	implementation "io.github.robsonkades:uuidv7:${uuidv7Version}"
-	// compileOnly 'org.projectlombok:lombok'
-	// annotationProcessor 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 	runtimeOnly 'org.postgresql:postgresql'
 

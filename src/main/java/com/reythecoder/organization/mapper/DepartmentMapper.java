@@ -15,10 +15,6 @@ public interface DepartmentMapper {
     DepartmentMapper INSTANCE = Mappers.getMapper(DepartmentMapper.class);
 
     // 将创建请求DTO映射到实体
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createTime", ignore = true)
-    @Mapping(target = "updateTime", ignore = true)
-    @Mapping(target = "tenantId", ignore = true)
     DepartmentEntity toEntity(DepartmentCreateReq req);
 
     // 将更新请求DTO映射到实体

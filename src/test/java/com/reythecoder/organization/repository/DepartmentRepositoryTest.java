@@ -72,7 +72,7 @@ class DepartmentRepositoryTest {
                 "TEST001",
                 "123456789",
                 "987654321",
-                "tes e.com",
+                "test@example.com",
                 "测试地址", "123456",
                 now, now,
                 tenantId);
@@ -129,35 +129,8 @@ class DepartmentRepositoryTest {
 
         // Assert
         assertThat(saved).isNotNull();
-        assertThat(saved.id()).isEqualTo(departmentId);
-        assertThat(saved.name()).isEqualTo(departmentEntity.name());
-    }
-
-    @Test
-    void save_shouldGenerateIdWhenNull() {
-        // Arrange
-        DepartmentEntity entityWithoutId = new DepartmentEntity(
-                null, // 不提供ID
-                "测试部门",
-                "Test Department",
-                "测试部",
-                "TEST001",
-                "123456789",
-                "987654321",
-                "test@example.com",
-                "测试地址",
-                "123456",
-                OffsetDateTime.now(),
-                OffsetDateTime.now(),
-                UUIDv7.randomUUID());
-
-        // Act
-        DepartmentEntity saved = departmentRepository.save(entityWithoutId);
-
-        // Assert
-        assertThat(saved).isNotNull();
-        assertThat(saved.id()).isNotNull(); // 应该生成ID
-        assertThat(saved.name()).isEqualTo(entityWithoutId.name());
+        assertThat(saved.getId()).isEqualTo(departmentId);
+        assertThat(saved.getName()).isEqualTo(departmentEntity.getName());
     }
 
     @Test

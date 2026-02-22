@@ -50,6 +50,11 @@ public class DepartmentServiceImpl implements DepartmentService {
     public DepartmentRsp createDepartment(DepartmentCreateReq req) {
         logger.info("创建部门: {}", req.name());
         DepartmentEntity entity = departmentMapper.toEntity(req);
+        // 手动设置 ID 和时间戳
+        entity.setId(io.github.robsonkades.uuidv7.UUIDv7.randomUUID());
+        entity.setCreateTime(java.time.OffsetDateTime.now());
+        entity.setUpdateTime(java.time.OffsetDateTime.now());
+        entity.setTenantId(java.util.UUID.fromString("00000000-0000-0000-0000-000000000000"));
         DepartmentEntity savedEntity = departmentRepository.save(java.util.Objects.requireNonNull(entity));
         return departmentMapper.toRsp(savedEntity);
     }

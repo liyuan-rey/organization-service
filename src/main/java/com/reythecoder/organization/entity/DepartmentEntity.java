@@ -2,6 +2,9 @@ package com.reythecoder.organization.entity;
 
 import io.github.robsonkades.uuidv7.UUIDv7;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -10,52 +13,69 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "org_department")
-public record DepartmentEntity(
-        @Id @JdbcTypeCode(SqlTypes.VARCHAR) UUID id,
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DepartmentEntity {
 
-        @Column(name = "name", length = 255, nullable = false) String name,
+    @Id
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    private UUID id;
 
-        @Column(name = "english_name", length = 255, nullable = false) String englishName,
+    @Column(name = "name", length = 255, nullable = false)
+    private String name;
 
-        @Column(name = "short_name", length = 100, nullable = false) String shortName,
+    @Column(name = "english_name", length = 255, nullable = false)
+    private String englishName;
 
-        @Column(name = "org_code", length = 50, nullable = false) String orgCode,
+    @Column(name = "short_name", length = 100, nullable = false)
+    private String shortName;
 
-        @Column(name = "phone", length = 50, nullable = false) String phone,
+    @Column(name = "org_code", length = 50, nullable = false)
+    private String orgCode;
 
-        @Column(name = "fax", length = 50, nullable = false) String fax,
+    @Column(name = "phone", length = 50, nullable = false)
+    private String phone;
 
-        @Column(name = "email", length = 100, nullable = false) String email,
+    @Column(name = "fax", length = 50, nullable = false)
+    private String fax;
 
-        @Column(name = "address", length = 500, nullable = false) String address,
+    @Column(name = "email", length = 100, nullable = false)
+    private String email;
 
-        @Column(name = "postal_code", length = 20, nullable = false) String postalCode,
+    @Column(name = "address", length = 500, nullable = false)
+    private String address;
 
-        @Column(name = "create_time", nullable = false) OffsetDateTime createTime,
+    @Column(name = "postal_code", length = 20, nullable = false)
+    private String postalCode;
 
-        @Column(name = "update_time", nullable = false) OffsetDateTime updateTime,
+    @Column(name = "create_time", nullable = false)
+    private OffsetDateTime createTime;
 
-        @Column(name = "tenant_id", nullable = false) @JdbcTypeCode(SqlTypes.VARCHAR) UUID tenantId) {
+    @Column(name = "update_time", nullable = false)
+    private OffsetDateTime updateTime;
 
-    // JPA requires a no-args constructor for proxying
-    public DepartmentEntity {
-        // Only set defaults for new entities (when id is null)
-        if (id == null) {
-            id = UUIDv7.randomUUID();
-            createTime = createTime != null ? createTime : OffsetDateTime.now();
-            updateTime = updateTime != null ? updateTime : OffsetDateTime.now();
-            tenantId = tenantId != null ? tenantId : UUID.fromString("00000000-0000-0000-0000-000000000000");
-        }
-    }
+    @Column(name = "tenant_id", nullable = false)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    private UUID tenantId;
 
-    // No-args constructor for JPA/Hibernate
-    public DepartmentEntity() {
-        this(
-            null,
-            "", "", "", "", "", "", "", "", "",
-            OffsetDateTime.now(),
-            OffsetDateTime.now(),
-            UUID.fromString("00000000-0000-0000-0000-000000000000")
-        );
+    // JPA requires a no-args constructor, which is provided by @NoArgsConstructor
+    
+    // Custom constructor for creating new entities with default values
+    public DepartmentEntity(String name, String englishName, String shortName, String orgCode,
+                          String phone, String fax, String email, String address, String postalCode) {
+        this.id = UUIDv7.randomUUID();
+        this.name = name;
+        this.englishName = englishName;
+        this.shortName = shortName;
+        this.orgCode = orgCode;
+        this.phone = phone;
+        this.fax = fax;
+        this.email = email;
+        this.address = address;
+        this.postalCode = postalCode;
+        this.createTime = OffsetDateTime.now();
+        this.updateTime = OffsetDateTime.now();
+        this.tenantId = UUID.fromString("00000000-0000-0000-0000-000000000000");
     }
 }

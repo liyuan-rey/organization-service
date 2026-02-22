@@ -113,8 +113,8 @@ class DepartmentServiceTest {
 
         // Assert
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).id()).isEqualTo(departmentEntity.id());
-        assertThat(result.get(0).name()).isEqualTo(departmentEntity.name());
+        assertThat(result.get(0).id()).isEqualTo(departmentEntity.getId());
+        assertThat(result.get(0).name()).isEqualTo(departmentEntity.getName());
         verify(departmentRepository, times(1)).findAll();
     }
 
@@ -140,8 +140,8 @@ class DepartmentServiceTest {
         DepartmentRsp result = departmentService.getDepartmentById(departmentId);
 
         // Assert
-        assertThat(result.id()).isEqualTo(departmentEntity.id());
-        assertThat(result.name()).isEqualTo(departmentEntity.name());
+        assertThat(result.id()).isEqualTo(departmentEntity.getId());
+        assertThat(result.name()).isEqualTo(departmentEntity.getName());
         verify(departmentRepository, times(1)).findById(departmentId);
     }
 
@@ -167,8 +167,8 @@ class DepartmentServiceTest {
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.id()).isEqualTo(departmentEntity.id());
-        assertThat(result.name()).isEqualTo(departmentEntity.name());
+        assertThat(result.id()).isEqualTo(departmentEntity.getId());
+        assertThat(result.name()).isEqualTo(departmentEntity.getName());
         verify(departmentRepository, times(1)).save(any(DepartmentEntity.class));
     }
 
@@ -186,9 +186,9 @@ class DepartmentServiceTest {
                 "updated@example.com",
                 "更新后的地址",
                 "654321",
-                departmentEntity.createTime(),
+                departmentEntity.getCreateTime(),
                 OffsetDateTime.now(),
-                departmentEntity.tenantId());
+                departmentEntity.getTenantId());
 
         when(departmentRepository.findById(departmentId)).thenReturn(Optional.of(departmentEntity));
         when(departmentRepository.save(departmentEntity)).thenReturn(updatedEntity);
@@ -198,9 +198,9 @@ class DepartmentServiceTest {
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.id()).isEqualTo(updatedEntity.id());
-        assertThat(result.name()).isEqualTo(updatedEntity.name());
-        assertThat(result.orgCode()).isEqualTo(updatedEntity.orgCode());
+        assertThat(result.id()).isEqualTo(updatedEntity.getId());
+        assertThat(result.name()).isEqualTo(updatedEntity.getName());
+        assertThat(result.orgCode()).isEqualTo(updatedEntity.getOrgCode());
         verify(departmentRepository, times(1)).findById(departmentId);
         verify(departmentRepository, times(1)).save(departmentEntity);
     }
