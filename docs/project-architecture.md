@@ -2,7 +2,7 @@
 
 ## Technology Stack
 
-- **Framework**: Spring Boot 3.5.4
+- **Framework**: Spring Boot 3.5.11
 - **Database**: PostgreSQL with Spring Data JPA
 - **Build Tool**: Gradle
 - **Java Version**: 17

@@ -167,7 +167,7 @@ The project uses externalized version properties defined in `gradle.properties` 
 javaVersion=17
 
 # Spring Boot
-springBootVersion=3.5.4
+springBootVersion=3.5.11
 springDependencyManagementVersion=1.1.7
 lombokPluginVersion=8.14
 

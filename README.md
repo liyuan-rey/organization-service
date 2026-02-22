@@ -4,7 +4,7 @@ A Spring Boot application for Organization Management Service.
 
 ## Technology Stack
 
-- **Framework**: Spring Boot 3.5.4
+- **Framework**: Spring Boot 3.5.11
 - **Language**: Java 17
 - **Build Tool**: Gradle
 - **Database**: PostgreSQL
