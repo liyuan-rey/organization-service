@@ -78,6 +78,11 @@ tasks.register("testIntegration", Test) {
     description = "Runs integration tests with Testcontainers"
 	// dependsOn(tasks.named('test'))
 
+	// for upgrade from gradle 8.x to 9.0 following
+	// https://docs.gradle.org/8.14.3/userguide/upgrading_version_8.html#test_task_default_classpath
+	testClassesDirs = testing.suites.test.sources.output.classesDirs
+	classpath = testing.suites.test.sources.runtimeClasspath
+
     systemProperty 'spring.profiles.active', 'test'
 
     // 仅运行带 @Tag("integration") 的测试类

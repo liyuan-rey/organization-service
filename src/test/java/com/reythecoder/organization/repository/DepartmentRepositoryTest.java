@@ -5,12 +5,10 @@ import com.reythecoder.organization.entity.DepartmentEntity;
 import io.github.robsonkades.uuidv7.UUIDv7;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-// TODO: Spring Boot 4.0 - @DataJpaTest 包路径变化，暂时注释掉
-// import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.junit.jupiter.Container;
@@ -25,10 +23,8 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-// TODO: Spring Boot 4.0 - @DataJpaTest 包路径变化，暂时禁用整个类
-@Disabled("Spring Boot 4.0 compatibility - needs investigation")
 @Testcontainers
-// @DataJpaTest
+@DataJpaTest
 @Tag("integration")
 class DepartmentRepositoryTest {
 
