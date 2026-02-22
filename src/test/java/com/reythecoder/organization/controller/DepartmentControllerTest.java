@@ -11,10 +11,15 @@ import io.github.robsonkades.uuidv7.UUIDv7;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+// TODO: Spring Boot 4.0 - @MockBean 包路径问题，暂时使用 Mockito 的 @Mock
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.time.OffsetDateTime;
 import java.util.Collections;
@@ -25,17 +30,19 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(DepartmentController.class)
+// TODO: Spring Boot 4.0 - @WebMvcTest 需要修复
+// 暂时使用 @SpringBootTest 替代
+@SpringBootTest
 class DepartmentControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private WebApplicationContext webApplicationContext;
 
-    @MockitoBean
+    @Mock
     private DepartmentService departmentService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private MockMvc mockMvc;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private UUID departmentId;
     private DepartmentRsp departmentRsp;
@@ -44,6 +51,9 @@ class DepartmentControllerTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+
         departmentId = UUIDv7.randomUUID();
         OffsetDateTime now = OffsetDateTime.now();
         UUID tenantId = UUIDv7.randomUUID();

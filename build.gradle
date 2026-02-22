@@ -45,6 +45,8 @@ dependencies {
 	// annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 	runtimeOnly 'org.postgresql:postgresql'
+
+	// Testing dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
