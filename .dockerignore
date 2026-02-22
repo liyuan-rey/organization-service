@@ -1,0 +1,48 @@
+# Gradle
+.gradle/
+build/
+!build/libs/
+!build/reports/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+.github/
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Test
+src/test/
+
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+.env.*
+
+# Other
+gradlew
+gradlew.bat
+LICENSE
