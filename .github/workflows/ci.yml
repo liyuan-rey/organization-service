@@ -102,13 +102,14 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run checkstyle (if configured)
-        run: ./gradlew checkstyleMain checkstyleTest --no-daemon
-        continue-on-error: true
+      # TODO: Code quality tools will be added later
+      # - name: Run checkstyle (if configured)
+      #   run: ./gradlew checkstyleMain checkstyleTest --no-daemon
+      #   continue-on-error: true
 
-      - name: Run SpotBugs (if configured)
-        run: ./gradlew spotbugsMain spotbugsTest --no-daemon
-        continue-on-error: true
+      # - name: Run SpotBugs (if configured)
+      #   run: ./gradlew spotbugsMain spotbugsTest --no-daemon
+      #   continue-on-error: true
 
       - name: Check dependencies
         run: ./gradlew dependencyUpdates --no-daemon
