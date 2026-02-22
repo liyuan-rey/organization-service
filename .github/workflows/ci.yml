@@ -45,6 +45,8 @@ jobs:
 
       - name: Run unit tests
         run: ./gradlew test --no-daemon
+        env:
+          JAVA_TOOL_OPTIONS: "--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED"
 
       - name: Run integration tests
         run: ./gradlew testIntegration --no-daemon
@@ -52,6 +54,7 @@ jobs:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/organization_db
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
+          JAVA_TOOL_OPTIONS: "--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED"
 
       - name: Generate test report
         if: always()
