@@ -1,0 +1,669 @@
+openapi: 3.1.0
+info:
+  title: 组织服务 API
+  description: |
+    组织服务提供部门管理、人员管理和用户组管理的 RESTful API。
+    
+    ## 概述
+    - **版本**: v1
+    - **认证**: 暂未实现（后续添加）
+  version: 1.0.0
+  contact:
+    name: API Support
+servers:
+  - url: /api
+    description: API 基础路径
+
+components:
+  schemas:
+    Department:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 部门 ID
+        name:
+          type: string
+          description: 部门名称
+        englishName:
+          type: string
+          description: 部门英文名称
+        shortName:
+          type: string
+          description: 部门简称
+        orgCode:
+          type: string
+          description: 组织代码
+        phone:
+          type: string
+          description: 联系电话
+        fax:
+          type: string
+          description: 传真
+        email:
+          type: string
+          format: email
+          description: 邮箱
+        address:
+          type: string
+          description: 地址
+        postalCode:
+          type: string
+          description: 邮政编码
+        createTime:
+          type: string
+          format: date-time
+          description: 创建时间
+        updateTime:
+          type: string
+          format: date-time
+          description: 更新时间
+        tenantId:
+          type: string
+          format: uuid
+          description: 租户 ID
+      required:
+        - id
+        - name
+        - createTime
+        - updateTime
+        - tenantId
+
+    DepartmentCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 部门名称
+        englishName:
+          type: string
+          description: 部门英文名称
+        shortName:
+          type: string
+          description: 部门简称
+        orgCode:
+          type: string
+          description: 组织代码
+        phone:
+          type: string
+          description: 联系电话
+        fax:
+          type: string
+          description: 传真
+        email:
+          type: string
+          format: email
+          description: 邮箱
+        address:
+          type: string
+          description: 地址
+        postalCode:
+          type: string
+          description: 邮政编码
+      required:
+        - name
+
+    DepartmentUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 部门名称
+        englishName:
+          type: string
+          description: 部门英文名称
+        shortName:
+          type: string
+          description: 部门简称
+        orgCode:
+          type: string
+          description: 组织代码
+        phone:
+          type: string
+          description: 联系电话
+        fax:
+          type: string
+          description: 传真
+        email:
+          type: string
+          format: email
+          description: 邮箱
+        address:
+          type: string
+          description: 地址
+        postalCode:
+          type: string
+          description: 邮政编码
+
+    Personnel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 人员 ID
+        name:
+          type: string
+          description: 姓名
+        gender:
+          type: string
+          enum:
+            - M
+            - F
+          description: 性别 (M/F)
+        idCard:
+          type: string
+          description: 身份证号
+        mobile:
+          type: string
+          description: 手机号
+        telephone:
+          type: string
+          description: 电话
+        fax:
+          type: string
+          description: 传真
+        email:
+          type: string
+          format: email
+          description: 邮箱
+        createTime:
+          type: string
+          format: date-time
+          description: 创建时间
+        updateTime:
+          type: string
+          format: date-time
+          description: 更新时间
+        tenantId:
+          type: string
+          format: uuid
+          description: 租户 ID
+      required:
+        - id
+        - name
+        - gender
+        - idCard
+        - mobile
+        - createTime
+        - updateTime
+        - tenantId
+
+    PersonnelCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 姓名
+        gender:
+          type: string
+          enum:
+            - M
+            - F
+          description: 性别 (M/F)
+        idCard:
+          type: string
+          description: 身份证号
+        mobile:
+          type: string
+          description: 手机号
+        telephone:
+          type: string
+          description: 电话
+        fax:
+          type: string
+          description: 传真
+        email:
+          type: string
+          format: email
+          description: 邮箱
+      required:
+        - name
+        - gender
+        - idCard
+        - mobile
+
+    PersonnelUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 姓名
+        gender:
+          type: string
+          enum:
+            - M
+            - F
+          description: 性别 (M/F)
+        idCard:
+          type: string
+          description: 身份证号
+        mobile:
+          type: string
+          description: 手机号
+        telephone:
+          type: string
+          description: 电话
+        fax:
+          type: string
+          description: 传真
+        email:
+          type: string
+          format: email
+          description: 邮箱
+
+    ApiResult:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: 响应状态码
+        message:
+          type: string
+          description: 响应消息
+        data:
+          type: object
+          description: 响应数据
+      required:
+        - status
+        - message
+
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: 错误状态码
+        message:
+          type: string
+          description: 错误消息
+        data:
+          type: object
+          nullable: true
+          description: 错误详情
+      required:
+        - status
+        - message
+
+  responses:
+    NotFound:
+      description: 资源不存在
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: 404
+            message: 部门不存在
+            data: null
+
+    BadRequest:
+      description: 请求参数验证失败
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: 400
+            message: 部门名称不能为空
+            data: null
+
+  parameters:
+    IdPathParam:
+      name: id
+      in: path
+      required: true
+      description: 资源 ID
+      schema:
+        type: string
+        format: uuid
+
+paths:
+  /departments:
+    get:
+      tags:
+        - 部门管理
+      summary: 获取所有部门
+      description: 获取系统中所有的部门列表
+      operationId: getAllDepartments
+      responses:
+        '200':
+          description: 成功获取部门列表
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Department'
+              example:
+                status: 200
+                message: success
+                data:
+                  - id: 11111111-1111-1111-1111-111111111111
+                    name: 人力资源部
+                    englishName: Human Resources Department
+                    shortName: HR
+                    orgCode: ORG-HR-001
+                    phone: +1-555-0101
+                    email: hr@company.com
+                    createTime: 2026-02-22T10:00:00+08:00
+                    updateTime: 2026-02-22T10:00:00+08:00
+                    tenantId: 00000000-0000-0000-0000-000000000000
+
+    post:
+      tags:
+        - 部门管理
+      summary: 创建部门
+      description: 创建一个新的部门
+      operationId: createDepartment
+      requestBody:
+        description: 部门创建请求参数
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartmentCreateRequest'
+            example:
+              name: 技术部
+              englishName: Technology Department
+              shortName: Tech
+              orgCode: ORG-TECH-001
+              phone: +1-555-0103
+              email: tech@company.com
+              address: 北京市海淀区某某科技园区 456 号
+              postalCode: '100001'
+      responses:
+        '201':
+          description: 部门创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Department'
+              example:
+                status: 200
+                message: 部门创建成功
+                data:
+                  id: 22222222-2222-2222-2222-222222222222
+                  name: 技术部
+                  englishName: Technology Department
+                  shortName: Tech
+                  createTime: 2026-02-22T10:00:00+08:00
+                  updateTime: 2026-02-22T10:00:00+08:00
+                  tenantId: 00000000-0000-0000-0000-000000000000
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /departments/{id}:
+    get:
+      tags:
+        - 部门管理
+      summary: 根据 ID 获取部门
+      description: 根据部门 ID 获取单个部门的详细信息
+      operationId: getDepartmentById
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: 成功获取部门信息
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Department'
+              example:
+                status: 200
+                message: success
+                data:
+                  id: 11111111-1111-1111-1111-111111111111
+                  name: 人力资源部
+                  englishName: Human Resources Department
+                  shortName: HR
+                  createTime: 2026-02-22T10:00:00+08:00
+                  updateTime: 2026-02-22T10:00:00+08:00
+                  tenantId: 00000000-0000-0000-0000-000000000000
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags:
+        - 部门管理
+      summary: 更新部门
+      description: 根据部门 ID 更新部门信息
+      operationId: updateDepartment
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      requestBody:
+        description: 部门更新请求参数
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartmentUpdateRequest'
+      responses:
+        '200':
+          description: 部门更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Department'
+              example:
+                status: 200
+                message: 部门更新成功
+                data:
+                  id: 22222222-2222-2222-2222-222222222222
+                  name: 开发部
+                  englishName: Development Department
+                  shortName: Dev
+                  createTime: 2026-02-22T10:00:00+08:00
+                  updateTime: 2026-02-22T10:05:00+08:00
+                  tenantId: 00000000-0000-0000-0000-000000000000
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags:
+        - 部门管理
+      summary: 删除部门
+      description: 根据部门 ID 删除部门
+      operationId: deleteDepartment
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '204':
+          description: 部门删除成功
+
+  /personnel:
+    get:
+      tags:
+        - 人员管理
+      summary: 获取所有人员
+      description: 获取系统中所有的人员列表
+      operationId: getAllPersonnel
+      responses:
+        '200':
+          description: 成功获取人员列表
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Personnel'
+              example:
+                status: 200
+                message: success
+                data:
+                  - id: 44444444-4444-4444-4444-444444444444
+                    name: 张三
+                    gender: M
+                    idCard: '110101199001011234'
+                    mobile: +1-555-0105
+                    email: zhangsan@company.com
+                    createTime: 2026-02-22T10:00:00+08:00
+                    updateTime: 2026-02-22T10:00:00+08:00
+                    tenantId: 00000000-0000-0000-0000-000000000000
+
+    post:
+      tags:
+        - 人员管理
+      summary: 创建人员
+      description: 创建一个新的人员
+      operationId: createPersonnel
+      requestBody:
+        description: 人员创建请求参数
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonnelCreateRequest'
+            example:
+              name: 李四
+              gender: F
+              idCard: '110101199001015678'
+              mobile: +1-555-0108
+              telephone: +1-555-0109
+              email: lisi@company.com
+      responses:
+        '201':
+          description: 人员创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Personnel'
+              example:
+                status: 200
+                message: 人员创建成功
+                data:
+                  id: 55555555-5555-5555-5555-555555555555
+                  name: 李四
+                  gender: F
+                  idCard: '110101199001015678'
+                  mobile: +1-555-0108
+                  createTime: 2026-02-22T10:00:00+08:00
+                  updateTime: 2026-02-22T10:00:00+08:00
+                  tenantId: 00000000-0000-0000-0000-000000000000
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /personnel/{id}:
+    get:
+      tags:
+        - 人员管理
+      summary: 根据 ID 获取人员
+      description: 根据人员 ID 获取单个人员的详细信息
+      operationId: getPersonnelById
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: 成功获取人员信息
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Personnel'
+              example:
+                status: 200
+                message: success
+                data:
+                  id: 44444444-4444-4444-4444-444444444444
+                  name: 张三
+                  gender: M
+                  idCard: '110101199001011234'
+                  mobile: +1-555-0105
+                  createTime: 2026-02-22T10:00:00+08:00
+                  updateTime: 2026-02-22T10:00:00+08:00
+                  tenantId: 00000000-0000-0000-0000-000000000000
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags:
+        - 人员管理
+      summary: 更新人员
+      description: 根据人员 ID 更新人员信息
+      operationId: updatePersonnel
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      requestBody:
+        description: 人员更新请求参数
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonnelUpdateRequest'
+      responses:
+        '200':
+          description: 人员更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Personnel'
+              example:
+                status: 200
+                message: 人员更新成功
+                data:
+                  id: 55555555-5555-5555-5555-555555555555
+                  name: 王五
+                  gender: M
+                  idCard: '110101199001019012'
+                  mobile: +1-555-0111
+                  createTime: 2026-02-22T10:00:00+08:00
+                  updateTime: 2026-02-22T10:05:00+08:00
+                  tenantId: 00000000-0000-0000-0000-000000000000
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags:
+        - 人员管理
+      summary: 删除人员
+      description: 根据人员 ID 删除人员
+      operationId: deletePersonnel
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '204':
+          description: 人员删除成功
