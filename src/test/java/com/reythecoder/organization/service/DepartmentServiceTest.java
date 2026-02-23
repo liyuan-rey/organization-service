@@ -113,8 +113,8 @@ class DepartmentServiceTest {
 
         // Assert
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).id()).isEqualTo(departmentEntity.getId());
-        assertThat(result.get(0).name()).isEqualTo(departmentEntity.getName());
+        assertThat(result.get(0).getId()).isEqualTo(departmentEntity.getId());
+        assertThat(result.get(0).getName()).isEqualTo(departmentEntity.getName());
         verify(departmentRepository, times(1)).findAll();
     }
 
@@ -140,8 +140,8 @@ class DepartmentServiceTest {
         DepartmentRsp result = departmentService.getDepartmentById(departmentId);
 
         // Assert
-        assertThat(result.id()).isEqualTo(departmentEntity.getId());
-        assertThat(result.name()).isEqualTo(departmentEntity.getName());
+        assertThat(result.getId()).isEqualTo(departmentEntity.getId());
+        assertThat(result.getName()).isEqualTo(departmentEntity.getName());
         verify(departmentRepository, times(1)).findById(departmentId);
     }
 
@@ -167,8 +167,8 @@ class DepartmentServiceTest {
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.id()).isEqualTo(departmentEntity.getId());
-        assertThat(result.name()).isEqualTo(departmentEntity.getName());
+        assertThat(result.getId()).isEqualTo(departmentEntity.getId());
+        assertThat(result.getName()).isEqualTo(departmentEntity.getName());
         verify(departmentRepository, times(1)).save(any(DepartmentEntity.class));
     }
 
@@ -198,9 +198,9 @@ class DepartmentServiceTest {
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.id()).isEqualTo(updatedEntity.getId());
-        assertThat(result.name()).isEqualTo(updatedEntity.getName());
-        assertThat(result.orgCode()).isEqualTo(updatedEntity.getOrgCode());
+        assertThat(result.getId()).isEqualTo(updatedEntity.getId());
+        assertThat(result.getName()).isEqualTo(updatedEntity.getName());
+        assertThat(result.getOrgCode()).isEqualTo(updatedEntity.getOrgCode());
         verify(departmentRepository, times(1)).findById(departmentId);
         verify(departmentRepository, times(1)).save(departmentEntity);
     }

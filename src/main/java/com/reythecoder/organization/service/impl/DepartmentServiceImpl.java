@@ -48,7 +48,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentRsp createDepartment(DepartmentCreateReq req) {
-        logger.info("创建部门: {}", req.name());
+        logger.info("创建部门: {}", req.getName());
         DepartmentEntity entity = departmentMapper.toEntity(req);
         // 手动设置 ID 和时间戳
         entity.setId(io.github.robsonkades.uuidv7.UUIDv7.randomUUID());

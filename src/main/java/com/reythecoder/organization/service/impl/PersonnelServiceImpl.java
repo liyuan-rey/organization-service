@@ -48,7 +48,7 @@ public class PersonnelServiceImpl implements PersonnelService {
 
     @Override
     public PersonnelRsp createPersonnel(PersonnelCreateReq req) {
-        logger.info("创建人员: {}", req.name());
+        logger.info("创建人员: {}", req.getName());
         PersonnelEntity entity = personnelMapper.toEntity(req);
         // 设置 ID、时间戳和租户ID
         entity.setId(UUID.randomUUID());

@@ -162,7 +162,7 @@ class PersonnelServiceTest {
         // Assert
         assertThat(result).isNotNull();
         assertThat(result.getId()).isNotNull();
-        assertThat(result.getName()).isEqualTo(personnelCreateReq.name());
+        assertThat(result.getName()).isEqualTo(personnelCreateReq.getName());
         verify(personnelRepository, times(1)).save(any(PersonnelEntity.class));
     }
 

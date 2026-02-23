@@ -41,7 +41,7 @@ public class DepartmentController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResult<DepartmentRsp> createDepartment(@Valid @RequestBody DepartmentCreateReq req) {
-        logger.info("收到创建部门请求: {}", req.name());
+        logger.info("收到创建部门请求: {}", req.getName());
         DepartmentRsp department = departmentService.createDepartment(req);
         return ApiResult.success("部门创建成功", department);
     }

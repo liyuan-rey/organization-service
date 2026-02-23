@@ -45,13 +45,13 @@ class PersonnelMapperTest {
 
         // Assert
         assertThat(entity).isNotNull();
-        assertThat(entity.getName()).isEqualTo(createReq.name());
-        assertThat(entity.getGender()).isEqualTo(createReq.gender());
-        assertThat(entity.getIdCard()).isEqualTo(createReq.idCard());
-        assertThat(entity.getMobile()).isEqualTo(createReq.mobile());
-        assertThat(entity.getTelephone()).isEqualTo(createReq.telephone());
-        assertThat(entity.getFax()).isEqualTo(createReq.fax());
-        assertThat(entity.getEmail()).isEqualTo(createReq.email());
+        assertThat(entity.getName()).isEqualTo(createReq.getName());
+        assertThat(entity.getGender()).isEqualTo(createReq.getGender());
+        assertThat(entity.getIdCard()).isEqualTo(createReq.getIdCard());
+        assertThat(entity.getMobile()).isEqualTo(createReq.getMobile());
+        assertThat(entity.getTelephone()).isEqualTo(createReq.getTelephone());
+        assertThat(entity.getFax()).isEqualTo(createReq.getFax());
+        assertThat(entity.getEmail()).isEqualTo(createReq.getEmail());
         // Note: ID, createTime, updateTime, tenantId, photo are handled by service layer
     }
 

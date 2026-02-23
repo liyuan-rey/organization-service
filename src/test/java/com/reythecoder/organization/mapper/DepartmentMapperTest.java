@@ -49,15 +49,15 @@ class DepartmentMapperTest {
         // Assert
         assertThat(entity).isNotNull();
         // ID, createTime, updateTime, tenantId 由 Service 层设置，Mapper 不处理这些字段
-        assertThat(entity.getName()).isEqualTo(createReq.name());
-        assertThat(entity.getEnglishName()).isEqualTo(createReq.englishName());
-        assertThat(entity.getShortName()).isEqualTo(createReq.shortName());
-        assertThat(entity.getOrgCode()).isEqualTo(createReq.orgCode());
-        assertThat(entity.getPhone()).isEqualTo(createReq.phone());
-        assertThat(entity.getFax()).isEqualTo(createReq.fax());
-        assertThat(entity.getEmail()).isEqualTo(createReq.email());
-        assertThat(entity.getAddress()).isEqualTo(createReq.address());
-        assertThat(entity.getPostalCode()).isEqualTo(createReq.postalCode());
+        assertThat(entity.getName()).isEqualTo(createReq.getName());
+        assertThat(entity.getEnglishName()).isEqualTo(createReq.getEnglishName());
+        assertThat(entity.getShortName()).isEqualTo(createReq.getShortName());
+        assertThat(entity.getOrgCode()).isEqualTo(createReq.getOrgCode());
+        assertThat(entity.getPhone()).isEqualTo(createReq.getPhone());
+        assertThat(entity.getFax()).isEqualTo(createReq.getFax());
+        assertThat(entity.getEmail()).isEqualTo(createReq.getEmail());
+        assertThat(entity.getAddress()).isEqualTo(createReq.getAddress());
+        assertThat(entity.getPostalCode()).isEqualTo(createReq.getPostalCode());
     }
 
     @Test
@@ -83,18 +83,18 @@ class DepartmentMapperTest {
 
         // Assert
         assertThat(rsp).isNotNull();
-        assertThat(rsp.id()).isEqualTo(entity.getId());
-        assertThat(rsp.name()).isEqualTo(entity.getName());
-        assertThat(rsp.englishName()).isEqualTo(entity.getEnglishName());
-        assertThat(rsp.shortName()).isEqualTo(entity.getShortName());
-        assertThat(rsp.orgCode()).isEqualTo(entity.getOrgCode());
-        assertThat(rsp.phone()).isEqualTo(entity.getPhone());
-        assertThat(rsp.fax()).isEqualTo(entity.getFax());
-        assertThat(rsp.email()).isEqualTo(entity.getEmail());
-        assertThat(rsp.address()).isEqualTo(entity.getAddress());
-        assertThat(rsp.postalCode()).isEqualTo(entity.getPostalCode());
-        assertThat(rsp.createTime()).isEqualTo(entity.getCreateTime());
-        assertThat(rsp.updateTime()).isEqualTo(entity.getUpdateTime());
-        assertThat(rsp.tenantId()).isEqualTo(entity.getTenantId());
+        assertThat(rsp.getId()).isEqualTo(entity.getId());
+        assertThat(rsp.getName()).isEqualTo(entity.getName());
+        assertThat(rsp.getEnglishName()).isEqualTo(entity.getEnglishName());
+        assertThat(rsp.getShortName()).isEqualTo(entity.getShortName());
+        assertThat(rsp.getOrgCode()).isEqualTo(entity.getOrgCode());
+        assertThat(rsp.getPhone()).isEqualTo(entity.getPhone());
+        assertThat(rsp.getFax()).isEqualTo(entity.getFax());
+        assertThat(rsp.getEmail()).isEqualTo(entity.getEmail());
+        assertThat(rsp.getAddress()).isEqualTo(entity.getAddress());
+        assertThat(rsp.getPostalCode()).isEqualTo(entity.getPostalCode());
+        assertThat(rsp.getCreateTime()).isEqualTo(entity.getCreateTime());
+        assertThat(rsp.getUpdateTime()).isEqualTo(entity.getUpdateTime());
+        assertThat(rsp.getTenantId()).isEqualTo(entity.getTenantId());
     }
 }

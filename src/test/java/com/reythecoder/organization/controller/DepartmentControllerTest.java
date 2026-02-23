@@ -172,9 +172,9 @@ class DepartmentControllerTest {
                 "updated@example.com",
                 "更新后的地址",
                 "654321",
-                departmentRsp.createTime(),
+                departmentRsp.getCreateTime(),
                 OffsetDateTime.now(),
-                departmentRsp.tenantId());
+                departmentRsp.getTenantId());
 
         when(departmentService.updateDepartment(departmentId, departmentUpdateReq)).thenReturn(updatedRsp);
 
