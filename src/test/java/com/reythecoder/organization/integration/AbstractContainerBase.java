@@ -1,7 +1,6 @@
 package com.reythecoder.organization.integration;
 
 import org.testcontainers.postgresql.PostgreSQLContainer;
-import org.testcontainers.utility.MountableFile;
 
 public abstract class AbstractContainerBase {
 

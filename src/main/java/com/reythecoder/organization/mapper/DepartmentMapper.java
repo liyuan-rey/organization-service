@@ -5,7 +5,6 @@ import com.reythecoder.organization.dto.request.DepartmentUpdateReq;
 import com.reythecoder.organization.dto.response.DepartmentRsp;
 import com.reythecoder.organization.entity.DepartmentEntity;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
