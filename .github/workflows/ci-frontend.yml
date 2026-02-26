@@ -1,0 +1,27 @@
+name: CI - Frontend
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/ci-frontend.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'frontend/**'
+
+jobs:
+  placeholder:
+    name: Frontend CI (Placeholder)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Frontend not initialized
+        run: |
+          echo "⚠️ Frontend directory exists but not initialized yet."
+          echo "📝 Initialize frontend project (React/Vue/Angular/etc.) to enable full CI."
+          echo ""
+          echo "Suggested steps:"
+          echo "  1. cd frontend"
+          echo "  2. npm create vite@latest .  (or your preferred framework)"
+          echo "  3. Update this workflow with actual build/test commands"

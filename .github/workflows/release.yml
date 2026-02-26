@@ -25,21 +25,21 @@ jobs:
           cache: 'gradle'
 
       - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+        run: chmod +x backend/gradlew
 
       - name: Extract version from tag
         id: version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
       - name: Build production JAR
-        run: ./gradlew build -x test --no-daemon
+        run: cd backend && ./gradlew build -x test --no-daemon
         env:
           SPRING_PROFILES_ACTIVE: prod
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: build/libs/*.jar
+          files: backend/build/libs/*.jar
           generate_release_notes: true
           draft: false
           prerelease: false
@@ -79,12 +79,12 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: backend/
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type:gha
+          cache-to: type:gha,mode=max
           platforms: linux/amd64,linux/arm64
 
       - name: Generate image digest

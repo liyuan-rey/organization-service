@@ -1,10 +1,15 @@
-name: CI
+name: CI - Backend
 
 on:
   push:
     branches: [ main, develop ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/ci-backend.yml'
   pull_request:
     branches: [ main, develop ]
+    paths:
+      - 'backend/**'
 
 jobs:
   build-and-test:
@@ -41,16 +46,16 @@ jobs:
           cache: 'gradle'
 
       - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+        run: chmod +x backend/gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+        run: cd backend && ./gradlew build --no-daemon
 
       - name: Run unit tests
-        run: ./gradlew test --no-daemon
+        run: cd backend && ./gradlew test --no-daemon
 
       - name: Run integration tests
-        run: ./gradlew testIntegration --no-daemon
+        run: cd backend && ./gradlew testIntegration --no-daemon
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/organization_db
           SPRING_DATASOURCE_USERNAME: postgres
@@ -60,58 +65,27 @@ jobs:
         if: always()
         uses: dorny/test-reporter@v1
         with:
-          name: Test Results
-          path: '**/build/test-results/test/*.xml'
+          name: Backend Test Results
+          path: 'backend/**/build/test-results/test/*.xml'
           reporter: java-junit
           fail-on-error: true
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
+          name: backend-build-artifacts
           path: |
-            build/libs/*.jar
-            build/reports/
+            backend/build/libs/*.jar
+            backend/build/reports/
           retention-days: 7
 
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: '**/build/test-results/**/*.xml'
+          name: backend-test-results
+          path: 'backend/**/build/test-results/**/*.xml'
           retention-days: 7
-
-# code-quality:
-#   name: Code Quality Check
-#   runs-on: ubuntu-latest
-#
-#   steps:
-#     - name: Checkout code
-#       uses: actions/checkout@v4
-#
-#     - name: Set up JDK 17
-#       uses: actions/setup-java@v4
-#       with:
-#         java-version: '17'
-#         distribution: 'temurin'
-#         cache: 'gradle'
-#
-#     - name: Grant execute permission for gradlew
-#       run: chmod +x gradlew
-#
-#     # TODO: Code quality tools will be added later
-#     # - name: Run checkstyle (if configured)
-#     #   run: ./gradlew checkstyleMain checkstyleTest --no-daemon
-#     #   continue-on-error: true
-#
-#     # - name: Run SpotBugs (if configured)
-#     #   run: ./gradlew spotbugsMain spotbugsTest --no-daemon
-#     #   continue-on-error: true
-#
-#     - name: Check dependencies
-#       run: ./gradlew dependencyUpdates --no-daemon
-#       continue-on-error: true
 
   security-scan:
     name: Security Scan
@@ -134,7 +108,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
-          scan-ref: '.'
+          scan-ref: 'backend/'
           format: 'sarif'
           output: 'trivy-results.sarif'
 
