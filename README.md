@@ -31,8 +31,19 @@ organization-service/
 │   ├── docs/             # 后端文档
 │   └── .github/          # CI/CD 配置
 │
-├── frontend/             # 前端工程（待开发）
-│   └── README.md         # 占位说明
+├── frontend/             # 前端工程（Vue3 + Vite + TypeScript）
+│   ├── src/              # 源代码
+│   │   ├── api/              # API 调用封装
+│   │   ├── components/       # 可复用组件
+│   │   ├── layouts/          # 布局组件
+│   │   ├── router/           # 路由配置
+│   │   ├── stores/           # Pinia 状态管理
+│   │   ├── types/            # TypeScript 类型
+│   │   └── views/            # 页面组件
+│   ├── package.json      # NPM 依赖配置
+│   ├── vite.config.ts    # Vite 构建配置
+│   ├── tsconfig.json     # TypeScript 配置
+│   └── README.md         # 前端文档
 │
 ├── scripts/              # 公共脚本
 │
@@ -107,16 +118,31 @@ cd backend
 
 ### 前端开发
 
-前端工程待初始化...
+```bash
+# 进入前端目录
+cd frontend
+
+# 安装依赖
+npm install
+
+# 启动开发服务器（代理到后端 http://localhost:8080）
+npm run dev
+
+# 构建生产版本
+npm run build
+```
+
+访问 http://localhost:3000
 
 ---
 
 ## 📝 开发规范
 
 1. **严格区分前后端目录** - 不要将后端代码放到 `frontend/`，反之亦然
-2. **依赖管理** - 后端依赖在 `backend/build.gradle` 中声明
-3. **配置文件** - 环境配置在各自工程目录下（如 `backend/src/main/resources/`）
+2. **依赖管理** - 后端依赖在 `backend/build.gradle` 中声明，前端依赖在 `frontend/package.json` 中声明
+3. **配置文件** - 环境配置在各自工程目录下（如 `backend/src/main/resources/` 或 `frontend/.env`）
 4. **文档更新** - 修改代码时同步更新对应目录下的文档
+5. **提交规范** - Git 提交信息应标注影响范围：`feat(backend):`、`feat(frontend):`、`refactor:` 等
 
 ---
 
@@ -125,6 +151,7 @@ cd backend
 - [后端 API 文档](backend/docs/)
 - [数据库设计](backend/db/)
 - [部署指南](backend/docs/deployment.md)
+- [前端文档](frontend/README.md)
 
 ---
 
