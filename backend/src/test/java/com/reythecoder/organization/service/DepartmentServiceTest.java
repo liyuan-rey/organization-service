@@ -78,7 +78,8 @@ class DepartmentServiceTest {
                 "123456",
                 now,
                 now,
-                tenantId);
+                tenantId,
+                0);
 
         departmentCreateReq = new DepartmentCreateReq(
                 "测试部门",

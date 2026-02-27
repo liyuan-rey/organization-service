@@ -61,7 +61,8 @@ class DepartmentControllerTest {
                 "123456",
                 now,
                 now,
-                tenantId);
+                tenantId,
+                0);
 
         departmentCreateReq = new DepartmentCreateReq(
                 "测试部门",
@@ -174,7 +175,8 @@ class DepartmentControllerTest {
                 "654321",
                 departmentRsp.getCreateTime(),
                 OffsetDateTime.now(),
-                departmentRsp.getTenantId());
+                departmentRsp.getTenantId(),
+                0);
 
         when(departmentService.updateDepartment(departmentId, departmentUpdateReq)).thenReturn(updatedRsp);
 
