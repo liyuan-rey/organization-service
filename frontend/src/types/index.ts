@@ -74,17 +74,90 @@ export interface PersonnelUpdateReq {
   status?: number
 }
 
-// 分页参数
-export interface PageParams {
-  page: number
-  size: number
+// 岗位实体
+export interface Position {
+  id: string
+  name: string
+  code: string
+  description: string
+  jobLevel: string
+  jobCategory: string
+  minSalary: number | null
+  maxSalary: number | null
+  status: number
+  createTime: string
+  updateTime: string
 }
 
-// 分页响应
-export interface PageResult<T> {
-  content: T[]
-  totalElements: number
-  totalPages: number
-  size: number
-  number: number
+// 岗位创建请求
+export interface PositionCreateReq {
+  name: string
+  code: string
+  description?: string
+  jobLevel?: string
+  jobCategory?: string
+  minSalary?: number | null
+  maxSalary?: number | null
+  status?: number
+}
+
+// 岗位更新请求
+export interface PositionUpdateReq {
+  name?: string
+  code?: string
+  description?: string
+  jobLevel?: string
+  jobCategory?: string
+  minSalary?: number | null
+  maxSalary?: number | null
+  status?: number
+}
+
+// 部门岗位关联实体
+export interface DepartmentPosition {
+  id: string
+  departmentId: string
+  departmentName: string
+  positionId: string
+  positionName: string
+  isPrimary: boolean
+  sortOrder: number
+  createTime: string
+  updateTime: string
+}
+
+// 部门岗位关联请求
+export interface DepartmentPositionReq {
+  departmentId: string
+  positionId: string
+  isPrimary?: boolean
+  sortOrder?: number
+}
+
+// 人员岗位关联实体
+export interface PersonnelPosition {
+  id: string
+  personnelId: string
+  personnelName: string
+  positionId: string
+  positionName: string
+  departmentId: string | null
+  departmentName: string | null
+  isPrimary: boolean
+  startDate: string | null
+  endDate: string | null
+  status: number
+  createTime: string
+  updateTime: string
+}
+
+// 人员岗位关联请求
+export interface PersonnelPositionReq {
+  personnelId: string
+  positionId: string
+  departmentId?: string | null
+  isPrimary?: boolean
+  startDate?: string | null
+  endDate?: string | null
+  status?: number
 }

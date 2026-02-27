@@ -1,13 +1,28 @@
+# ================================
+# Build Outputs
+# ================================
+
 HELP.md
-.gradle
+.gradle/
 build/
-logs/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-db/data/
 
-### STS ###
+# ================================
+# IDE & Editor
+# ================================
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### Eclipse / STS ###
 .apt_generated
 .classpath
 .factorypath
@@ -19,15 +34,6 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -38,13 +44,37 @@ out/
 ### VS Code ###
 .vscode/
 
-### Local settings ###
+### Claude ###
 .claude/settings.local*.json
 
-### Environment files ###
+# ================================
+# Logs & Database
+# ================================
+
+logs/
+*.log
+db/data/
+
+# ================================
+# Environment & Secrets
+# ================================
+
 .env
 .env.local
 .env.*.local
+.env.*.prod
+.env.*.dev
 
 ### Docker ###
 docker-compose.override.yml
+
+# ================================
+# System & Temp Files
+# ================================
+
+.DS_Store
+Thumbs.db
+*~
+*.tmp
+*.swp
+*.swo

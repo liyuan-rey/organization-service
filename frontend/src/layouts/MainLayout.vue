@@ -100,5 +100,8 @@ const sidebarOpen = ref(false)
 const routes = [
   { path: '/departments', meta: { title: '部门管理', icon: 'building' } },
   { path: '/personnel', meta: { title: '人员管理', icon: 'users' } },
+  { path: '/positions', meta: { title: '岗位管理', icon: 'briefcase' } },
+  { path: '/department-positions', meta: { title: '部门岗位管理', icon: 'building-office' } },
+  { path: '/personnel-positions', meta: { title: '人员岗位管理', icon: 'users-briefcase' } },
 ]
 </script>

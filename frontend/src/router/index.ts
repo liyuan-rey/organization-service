@@ -20,6 +20,24 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/PersonnelList.vue'),
         meta: { title: '人员管理', icon: 'users' },
       },
+      {
+        path: 'positions',
+        name: 'Positions',
+        component: () => import('@/views/PositionList.vue'),
+        meta: { title: '岗位管理', icon: 'briefcase' },
+      },
+      {
+        path: 'department-positions',
+        name: 'DepartmentPositions',
+        component: () => import('@/views/DepartmentPositionList.vue'),
+        meta: { title: '部门岗位管理', icon: 'building-office' },
+      },
+      {
+        path: 'personnel-positions',
+        name: 'PersonnelPositions',
+        component: () => import('@/views/PersonnelPositionList.vue'),
+        meta: { title: '人员岗位管理', icon: 'users-briefcase' },
+      },
     ],
   },
 ]

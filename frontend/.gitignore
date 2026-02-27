@@ -1,5 +1,17 @@
+# ================================
+# Dependencies & Build Outputs
+# ================================
+
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# ================================
 # Logs
-logs
+# ================================
+
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -7,18 +19,43 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# ================================
+# IDE & Editor
+# ================================
 
-# Editor directories and files
+### VS Code ###
 .vscode/*
 !.vscode/extensions.json
-.idea
+
+### IntelliJ IDEA ###
+.idea/
+
+### Claude ###
+.claude/settings.local*.json
+
+# ================================
+# Environment Files
+# ================================
+
+.env
+.env.local
+.env.*.local
+.env.*.prod
+.env.*.dev
+
+# ================================
+# System Files
+# ================================
+
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+Thumbs.db
+*~
+
+# ================================
+# Temp & Cache
+# ================================
+
+.cache/
+*.tmp
+*.swp
+*.swo
