@@ -7,6 +7,7 @@ import com.reythecoder.organization.entity.DepartmentEntity;
 import com.reythecoder.organization.exception.ApiException;
 
 import com.reythecoder.organization.repository.DepartmentRepository;
+import com.reythecoder.organization.repository.PersonnelPositionRepository;
 import com.reythecoder.organization.service.impl.DepartmentServiceImpl;
 
 import io.github.robsonkades.uuidv7.UUIDv7;
@@ -34,6 +35,9 @@ class DepartmentServiceTest {
 
     @Mock
     private DepartmentRepository departmentRepository;
+
+    @Mock
+    private PersonnelPositionRepository personnelPositionRepository;
 
     @InjectMocks
     private DepartmentServiceImpl departmentService;
@@ -108,6 +112,7 @@ class DepartmentServiceTest {
     void getAllDepartments_shouldReturnAllDepartments() {
         // Arrange
         when(departmentRepository.findAll()).thenReturn(List.of(departmentEntity));
+        when(personnelPositionRepository.findByDepartmentId(departmentId)).thenReturn(Collections.emptyList());
 
         // Act
         List<DepartmentRsp> result = departmentService.getAllDepartments();
