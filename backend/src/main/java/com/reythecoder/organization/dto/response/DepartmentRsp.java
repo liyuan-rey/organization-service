@@ -26,4 +26,10 @@ public class DepartmentRsp {
     private OffsetDateTime createTime;
     private OffsetDateTime updateTime;
     private UUID tenantId;
+    
+    /**
+     * 部门内人数
+     */
+    @Builder.Default
+    private Integer personCount = 0;
 }

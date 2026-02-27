@@ -7,6 +7,7 @@ import com.reythecoder.organization.entity.DepartmentEntity;
 import com.reythecoder.organization.exception.ApiException;
 import com.reythecoder.organization.mapper.DepartmentMapper;
 import com.reythecoder.organization.repository.DepartmentRepository;
+import com.reythecoder.organization.repository.PersonnelPositionRepository;
 import com.reythecoder.organization.service.DepartmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +24,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     private static final Logger logger = LoggerFactory.getLogger(DepartmentServiceImpl.class);
     private final DepartmentRepository departmentRepository;
     private final DepartmentMapper departmentMapper;
+    private final PersonnelPositionRepository personnelPositionRepository;
 
-    public DepartmentServiceImpl(DepartmentRepository departmentRepository) {
+    public DepartmentServiceImpl(DepartmentRepository departmentRepository, 
+                                  PersonnelPositionRepository personnelPositionRepository) {
         this.departmentRepository = departmentRepository;
         this.departmentMapper = DepartmentMapper.INSTANCE;
+        this.personnelPositionRepository = personnelPositionRepository;
     }
 
     @Override
@@ -34,7 +38,13 @@ public class DepartmentServiceImpl implements DepartmentService {
         logger.info("获取所有部门");
         List<DepartmentEntity> entities = departmentRepository.findAll();
         return entities.stream()
-                .map(departmentMapper::toRsp)
+                .map(entity -> {
+                    DepartmentRsp rsp = departmentMapper.toRsp(entity);
+                    // 统计部门内人数
+                    int count = personnelPositionRepository.findByDepartmentId(entity.getId()).size();
+                    rsp.setPersonCount(count);
+                    return rsp;
+                })
                 .collect(Collectors.toList());
     }
 

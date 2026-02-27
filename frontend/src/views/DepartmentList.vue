@@ -59,7 +59,12 @@
             </tr>
             <tr v-for="dept in store.departments" :key="dept.id" class="hover:bg-gray-50">
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900">{{ dept.name }}</div>
+                <div class="flex items-center space-x-2">
+                  <span class="text-sm font-medium text-gray-900">{{ dept.name }}</span>
+                  <span class="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                    {{ dept.personCount ?? 0 }}人
+                  </span>
+                </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="text-sm text-gray-500">{{ dept.code }}</div>

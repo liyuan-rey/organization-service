@@ -16,6 +16,7 @@ export interface Department {
   status: number
   createTime: string
   updateTime: string
+  personCount?: number
 }
 
 // 部门创建请求
