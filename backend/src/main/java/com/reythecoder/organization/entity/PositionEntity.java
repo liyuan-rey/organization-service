@@ -20,7 +20,7 @@ import java.util.UUID;
 public class PositionEntity {
 
     @Id
-    @JdbcTypeCode(SqlTypes.VARCHAR)
+    //@JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
     @Column(name = "name", length = 100, nullable = false)
@@ -54,7 +54,7 @@ public class PositionEntity {
     private OffsetDateTime updateTime;
 
     @Column(name = "tenant_id", nullable = false)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
+    //@JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID tenantId;
 
     // Custom constructor for creating new position with default values

@@ -19,7 +19,7 @@ import java.util.UUID;
 public class DepartmentEntity {
 
     @Id
-    @JdbcTypeCode(SqlTypes.VARCHAR)
+    //@JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
     @Column(name = "name", length = 255, nullable = false)
@@ -56,7 +56,7 @@ public class DepartmentEntity {
     private OffsetDateTime updateTime;
 
     @Column(name = "tenant_id", nullable = false)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
+    //@JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID tenantId;
 
     // JPA requires a no-args constructor, which is provided by @NoArgsConstructor

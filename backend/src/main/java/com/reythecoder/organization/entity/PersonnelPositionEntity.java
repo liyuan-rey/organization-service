@@ -21,19 +21,19 @@ import java.util.UUID;
 public class PersonnelPositionEntity {
 
     @Id
-    @JdbcTypeCode(SqlTypes.VARCHAR)
+    //@JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
     @Column(name = "personnel_id", nullable = false)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
+    //@JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID personnelId;
 
     @Column(name = "position_id", nullable = false)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
+    //@JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID positionId;
 
     @Column(name = "department_id")
-    @JdbcTypeCode(SqlTypes.VARCHAR)
+    //@JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID departmentId;
 
     @Column(name = "is_primary", nullable = false)
@@ -55,7 +55,7 @@ public class PersonnelPositionEntity {
     private OffsetDateTime updateTime;
 
     @Column(name = "tenant_id", nullable = false)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
+    //@JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID tenantId;
 
     // Custom constructor

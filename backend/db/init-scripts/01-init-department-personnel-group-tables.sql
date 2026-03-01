@@ -39,7 +39,7 @@ COMMENT ON COLUMN org_department.tenant_id IS 'Tenant identifier for multi-tenan
 CREATE TABLE IF NOT EXISTS org_personnel (
     id UUID PRIMARY KEY, -- Primary key using 128-bit UUID v7 algorithm
     name VARCHAR(100) NOT NULL DEFAULT '', -- Personnel name
-    gender CHAR(1) NOT NULL DEFAULT '', -- Personnel gender (M/F)
+    gender VARCHAR(1) NOT NULL DEFAULT '', -- Personnel gender (M/F)
     id_card VARCHAR(18) NOT NULL DEFAULT '', -- ID card number
     mobile VARCHAR(20) NOT NULL DEFAULT '', -- Mobile phone number
     telephone VARCHAR(20) NOT NULL DEFAULT '', -- Telephone number
