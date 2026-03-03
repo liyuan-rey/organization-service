@@ -73,7 +73,7 @@ class DepartmentPersonnelControllerTest {
         mockMvc.perform(get("/api/department-personnel/department/{departmentId}", departmentId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data[0].personnelId").value(personnelId.toString()));
 
@@ -87,7 +87,7 @@ class DepartmentPersonnelControllerTest {
         mockMvc.perform(get("/api/department-personnel/personnel/{personnelId}", personnelId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data[0].departmentId").value(departmentId.toString()));
 
@@ -103,7 +103,7 @@ class DepartmentPersonnelControllerTest {
                 .content(objectMapper.writeValueAsString(createReq)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.message").value("部门人员关联创建成功"));
 
         verify(departmentPersonnelService, times(1)).create(createReq);
@@ -125,7 +125,7 @@ class DepartmentPersonnelControllerTest {
 
         mockMvc.perform(put("/api/department-personnel/set-primary/{personnelId}/{departmentId}", personnelId, departmentId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.message").value("主部门设置成功"));
 
         verify(departmentPersonnelService, times(1)).setPrimaryDepartment(personnelId, departmentId);

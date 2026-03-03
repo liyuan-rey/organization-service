@@ -71,7 +71,7 @@ class GroupControllerTest {
         mockMvc.perform(get("/api/groups"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.message").value("success"))
                 .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data[0].id").value(groupId.toString()))
@@ -87,7 +87,7 @@ class GroupControllerTest {
         mockMvc.perform(get("/api/groups"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.message").value("success"))
                 .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data").isEmpty());
@@ -102,7 +102,7 @@ class GroupControllerTest {
         mockMvc.perform(get("/api/groups/{id}", groupId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.message").value("success"))
                 .andExpect(jsonPath("$.data.id").value(groupId.toString()))
                 .andExpect(jsonPath("$.data.name").value("测试分组"));
@@ -119,7 +119,7 @@ class GroupControllerTest {
                 .content(objectMapper.writeValueAsString(groupCreateReq)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.message").value("分组创建成功"))
                 .andExpect(jsonPath("$.data.id").value(groupId.toString()))
                 .andExpect(jsonPath("$.data.name").value("测试分组"));
@@ -143,7 +143,7 @@ class GroupControllerTest {
                 .content(objectMapper.writeValueAsString(groupUpdateReq)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.message").value("分组更新成功"))
                 .andExpect(jsonPath("$.data.id").value(groupId.toString()))
                 .andExpect(jsonPath("$.data.name").value("更新后的分组"));

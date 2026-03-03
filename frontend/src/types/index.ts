@@ -1,6 +1,6 @@
 // API 响应结构
 export interface ApiResult<T> {
-  status: number
+  code: number
   message: string
   data: T
 }

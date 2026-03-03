@@ -26,7 +26,7 @@ request.interceptors.response.use(
   (response: AxiosResponse<ApiResult<unknown>>) => {
     const res = response.data
     // 如果返回的状态码不是 200，说明接口有错误
-    if (res.status !== 200) {
+    if (res.code !== 200) {
       console.error('API Error:', res.message)
       return Promise.reject(new Error(res.message || 'Error'))
     }

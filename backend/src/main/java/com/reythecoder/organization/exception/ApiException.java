@@ -1,19 +1,19 @@
 package com.reythecoder.organization.exception;
 
 public class ApiException extends RuntimeException {
-    private final int status;
+    private final int code;
 
-    public ApiException(int status, String message) {
+    public ApiException(int code, String message) {
         super(message);
-        this.status = status;
+        this.code = code;
     }
 
-    public ApiException(int status, String message, Throwable cause) {
+    public ApiException(int code, String message, Throwable cause) {
         super(message, cause);
-        this.status = status;
+        this.code = code;
     }
 
-    public int getStatus() {
-        return status;
+    public int getCode() {
+        return code;
     }
 }

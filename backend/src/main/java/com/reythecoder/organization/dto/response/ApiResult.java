@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiResult<T> {
-    private int status;
+    private int code;
     private String message;
     private T data;
 
     public static <T> ApiResult<T> success(T data) {
         return ApiResult.<T>builder()
-                .status(200)
+                .code(200)
                 .message("success")
                 .data(data)
                 .build();
@@ -24,23 +24,23 @@ public class ApiResult<T> {
 
     public static <T> ApiResult<T> success(String message, T data) {
         return ApiResult.<T>builder()
-                .status(200)
+                .code(200)
                 .message(message)
                 .data(data)
                 .build();
     }
 
-    public static <T> ApiResult<T> error(int status, String message) {
+    public static <T> ApiResult<T> error(int code, String message) {
         return ApiResult.<T>builder()
-                .status(status)
+                .code(code)
                 .message(message)
                 .data(null)
                 .build();
     }
 
-    public static <T> ApiResult<T> error(int status, String message, T data) {
+    public static <T> ApiResult<T> error(int code, String message, T data) {
         return ApiResult.<T>builder()
-                .status(status)
+                .code(code)
                 .message(message)
                 .data(data)
                 .build();

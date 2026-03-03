@@ -64,7 +64,7 @@ src/main/java/com/reythecoder/organization/
 **Key Conventions:**
 - DTOs use `Record` type (no Lombok)
 - Request DTOs suffixed with `Req`, Response DTOs with `Rsp`
-- `ApiResult<T>` returns `{ status, message, data }`
+- `ApiResult<T>` returns `{ code, message, data }`
 - Primary keys use UUIDv7 via `UUIDv7.randomUUID()`
 - All controllers return `ApiResult<T>` wrapped responses
 

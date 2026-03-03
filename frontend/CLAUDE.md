@@ -70,13 +70,13 @@ src/
 
 **TypeScript:**
 - All types defined in `types/index.ts`
-- `ApiResult<T>` matches backend: `{ status, message, data }`
+- `ApiResult<T>` matches backend: `{ code, message, data }`
 - Path alias: `@` → `src/`
 
 **API Layer:**
 - Base URL: `/api` (proxied to `http://localhost:8080`)
 - Generic methods: `get<T>`, `post<T>`, `put<T>`, `del<T>`
-- Response interceptor rejects on `status !== 200`
+- Response interceptor rejects on `code !== 200`
 
 **State Management (Pinia):**
 - One store per domain entity

@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ApiException.class)
     public ApiResult<Object> handleApiException(ApiException e) {
         logger.error("API异常: {}", e.getMessage(), e);
-        return ApiResult.error(e.getStatus(), e.getMessage());
+        return ApiResult.error(e.getCode(), e.getMessage());
     }
 
     // 处理方法参数验证异常

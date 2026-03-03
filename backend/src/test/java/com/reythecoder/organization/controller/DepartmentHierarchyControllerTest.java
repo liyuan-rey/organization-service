@@ -73,7 +73,7 @@ class DepartmentHierarchyControllerTest {
         mockMvc.perform(get("/api/department-hierarchy/roots"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data[0].childId").value(childId.toString()));
 
@@ -87,7 +87,7 @@ class DepartmentHierarchyControllerTest {
         mockMvc.perform(get("/api/department-hierarchy/children/{parentId}", parentId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data[0].parentId").value(parentId.toString()));
 
@@ -101,7 +101,7 @@ class DepartmentHierarchyControllerTest {
         mockMvc.perform(get("/api/department-hierarchy/{childId}", childId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.data.childId").value(childId.toString()));
 
         verify(hierarchyService, times(1)).getByChildId(childId);
@@ -116,7 +116,7 @@ class DepartmentHierarchyControllerTest {
                 .content(objectMapper.writeValueAsString(createReq)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.message").value("部门层级关系创建成功"));
 
         verify(hierarchyService, times(1)).create(createReq);

@@ -38,6 +38,6 @@ The project has implemented core organization and personnel management features:
 - Main application class: `OrganizationServiceApplication.java`
 - REST controllers: `DepartmentController`, `PersonnelController`, `PositionController`, `GroupController`, and association controllers
 - Service layer with interfaces and implementations
-- DTOs: `ApiResult` uses `status` field (not `code`) for response status
+- DTOs: `ApiResult` uses `code` field for response status
 - MapStruct mappers for entity-DTO mapping
 - Global exception handling and AOP logging
