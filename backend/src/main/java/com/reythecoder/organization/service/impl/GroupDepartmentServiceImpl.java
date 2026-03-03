@@ -60,7 +60,7 @@ public class GroupDepartmentServiceImpl implements GroupDepartmentService {
         logger.info("创建分组部门关联, groupId: {}, departmentId: {}", req.getGroupId(), req.getDepartmentId());
         
         if (groupDepartmentRepository.existsByGroupIdAndDepartmentId(req.getGroupId(), req.getDepartmentId())) {
-            throw new ApiException(400, "该分组已关联此部门");
+            throw new ApiException(400, "该部门已在此分组中");
         }
         
         GroupDepartmentEntity entity = new GroupDepartmentEntity(
