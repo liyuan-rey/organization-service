@@ -93,79 +93,141 @@ COMMENT ON COLUMN org_group.create_time IS 'Record creation time';
 COMMENT ON COLUMN org_group.update_time IS 'Record last update time';
 COMMENT ON COLUMN org_group.tenant_id IS 'Tenant identifier for multi-tenant data isolation';
 
--- Create universal entity relation table (core table for unified management of all entity relationships and hierarchies)
-CREATE TABLE IF NOT EXISTS org_entity_relation (
-    id UUID PRIMARY KEY, -- Primary key using 128-bit UUID v7 algorithm
-    node_id UUID NOT NULL, -- Unique identifier of the node (linked to specific entity tables)
-    node_name_alias VARCHAR(255) NOT NULL DEFAULT '', -- Display name or alias of the node
-    node_type VARCHAR(50) NOT NULL, -- Type of the node (e.g., 'PERSONNEL', 'DEPARTMENT', 'GROUP')
-    related_node_id UUID NOT NULL, -- Related node ID, used to build hierarchical relationships. 'related_node_id' of root node is '00000000-0000-0000-0000-000000000000'
-    relationship VARCHAR(50) NOT NULL, -- Type of the relationship of two nodes (e.g., 'org-structure' for organizational structure, 'address-book' for address book, 'directly-managed' for directly-managed line ministries, 'peer-C.G.M.' for party committees, government offices, and line ministries)
-    level INTEGER NOT NULL DEFAULT 0, -- Hierarchy level (depth), level of root node is 1
-    path VARCHAR(1000) NOT NULL DEFAULT '', -- Path from root to current node, e.g., "/1/5/12/"
-    sort_order INTEGER NOT NULL DEFAULT 0, -- Sort order for siblings
-    attributes JSONB, -- Extended attributes for storing dynamic node or relationship information
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE, -- Soft delete flag
-    create_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp, -- Record creation time
-    update_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp, -- Record last update time
-    tenant_id UUID NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000' -- Tenant identifier for multi-tenant data isolation
+-- ============================================================================
+-- 部门层级关系表 (Department Hierarchy Table)
+-- 用于存储部门的树形层级结构
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS org_department_hierarchy (
+    id UUID PRIMARY KEY,
+    parent_id UUID, -- 父部门ID，根节点为 NULL
+    child_id UUID NOT NULL, -- 子部门ID
+    level INTEGER NOT NULL DEFAULT 1, -- 层级深度，根节点为 1
+    path VARCHAR(1000) NOT NULL DEFAULT '', -- 从根到当前节点的路径
+    sort_order INTEGER NOT NULL DEFAULT 0, -- 同级节点排序
+    create_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    update_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    tenant_id UUID NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+    UNIQUE (child_id) -- 每个部门只能有一个父节点
 );
 
--- Comments for columns (example for PostgreSQL)
-COMMENT ON COLUMN org_entity_relation.id IS 'Primary key';
-COMMENT ON COLUMN org_entity_relation.node_id IS 'Unique identifier of the node (linked to specific entity tables)';
-COMMENT ON COLUMN org_entity_relation.node_name_alias IS 'Display name or alias of the node';
-COMMENT ON COLUMN org_entity_relation.node_type IS 'Type of the node (e.g., ''PERSONNEL'', ''DEPARTMENT'', ''GROUP'')';
-COMMENT ON COLUMN org_entity_relation.related_node_id IS 'Related node ID, used to build hierarchical relationships. ''related_node_id'' of root node is ''00000000-0000-0000-0000-000000000000'' ';
-COMMENT ON COLUMN org_entity_relation.relationship IS 'Type of the relationship of two nodes (e.g., ''org-structure'' for organizational structure, ''address-book'' for address book, ''directly-managed'' for directly-managed line ministries, ''peer-C.G.M.'' for party committees, government offices, and line ministries)';
-COMMENT ON COLUMN org_entity_relation.level IS 'Hierarchy level (depth), level of root node is 1';
-COMMENT ON COLUMN org_entity_relation.path IS 'Path from root to current node, e.g., "/1/5/12/"';
-COMMENT ON COLUMN org_entity_relation.sort_order IS 'Sort order for siblings';
-COMMENT ON COLUMN org_entity_relation.attributes IS 'Extended attributes for storing dynamic node or relationship information';
-COMMENT ON COLUMN org_entity_relation.is_deleted IS 'Soft delete flag';
-COMMENT ON COLUMN org_entity_relation.create_time IS 'Record creation time';
-COMMENT ON COLUMN org_entity_relation.update_time IS 'Record last update time';
-COMMENT ON COLUMN org_entity_relation.tenant_id IS 'Tenant identifier for multi-tenant data isolation';
+CREATE INDEX IF NOT EXISTS idx_org_dept_hierarchy_parent ON org_department_hierarchy(parent_id);
+CREATE INDEX IF NOT EXISTS idx_org_dept_hierarchy_child ON org_department_hierarchy(child_id);
+CREATE INDEX IF NOT EXISTS idx_org_dept_hierarchy_tenant ON org_department_hierarchy(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_org_dept_hierarchy_path ON org_department_hierarchy(path);
 
--- Indexing Strategy for org_entity_relation table
--- Primary Key Index (automatically created)
--- CREATE UNIQUE INDEX pk_org_entity_relation ON org_entity_relation(id);
+COMMENT ON COLUMN org_department_hierarchy.id IS 'Primary key';
+COMMENT ON COLUMN org_department_hierarchy.parent_id IS 'Parent department ID, NULL for root node';
+COMMENT ON COLUMN org_department_hierarchy.child_id IS 'Child department ID';
+COMMENT ON COLUMN org_department_hierarchy.level IS 'Hierarchy level, root node is 1';
+COMMENT ON COLUMN org_department_hierarchy.path IS 'Path from root to current node';
+COMMENT ON COLUMN org_department_hierarchy.sort_order IS 'Sort order among siblings';
 
--- Core Business Indexes
--- 为node_type字段添加索引
-CREATE INDEX IF NOT EXISTS idx_org_entity_relation_node_type ON org_entity_relation(node_type);
+-- ============================================================================
+-- 部门人员关联表 (Department Personnel Relation Table)
+-- 用于存储人员与部门的多对多关系，支持主次部门标识
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS org_department_personnel (
+    id UUID PRIMARY KEY,
+    department_id UUID NOT NULL, -- 部门ID
+    personnel_id UUID NOT NULL, -- 人员ID
+    is_primary BOOLEAN NOT NULL DEFAULT FALSE, -- 是否为主部门
+    position VARCHAR(100) NOT NULL DEFAULT '', -- 职位名称
+    sort_order INTEGER NOT NULL DEFAULT 0, -- 排序
+    create_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    update_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    tenant_id UUID NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+    UNIQUE (department_id, personnel_id) -- 防止重复关联
+);
 
--- 为relationship字段添加索引
-CREATE INDEX IF NOT EXISTS idx_org_entity_relation_relationship ON org_entity_relation(relationship);
+CREATE INDEX IF NOT EXISTS idx_org_dept_personnel_dept ON org_department_personnel(department_id);
+CREATE INDEX IF NOT EXISTS idx_org_dept_personnel_personnel ON org_department_personnel(personnel_id);
+CREATE INDEX IF NOT EXISTS idx_org_dept_personnel_tenant ON org_department_personnel(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_org_dept_personnel_primary ON org_department_personnel(personnel_id, is_primary);
 
--- For quickly locating a specific node by type and ID
-CREATE INDEX IF NOT EXISTS idx_org_entity_relation_node_lookup ON org_entity_relation(node_type, node_id);
+COMMENT ON COLUMN org_department_personnel.id IS 'Primary key';
+COMMENT ON COLUMN org_department_personnel.department_id IS 'Department ID';
+COMMENT ON COLUMN org_department_personnel.personnel_id IS 'Personnel ID';
+COMMENT ON COLUMN org_department_personnel.is_primary IS 'Is this the primary department for this person';
+COMMENT ON COLUMN org_department_personnel.position IS 'Position name in this department';
 
--- For querying all direct children of a node
-CREATE INDEX IF NOT EXISTS idx_org_entity_relation_related_lookup ON org_entity_relation(related_node_id);
+-- ============================================================================
+-- 分组层级关系表 (Group Hierarchy Table)
+-- 用于存储分组的树形层级结构
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS org_group_hierarchy (
+    id UUID PRIMARY KEY,
+    parent_id UUID, -- 父分组ID，根节点为 NULL
+    child_id UUID NOT NULL, -- 子分组ID
+    level INTEGER NOT NULL DEFAULT 1, -- 层级深度，根节点为 1
+    path VARCHAR(1000) NOT NULL DEFAULT '', -- 从根到当前节点的路径
+    sort_order INTEGER NOT NULL DEFAULT 0, -- 同级节点排序
+    create_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    update_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    tenant_id UUID NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+    UNIQUE (child_id) -- 每个分组只能有一个父节点
+);
 
--- For querying and sorting children of a node
-CREATE INDEX IF NOT EXISTS idx_org_entity_relation_children_sort ON org_entity_relation(related_node_id, sort_order);
+CREATE INDEX IF NOT EXISTS idx_org_group_hierarchy_parent ON org_group_hierarchy(parent_id);
+CREATE INDEX IF NOT EXISTS idx_org_group_hierarchy_child ON org_group_hierarchy(child_id);
+CREATE INDEX IF NOT EXISTS idx_org_group_hierarchy_tenant ON org_group_hierarchy(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_org_group_hierarchy_path ON org_group_hierarchy(path);
 
--- Multi-tenant and Status Indexes
--- For locating a node within a tenant
-CREATE INDEX IF NOT EXISTS idx_org_entity_relation_tenant_node ON org_entity_relation(tenant_id, node_type, node_id);
+COMMENT ON COLUMN org_group_hierarchy.id IS 'Primary key';
+COMMENT ON COLUMN org_group_hierarchy.parent_id IS 'Parent group ID, NULL for root node';
+COMMENT ON COLUMN org_group_hierarchy.child_id IS 'Child group ID';
+COMMENT ON COLUMN org_group_hierarchy.level IS 'Hierarchy level, root node is 1';
+COMMENT ON COLUMN org_group_hierarchy.path IS 'Path from root to current node';
+COMMENT ON COLUMN org_group_hierarchy.sort_order IS 'Sort order among siblings';
 
--- For querying children within a tenant
-CREATE INDEX IF NOT EXISTS idx_org_entity_relation_tenant_related ON org_entity_relation(tenant_id, related_node_id);
+-- ============================================================================
+-- 分组部门关联表 (Group Department Relation Table)
+-- 用于存储分组与部门的多对多关系，支持跨部门协作
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS org_group_department (
+    id UUID PRIMARY KEY,
+    group_id UUID NOT NULL, -- 分组ID
+    department_id UUID NOT NULL, -- 部门ID
+    role VARCHAR(100) NOT NULL DEFAULT '', -- 协作角色
+    sort_order INTEGER NOT NULL DEFAULT 0, -- 排序
+    create_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    update_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    tenant_id UUID NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+    UNIQUE (group_id, department_id) -- 防止重复关联
+);
 
--- For querying and sorting children within a tenant
-CREATE INDEX IF NOT EXISTS idx_org_entity_relation_tenant_related_sort ON org_entity_relation(tenant_id, related_node_id, sort_order);
+CREATE INDEX IF NOT EXISTS idx_org_group_dept_group ON org_group_department(group_id);
+CREATE INDEX IF NOT EXISTS idx_org_group_dept_dept ON org_group_department(department_id);
+CREATE INDEX IF NOT EXISTS idx_org_group_dept_tenant ON org_group_department(tenant_id);
 
--- For filtering active (not deleted) data within a tenant
-CREATE INDEX IF NOT EXISTS idx_org_entity_relation_active_tenant ON org_entity_relation(is_deleted, tenant_id);
+COMMENT ON COLUMN org_group_department.id IS 'Primary key';
+COMMENT ON COLUMN org_group_department.group_id IS 'Group ID';
+COMMENT ON COLUMN org_group_department.department_id IS 'Department ID';
+COMMENT ON COLUMN org_group_department.role IS 'Collaboration role';
 
--- Special Query Indexes (Optional, based on query needs)
--- If frequent path-based queries are needed
--- CREATE INDEX IF NOT EXISTS idx_org_entity_relation_path ON org_entity_relation(path);
+-- ============================================================================
+-- 分组人员关联表 (Group Personnel Relation Table)
+-- 用于存储分组与人员的多对多关系，支持不同角色
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS org_group_personnel (
+    id UUID PRIMARY KEY,
+    group_id UUID NOT NULL, -- 分组ID
+    personnel_id UUID NOT NULL, -- 人员ID
+    role VARCHAR(100) NOT NULL DEFAULT '', -- 组内角色
+    sort_order INTEGER NOT NULL DEFAULT 0, -- 排序
+    create_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    update_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    tenant_id UUID NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+    UNIQUE (group_id, personnel_id) -- 防止重复关联
+);
 
--- If frequent level-based queries are needed
--- CREATE INDEX IF NOT EXISTS idx_org_entity_relation_level ON org_entity_relation(level);
+CREATE INDEX IF NOT EXISTS idx_org_group_personnel_group ON org_group_personnel(group_id);
+CREATE INDEX IF NOT EXISTS idx_org_group_personnel_personnel ON org_group_personnel(personnel_id);
+CREATE INDEX IF NOT EXISTS idx_org_group_personnel_tenant ON org_group_personnel(tenant_id);
+
+COMMENT ON COLUMN org_group_personnel.id IS 'Primary key';
+COMMENT ON COLUMN org_group_personnel.group_id IS 'Group ID';
+COMMENT ON COLUMN org_group_personnel.personnel_id IS 'Personnel ID';
+COMMENT ON COLUMN org_group_personnel.role IS 'Role in the group';
 
 -- ----------------------------
 -- Function structure for upd_timestamp
@@ -179,11 +241,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- 为各表创建触发器
+-- Triggers for update timestamps
 CREATE TRIGGER update_org_department_updated_at BEFORE UPDATE ON org_department FOR EACH ROW EXECUTE PROCEDURE upd_timestamp();
 CREATE TRIGGER update_org_personnel_updated_at BEFORE UPDATE ON org_personnel FOR EACH ROW EXECUTE PROCEDURE upd_timestamp();
 CREATE TRIGGER update_org_group_updated_at BEFORE UPDATE ON org_group FOR EACH ROW EXECUTE PROCEDURE upd_timestamp();
-CREATE TRIGGER update_org_entity_relation_updated_at BEFORE UPDATE ON org_entity_relation FOR EACH ROW EXECUTE PROCEDURE upd_timestamp();
+CREATE TRIGGER update_org_dept_hierarchy_updated_at BEFORE UPDATE ON org_department_hierarchy FOR EACH ROW EXECUTE PROCEDURE upd_timestamp();
+CREATE TRIGGER update_org_dept_personnel_updated_at BEFORE UPDATE ON org_department_personnel FOR EACH ROW EXECUTE PROCEDURE upd_timestamp();
+CREATE TRIGGER update_org_group_hierarchy_updated_at BEFORE UPDATE ON org_group_hierarchy FOR EACH ROW EXECUTE PROCEDURE upd_timestamp();
+CREATE TRIGGER update_org_group_dept_updated_at BEFORE UPDATE ON org_group_department FOR EACH ROW EXECUTE PROCEDURE upd_timestamp();
+CREATE TRIGGER update_org_group_personnel_updated_at BEFORE UPDATE ON org_group_personnel FOR EACH ROW EXECUTE PROCEDURE upd_timestamp();
 
 -- Insert sample data for department
 -- Note: In a real application, UUIDs would be generated by the application
@@ -207,26 +273,28 @@ INSERT INTO org_group (id, name, description) VALUES
     ('99999999-9999-9999-9999-999999999999', '运维组', '负责基础设施和部署工作')
 ON CONFLICT (id) DO NOTHING;
 
--- Insert sample data for entity relations
--- Department hierarchy relationships
--- Assume department 1111... is root node, department 2222... is child of department 1111..., department 3333... is child of department 2222...
-INSERT INTO org_entity_relation
-(id, node_id, node_name_alias, node_type, related_node_id,  relationship, level, path, sort_order, tenant_id)
-VALUES
-('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '11111111-1111-1111-1111-111111111111', '人力资源部', 'DEPARTMENT', '00000000-0000-0000-0000-000000000000', 'org-structure', 1, '/11111111-1111-1111-1111-111111111111/', 1, '00000000-0000-0000-0000-000000000000'), -- Root department
-('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '22222222-2222-2222-2222-222222222222', '技术部', 'DEPARTMENT', '11111111-1111-1111-1111-111111111111', 'org-structure', 2, '/11111111-1111-1111-1111-111111111111/22222222-2222-2222-2222-222222222222/', 1, '00000000-0000-0000-0000-000000000000'), -- Child of department 1111...
-('cccccccc-cccc-cccc-cccc-cccccccccccc', '33333333-3333-3333-3333-333333333333', '开发部', 'DEPARTMENT', '22222222-2222-2222-2222-222222222222', 'org-structure', 3, '/11111111-1111-1111-1111-111111111111/22222222-2222-2222-2222-222222222222/33333333-3333-3333-3333-333333333333/', 1, '00000000-0000-0000-0000-000000000000'); -- Child of department 2222...
+-- ============================================================================
+-- Sample Data for Department Hierarchy
+-- 人力资源部(根) -> 技术部 -> 开发部
+-- ============================================================================
+INSERT INTO org_department_hierarchy (id, parent_id, child_id, level, path, sort_order, tenant_id) VALUES 
+    ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', NULL, '11111111-1111-1111-1111-111111111111', 1, '/11111111-1111-1111-1111-111111111111/', 1, '00000000-0000-0000-0000-000000000000'),
+    ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222', 2, '/11111111-1111-1111-1111-111111111111/22222222-2222-2222-2222-222222222222/', 1, '00000000-0000-0000-0000-000000000000'),
+    ('cccccccc-cccc-cccc-cccc-cccccccccccc', '22222222-2222-2222-2222-222222222222', '33333333-3333-3333-3333-333333333333', 3, '/11111111-1111-1111-1111-111111111111/22222222-2222-2222-2222-222222222222/33333333-3333-3333-3333-333333333333/', 1, '00000000-0000-0000-0000-000000000000')
+ON CONFLICT (child_id) DO NOTHING;
 
--- Personnel-department relationships
--- Assume personnel 4444... belongs to department 1111... and is the primary department
-INSERT INTO org_entity_relation
-(id, node_id, node_name_alias, node_type, related_node_id, relationship, level, path, sort_order, attributes, tenant_id)
-VALUES
-('dddddddd-dddd-dddd-dddd-dddddddddddd', '44444444-4444-4444-4444-444444444444', '张三', 'PERSONNEL', '11111111-1111-1111-1111-111111111111', 'org-structure', 2, '/11111111-1111-1111-1111-111111111111/44444444-4444-4444-4444-444444444444/', 1, '{"position": "HR经理", "is_primary": true}', '00000000-0000-0000-0000-000000000000');
+-- ============================================================================
+-- Sample Data for Department Personnel
+-- 张三属于人力资源部，职位HR经理，主部门
+-- ============================================================================
+INSERT INTO org_department_personnel (id, department_id, personnel_id, is_primary, position, sort_order, tenant_id) VALUES 
+    ('dddddddd-dddd-dddd-dddd-dddddddddddd', '11111111-1111-1111-1111-111111111111', '44444444-4444-4444-4444-444444444444', TRUE, 'HR经理', 1, '00000000-0000-0000-0000-000000000000')
+ON CONFLICT (department_id, personnel_id) DO NOTHING;
 
--- Personnel-group relationships
--- Assume personnel 4444... is member of group 7777... and is leader
-INSERT INTO org_entity_relation
-(id, node_id, node_name_alias, node_type, related_node_id, relationship, level, path, sort_order, attributes, tenant_id)
-VALUES
-('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '44444444-4444-4444-4444-444444444444', '张三', 'PERSONNEL', '77777777-7777-7777-7777-777777777777', 'org-structure', 2, '/77777777-7777-7777-7777-777777777777/44444444-4444-4444-4444-444444444444/', 1, '{"role": "Leader"}', '00000000-0000-0000-0000-000000000000');
+-- ============================================================================
+-- Sample Data for Group Personnel
+-- 张三属于开发组，角色为组长
+-- ============================================================================
+INSERT INTO org_group_personnel (id, group_id, personnel_id, role, sort_order, tenant_id) VALUES 
+    ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '77777777-7777-7777-7777-777777777777', '44444444-4444-4444-4444-444444444444', '组长', 1, '00000000-0000-0000-0000-000000000000')
+ON CONFLICT (group_id, personnel_id) DO NOTHING;
