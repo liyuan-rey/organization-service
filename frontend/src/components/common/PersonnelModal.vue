@@ -1,158 +1,87 @@
 <template>
-  <div v-if="show" class="fixed inset-0 z-50 overflow-y-auto">
-    <!-- 背景遮罩 -->
-    <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity" @click="$emit('close')"></div>
+  <Dialog :open="show" @update:open="$emit('close')">
+    <DialogContent class="sm:max-w-md">
+      <DialogHeader>
+        <DialogTitle>{{ personnel ? '编辑人员' : '新建人员' }}</DialogTitle>
+      </DialogHeader>
 
-    <!-- 模态框 -->
-    <div class="flex min-h-full items-center justify-center p-4">
-      <div class="relative bg-white rounded-lg shadow-xl max-w-md w-full">
-        <!-- 标题 -->
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-          <h3 class="text-lg font-semibold text-gray-800">
-            {{ personnel ? '编辑人员' : '新建人员' }}
-          </h3>
-          <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+      <form @submit.prevent="handleSubmit" class="space-y-4">
+        <div class="space-y-2">
+          <Label for="name">姓名</Label>
+          <Input id="name" v-model="formData.name" type="text" required placeholder="请输入姓名" />
         </div>
 
-        <!-- 表单 -->
-        <form @submit.prevent="handleSubmit" class="px-6 py-4 space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">姓名</label>
-            <input
-              v-model="formData.name"
-              type="text"
-              required
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="请输入姓名"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">工号</label>
-            <input
-              v-model="formData.code"
-              type="text"
-              required
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="请输入工号"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">所属部门</label>
-            <select
-              v-model="formData.departmentId"
-              required
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="" disabled>请选择部门</option>
-              <option v-for="dept in departmentOptions" :key="dept.value" :value="dept.value">
-                {{ dept.label }}
-              </option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">职位</label>
-            <input
-              v-model="formData.position"
-              type="text"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="请输入职位"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
-            <input
-              v-model="formData.email"
-              type="email"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="请输入邮箱"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">电话</label>
-            <input
-              v-model="formData.phone"
-              type="tel"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="请输入电话"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
-            <select
-              v-model.number="formData.status"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option :value="1">启用</option>
-              <option :value="0">禁用</option>
-            </select>
-          </div>
-        </form>
-
-        <!-- 按钮 -->
-        <div class="flex justify-end space-x-3 px-6 py-4 border-t border-gray-200">
-          <button
-            type="button"
-            @click="$emit('close')"
-            class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            取消
-          </button>
-          <button
-            type="submit"
-            @click="handleSubmit"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            保存
-          </button>
+        <div class="space-y-2">
+          <Label for="code">工号</Label>
+          <Input id="code" v-model="formData.code" type="text" required placeholder="请输入工号" />
         </div>
-      </div>
-    </div>
-  </div>
+
+        <div class="space-y-2">
+          <Label for="departmentId">所属部门</Label>
+          <Select v-model="formData.departmentId" required>
+            <SelectTrigger><SelectValue placeholder="请选择部门" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem v-for="dept in departmentOptions" :key="dept.value" :value="dept.value">{{ dept.label }}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div class="space-y-2">
+          <Label for="position">职位</Label>
+          <Input id="position" v-model="formData.position" type="text" placeholder="请输入职位" />
+        </div>
+
+        <div class="space-y-2">
+          <Label for="email">邮箱</Label>
+          <Input id="email" v-model="formData.email" type="email" placeholder="请输入邮箱" />
+        </div>
+
+        <div class="space-y-2">
+          <Label for="phone">电话</Label>
+          <Input id="phone" v-model="formData.phone" type="tel" placeholder="请输入电话" />
+        </div>
+
+        <div class="space-y-2">
+          <Label for="status">状态</Label>
+          <Select v-model="statusValue">
+            <SelectTrigger><SelectValue placeholder="请选择状态" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">启用</SelectItem>
+              <SelectItem value="0">禁用</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </form>
+
+      <DialogFooter>
+        <Button type="button" variant="outline" @click="$emit('close')">取消</Button>
+        <Button type="submit" @click="handleSubmit">保存</Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import type { Personnel, PersonnelCreateReq, PersonnelUpdateReq } from '@/types'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-interface DepartmentOption {
-  label: string
-  value: string
-}
+interface Option { label: string; value: string }
+interface Props { show: boolean; personnel?: Personnel | null; departmentOptions: Option[] }
+const props = withDefaults(defineProps<Props>(), { personnel: null, departmentOptions: () => [] })
+const emit = defineEmits<{ close: []; save: [data: PersonnelCreateReq | PersonnelUpdateReq] }>()
 
-interface Props {
-  show: boolean
-  personnel?: Personnel | null
-  departmentOptions: DepartmentOption[]
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  personnel: null,
-  departmentOptions: () => [],
+const formData = ref<{ name: string; code: string; email: string; phone: string; departmentId: string; position: string; status: number }>({
+  name: '', code: '', email: '', phone: '', departmentId: '', position: '', status: 1,
 })
 
-const emit = defineEmits<{
-  close: []
-  save: [data: PersonnelCreateReq | PersonnelUpdateReq]
-}>()
-
-const formData = ref<PersonnelCreateReq>({
-  name: '',
-  code: '',
-  email: '',
-  phone: '',
-  departmentId: '',
-  position: '',
-  status: 1,
+const statusValue = computed({
+  get: () => String(formData.value.status),
+  set: (val: string) => { formData.value.status = Number(val) },
 })
 
 watch(
@@ -160,38 +89,17 @@ watch(
   (person) => {
     if (person) {
       formData.value = {
-        name: person.name,
-        code: person.code,
-        email: person.email || '',
-        phone: person.phone || '',
-        departmentId: person.departmentId,
-        position: person.position || '',
-        status: person.status,
+        name: person.name, code: person.code, email: person.email || '', phone: person.phone || '',
+        departmentId: person.departmentId, position: person.position || '', status: person.status,
       }
     } else {
-      formData.value = {
-        name: '',
-        code: '',
-        email: '',
-        phone: '',
-        departmentId: '',
-        position: '',
-        status: 1,
-      }
+      formData.value = { name: '', code: '', email: '', phone: '', departmentId: '', position: '', status: 1 }
     }
   },
   { immediate: true }
 )
 
 function handleSubmit() {
-  emit('save', {
-    name: formData.value.name,
-    code: formData.value.code,
-    email: formData.value.email,
-    phone: formData.value.phone,
-    departmentId: formData.value.departmentId,
-    position: formData.value.position,
-    status: formData.value.status || 1,
-  })
+  emit('save', { ...formData.value, status: formData.value.status || 1 })
 }
 </script>

@@ -2,102 +2,71 @@
   <div>
     <!-- 页面标题和操作按钮 -->
     <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-bold text-gray-800">部门管理</h2>
-      <button
-        @click="showCreateModal = true"
-        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
-      >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        <span>新建部门</span>
-      </button>
+      <h2 class="text-2xl font-bold">部门管理</h2>
+      <Button @click="showCreateModal = true">
+        <Plus class="mr-2 h-4 w-4" />
+        新建部门
+      </Button>
     </div>
 
     <!-- 部门列表卡片 -->
-    <div class="bg-white rounded-lg shadow">
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                部门名称
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                部门编码
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                描述
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                状态
-              </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                创建时间
-              </th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                操作
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-if="store.loading">
-              <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+    <Card>
+      <CardContent class="p-0">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>部门名称</TableHead>
+              <TableHead>部门编码</TableHead>
+              <TableHead>描述</TableHead>
+              <TableHead>状态</TableHead>
+              <TableHead>创建时间</TableHead>
+              <TableHead class="text-right">操作</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow v-if="store.loading">
+              <TableCell colspan="6" class="text-center py-8">
                 <div class="flex justify-center items-center space-x-2">
-                  <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>
-                  <span>加载中...</span>
+                  <Loader2 class="h-5 w-5 animate-spin" />
+                  <span class="text-muted-foreground">加载中...</span>
                 </div>
-              </td>
-            </tr>
-            <tr v-else-if="store.departments.length === 0">
-              <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+              </TableCell>
+            </TableRow>
+            <TableRow v-else-if="store.departments.length === 0">
+              <TableCell colspan="6" class="text-center py-8 text-muted-foreground">
                 暂无部门数据
-              </td>
-            </tr>
-            <tr v-for="dept in store.departments" :key="dept.id" class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap">
+              </TableCell>
+            </TableRow>
+            <TableRow v-for="dept in store.departments" :key="dept.id">
+              <TableCell>
                 <div class="flex items-center space-x-2">
-                  <span class="text-sm font-medium text-gray-900">{{ dept.name }}</span>
-                  <span class="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                    {{ dept.personCount ?? 0 }}人
-                  </span>
+                  <span class="font-medium">{{ dept.name }}</span>
+                  <Badge variant="secondary">{{ dept.personCount ?? 0 }}人</Badge>
                 </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-500">{{ dept.code }}</div>
-              </td>
-              <td class="px-6 py-4">
-                <div class="text-sm text-gray-500 max-w-xs truncate">{{ dept.description }}</div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span
-                  :class="[
-                    'px-2 py-1 text-xs font-medium rounded-full',
-                    dept.status === 1 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800',
-                  ]"
-                >
+              </TableCell>
+              <TableCell class="text-muted-foreground">{{ dept.code }}</TableCell>
+              <TableCell>
+                <div class="max-w-xs truncate text-muted-foreground">{{ dept.description }}</div>
+              </TableCell>
+              <TableCell>
+                <Badge :variant="dept.status === 1 ? 'success' : 'secondary'">
                   {{ dept.status === 1 ? '启用' : '禁用' }}
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-500">{{ formatDate(dept.createTime) }}</div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <button @click="editDepartment(dept)" class="text-blue-600 hover:text-blue-900 mr-3">
-                  编辑
-                </button>
-                <button @click="deleteDepartment(dept)" class="text-red-600 hover:text-red-900">
-                  删除
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+                </Badge>
+              </TableCell>
+              <TableCell class="text-muted-foreground">{{ formatDate(dept.createTime) }}</TableCell>
+              <TableCell class="text-right">
+                <Button variant="ghost" size="sm" @click="editDepartment(dept)">
+                  <Pencil class="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="sm" @click="confirmDelete(dept)">
+                  <Trash2 class="h-4 w-4 text-destructive" />
+                </Button>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
 
     <!-- 新建/编辑部门模态框 -->
     <DepartmentModal
@@ -106,25 +75,51 @@
       @save="handleSave"
       @close="handleClose"
     />
+
+    <!-- 删除确认对话框 -->
+    <AlertDialog :open="showDeleteDialog" @update:open="showDeleteDialog = false">
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>确认删除</AlertDialogTitle>
+          <AlertDialogDescription>
+            确定要删除部门 "{{ deletingDepartment?.name }}" 吗？此操作无法撤销。
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>取消</AlertDialogCancel>
+          <AlertDialogAction @click="handleDelete">删除</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useDepartmentStore } from '@/stores/department'
 import type { Department, DepartmentCreateReq, DepartmentUpdateReq } from '@/types'
 import DepartmentModal from '@/components/common/DepartmentModal.vue'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Badge } from '@/components/ui/badge'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { Plus, Pencil, Trash2, Loader2 } from 'lucide-vue-next'
 
 const store = useDepartmentStore()
 const showCreateModal = ref(false)
 const editingDepartment = ref<Department | null>(null)
-
-const departmentOptions = computed(() => {
-  return store.departments.map((dept) => ({
-    label: dept.name,
-    value: dept.id,
-  }))
-})
+const showDeleteDialog = ref(false)
+const deletingDepartment = ref<Department | null>(null)
 
 onMounted(() => {
   store.fetchDepartments()
@@ -139,10 +134,17 @@ function editDepartment(dept: Department) {
   showCreateModal.value = true
 }
 
-function deleteDepartment(dept: Department) {
-  if (confirm(`确定要删除部门 "${dept.name}" 吗？`)) {
-    store.deleteDepartment(dept.id)
+function confirmDelete(dept: Department) {
+  deletingDepartment.value = dept
+  showDeleteDialog.value = true
+}
+
+function handleDelete() {
+  if (deletingDepartment.value) {
+    store.deleteDepartment(deletingDepartment.value.id)
   }
+  showDeleteDialog.value = false
+  deletingDepartment.value = null
 }
 
 function handleSave(data: DepartmentCreateReq | DepartmentUpdateReq) {
