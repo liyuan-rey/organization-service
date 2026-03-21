@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
 
@@ -21,44 +21,47 @@ async function takeScreenshots() {
     fs.mkdirSync(SCREENSHOTS_DIR, { recursive: true });
   }
 
-  const browser = await puppeteer.launch({
-    headless: 'new',
+  const browser = await chromium.launch({
+    headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
+  });
+
+  const context = await browser.newContext({
+    viewport: { width: 1400, height: 900 }
   });
 
   const results = [];
 
   for (const pageConfig of PAGES) {
+    const page = await context.newPage();
+
+    // Capture console messages
+    page.on('console', msg => {
+      console.log(`  [Console] ${msg.type()}: ${msg.text()}`);
+    });
+    page.on('pageerror', error => {
+      console.log(`  [Page Error] ${error.message}`);
+    });
+
     try {
-      const tab = await browser.newPage();
-      await tab.setViewport({ width: 1400, height: 900 });
-
-      // Capture console messages
-      tab.on('console', msg => {
-        console.log(`  [Console] ${msg.type()}: ${msg.text()}`);
-      });
-      tab.on('pageerror', error => {
-        console.log(`  [Page Error] ${error.message}`);
-      });
-
       console.log(`Capturing: ${pageConfig.url}`);
-      await tab.goto(`${BASE_URL}${pageConfig.url}`, {
-        waitUntil: 'networkidle2',
+      await page.goto(`${BASE_URL}${pageConfig.url}`, {
+        waitUntil: 'networkidle',
         timeout: 30000
       });
 
       // Wait for Vue to render - wait for main content element
       try {
-        await tab.waitForSelector(pageConfig.waitFor, { timeout: 10000 });
+        await page.waitForSelector(pageConfig.waitFor, { timeout: 10000 });
       } catch (e) {
         console.log(`  Warning: selector "${pageConfig.waitFor}" not found, using timeout`);
       }
 
       // Additional wait for animations/data
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await page.waitForTimeout(3000);
 
       const screenshotPath = path.join(SCREENSHOTS_DIR, `${pageConfig.name}.png`);
-      await tab.screenshot({
+      await page.screenshot({
         path: screenshotPath,
         fullPage: false
       });
@@ -71,7 +74,6 @@ async function takeScreenshots() {
       });
 
       console.log(`  Saved: ${screenshotPath}`);
-      await tab.close();
     } catch (error) {
       results.push({
         page: pageConfig.title,
@@ -80,6 +82,8 @@ async function takeScreenshots() {
         error: error.message
       });
       console.error(`  Error: ${error.message}`);
+    } finally {
+      await page.close();
     }
   }
 

@@ -145,12 +145,18 @@ src/
 
 ## Screenshot Tool
 
-For UI verification, use Puppeteer to capture screenshots:
+For UI verification, use Playwright to capture screenshots:
 
 ```bash
 # Prerequisites
 cd frontend
-npm install  # Puppeteer is included in devDependencies
+npm install  # Playwright is included in devDependencies
+
+# Install Playwright browsers (use mirror for China if needed)
+# China mirror (faster in China):
+PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright npx playwright install chromium
+# Or use official source:
+npx playwright install chromium
 
 # Start dev server first
 npm run dev

@@ -32,7 +32,12 @@ npm run type-check     # Type check only
 npm run build          # Production build to dist/
 npm run preview        # Preview production build
 
-# Screenshots (using Puppeteer)
+# Screenshots (using Playwright)
+# First time: install browser
+npx playwright install chromium
+# For China users (faster):
+PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright npx playwright install chromium
+# Then run screenshot script
 node screenshot.cjs    # Capture screenshots to screenshots/
 ```
 

@@ -15,7 +15,7 @@
   - **Element Plus**: 复杂组件 (Table, Form, Select, DatePicker 等)
   - **shadcn-vue**: 基础组件 (Button, Card, Dialog, Badge 等)
 - **图标**: lucide-vue-next + @element-plus/icons-vue
-- **测试工具**: Puppeteer (截图验证)
+- **测试工具**: Playwright (截图验证)
 
 ## 📦 功能特性
 
@@ -60,9 +60,15 @@ npm run build
 npm run preview
 ```
 
-### 截图验证 (Puppeteer)
+### 截图验证 (Playwright)
 
 ```bash
+# 首次使用需安装浏览器
+npx playwright install chromium
+
+# 国内用户可使用镜像加速
+PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright npx playwright install chromium
+
 # 确保开发服务器正在运行
 npm run dev
 
