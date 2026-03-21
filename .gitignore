@@ -1,0 +1,49 @@
+# ================================
+# Build Outputs
+# ================================
+
+build/
+
+# ================================
+# IDE & Editor
+# ================================
+
+### VS Code ###
+.vscode/
+
+### Claude ###
+.claude/settings.local*.json
+
+# ================================
+# Logs & Database
+# ================================
+
+logs/
+*.log
+db/data/
+
+# ================================
+# Environment & Secrets
+# ================================
+
+settings.local*.json
+
+.env
+.env.local
+.env.*.local
+.env.*.prod
+.env.*.dev
+
+### Docker ###
+docker-compose.override.yml
+
+# ================================
+# System & Temp Files
+# ================================
+
+.DS_Store
+Thumbs.db
+*~
+*.tmp
+*.swp
+*.swo
