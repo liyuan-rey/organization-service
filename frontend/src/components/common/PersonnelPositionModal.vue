@@ -1,121 +1,210 @@
 <template>
-  <Dialog :open="show" @update:open="$emit('close')">
-    <DialogContent class="sm:max-w-2xl">
-      <DialogHeader>
-        <DialogTitle>{{ item ? '编辑任职' : '新增任职' }}</DialogTitle>
-      </DialogHeader>
+  <el-dialog
+    :model-value="show"
+    :title="item ? '编辑任职' : '新增任职'"
+    width="550"
+    @update:model-value="$emit('close')"
+  >
+    <el-form
+      ref="formRef"
+      :model="formData"
+      :rules="rules"
+      label-width="80px"
+      label-position="left"
+    >
+      <el-form-item label="人员" prop="personnelId">
+        <el-select
+          v-model="formData.personnelId"
+          placeholder="请选择人员"
+          filterable
+          :disabled="!!item"
+        >
+          <el-option
+            v-for="p in personnelStore.personnel"
+            :key="p.id"
+            :label="p.name"
+            :value="p.id"
+          />
+        </el-select>
+      </el-form-item>
 
-      <form @submit.prevent="handleSubmit" class="space-y-4">
-        <div class="space-y-2">
-          <Label for="personnelId">人员 <span class="text-destructive">*</span></Label>
-          <Select v-model="formData.personnelId" required :disabled="!!item">
-            <SelectTrigger><SelectValue placeholder="请选择人员" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem v-for="opt in personnelOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <el-form-item label="岗位" prop="positionId">
+        <el-select
+          v-model="formData.positionId"
+          placeholder="请选择岗位"
+          :disabled="!!item"
+        >
+          <el-option
+            v-for="p in positionStore.positions"
+            :key="p.id"
+            :label="p.name"
+            :value="p.id"
+          />
+        </el-select>
+      </el-form-item>
 
-        <div class="space-y-2">
-          <Label for="positionId">岗位 <span class="text-destructive">*</span></Label>
-          <Select v-model="formData.positionId" required :disabled="!!item">
-            <SelectTrigger><SelectValue placeholder="请选择岗位" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem v-for="opt in positionOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <el-form-item label="部门" prop="departmentId">
+        <el-tree-select
+          v-model="formData.departmentId"
+          :data="departmentTreeData"
+          :props="{ label: 'name', value: 'id', children: 'children' }"
+          placeholder="请选择部门"
+          clearable
+          check-strictly
+          :render-after-expand="false"
+        />
+      </el-form-item>
 
-        <div class="space-y-2">
-          <Label for="departmentId">部门</Label>
-          <Select v-model="departmentIdValue">
-            <SelectTrigger><SelectValue placeholder="请选择部门" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="__null__">无</SelectItem>
-              <SelectItem v-for="opt in departmentOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <el-form-item label="岗位类型" prop="isPrimary">
+        <el-radio-group v-model="formData.isPrimary">
+          <el-radio :value="true">主岗</el-radio>
+          <el-radio :value="false">兼岗</el-radio>
+        </el-radio-group>
+      </el-form-item>
 
-        <div class="space-y-2">
-          <Label>是否主岗</Label>
-          <Select v-model="isPrimaryValue">
-            <SelectTrigger class="w-40"><SelectValue placeholder="请选择" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="true">主岗</SelectItem>
-              <SelectItem value="false">兼岗</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="开始日期" prop="startDate">
+            <el-date-picker
+              v-model="formData.startDate"
+              type="date"
+              placeholder="选择开始日期"
+              value-format="YYYY-MM-DD"
+              style="width: 100%"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="结束日期" prop="endDate">
+            <el-date-picker
+              v-model="formData.endDate"
+              type="date"
+              placeholder="选择结束日期"
+              value-format="YYYY-MM-DD"
+              style="width: 100%"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
 
-        <div class="grid grid-cols-2 gap-4">
-          <div class="space-y-2">
-            <Label for="startDate">开始日期</Label>
-            <Input id="startDate" :model-value="formData.startDate ?? ''" type="date" @update:model-value="(v: string | number) => formData.startDate = String(v) || null" />
-          </div>
-          <div class="space-y-2">
-            <Label for="endDate">结束日期</Label>
-            <Input id="endDate" :model-value="formData.endDate ?? ''" type="date" @update:model-value="(v: string | number) => formData.endDate = String(v) || null" />
-          </div>
-        </div>
+      <el-form-item label="状态" prop="status">
+        <el-radio-group v-model="formData.status">
+          <el-radio :value="1">在职</el-radio>
+          <el-radio :value="0">离任</el-radio>
+        </el-radio-group>
+      </el-form-item>
+    </el-form>
 
-        <div class="space-y-2">
-          <Label>状态</Label>
-          <Select v-model="statusValue">
-            <SelectTrigger class="w-40"><SelectValue placeholder="请选择状态" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">在职</SelectItem>
-              <SelectItem value="0">离任</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </form>
-
-      <DialogFooter>
-        <Button type="button" variant="outline" @click="$emit('close')">取消</Button>
-        <Button type="submit" @click="handleSubmit">保存</Button>
-      </DialogFooter>
-    </DialogContent>
-  </Dialog>
+    <template #footer>
+      <el-button @click="$emit('close')">取消</el-button>
+      <el-button type="primary" :loading="submitting" @click="handleSubmit">
+        保存
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import type { FormInstance, FormRules } from 'element-plus'
 import type { PersonnelPosition, PersonnelPositionReq } from '@/types'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { usePersonnelStore } from '@/stores/personnel'
+import { usePositionStore } from '@/stores/position'
+import { useDepartmentStore } from '@/stores/department'
 
-interface Option { label: string; value: string }
-const props = defineProps<{ show: boolean; item?: PersonnelPosition | null; personnelOptions: Option[]; positionOptions: Option[]; departmentOptions: Option[] }>()
-const emit = defineEmits<{ (e: 'save', data: PersonnelPositionReq): void; (e: 'close'): void }>()
+interface Props {
+  show: boolean
+  item?: PersonnelPosition | null
+}
 
-const formData = ref<PersonnelPositionReq>({ personnelId: '', positionId: '', departmentId: null, isPrimary: true, startDate: null, endDate: null, status: 1 })
+const props = withDefaults(defineProps<Props>(), { item: null })
+const emit = defineEmits<{
+  close: []
+  save: [data: PersonnelPositionReq]
+}>()
 
-const departmentIdValue = computed({
-  get: () => formData.value.departmentId || '__null__',
-  set: (val: string) => { formData.value.departmentId = val === '__null__' ? null : val },
+const personnelStore = usePersonnelStore()
+const positionStore = usePositionStore()
+const departmentStore = useDepartmentStore()
+const formRef = ref<FormInstance>()
+const submitting = ref(false)
+
+const formData = ref<PersonnelPositionReq>({
+  personnelId: '',
+  positionId: '',
+  departmentId: null,
+  isPrimary: true,
+  startDate: null,
+  endDate: null,
+  status: 1,
 })
 
-const isPrimaryValue = computed({
-  get: () => String(formData.value.isPrimary),
-  set: (val: string) => { formData.value.isPrimary = val === 'true' },
-})
+const rules: FormRules = {
+  personnelId: [{ required: true, message: '请选择人员', trigger: 'change' }],
+  positionId: [{ required: true, message: '请选择岗位', trigger: 'change' }],
+}
 
-const statusValue = computed({
-  get: () => String(formData.value.status),
-  set: (val: string) => { formData.value.status = Number(val) },
-})
+// 部门树形数据
+const departmentTreeData = computed(() => {
+  const departments = departmentStore.departments
 
-watch(() => props.item, (item) => {
-  if (item) {
-    formData.value = { personnelId: item.personnelId, positionId: item.positionId, departmentId: item.departmentId, isPrimary: item.isPrimary, startDate: item.startDate, endDate: item.endDate, status: item.status }
-  } else {
-    formData.value = { personnelId: '', positionId: '', departmentId: null, isPrimary: true, startDate: new Date().toISOString().split('T')[0], endDate: null, status: 1 }
+  const buildTree = (items: typeof departments, parentId: string | null = null): any[] => {
+    return items
+      .filter((item) => item.parentId === parentId)
+      .map((item) => ({
+        ...item,
+        children: buildTree(items, item.id),
+      }))
   }
-}, { immediate: true })
 
-function handleSubmit() { emit('save', formData.value) }
+  return buildTree(departments)
+})
+
+watch(
+  () => props.item,
+  (item) => {
+    if (item) {
+      formData.value = {
+        personnelId: item.personnelId,
+        positionId: item.positionId,
+        departmentId: item.departmentId,
+        isPrimary: item.isPrimary,
+        startDate: item.startDate,
+        endDate: item.endDate,
+        status: item.status,
+      }
+    } else {
+      formData.value = {
+        personnelId: '',
+        positionId: '',
+        departmentId: null,
+        isPrimary: true,
+        startDate: new Date().toISOString().split('T')[0],
+        endDate: null,
+        status: 1,
+      }
+    }
+  },
+  { immediate: true }
+)
+
+async function handleSubmit() {
+  const valid = await formRef.value?.validate().catch(() => false)
+  if (!valid) return
+
+  submitting.value = true
+  try {
+    emit('save', {
+      personnelId: formData.value.personnelId,
+      positionId: formData.value.positionId,
+      departmentId: formData.value.departmentId || null,
+      isPrimary: formData.value.isPrimary ?? true,
+      startDate: formData.value.startDate || null,
+      endDate: formData.value.endDate || null,
+      status: formData.value.status ?? 1,
+    })
+  } finally {
+    submitting.value = false
+  }
+}
 </script>

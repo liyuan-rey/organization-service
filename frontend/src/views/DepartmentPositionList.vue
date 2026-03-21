@@ -1,91 +1,89 @@
 <template>
-  <div>
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-bold">部门岗位管理</h2>
-      <Button @click="showCreateModal = true"><Plus class="mr-2 h-4 w-4" />配置岗位</Button>
+  <div class="space-y-4">
+    <!-- 页面标题 -->
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight">部门岗位管理</h1>
+        <p class="text-muted-foreground text-sm">配置部门与岗位的关联关系</p>
+      </div>
+      <el-button type="primary" @click="showCreateModal = true">
+        <el-icon class="mr-1"><Plus /></el-icon>
+        配置岗位
+      </el-button>
     </div>
 
     <!-- 筛选条件 -->
-    <Card class="mb-6">
-      <CardContent class="p-4">
-        <div class="grid grid-cols-2 gap-4">
-          <div class="space-y-2">
-            <Label>部门</Label>
-            <Select v-model="filterDepartmentId">
-              <SelectTrigger><SelectValue placeholder="全部部门" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">全部部门</SelectItem>
-                <SelectItem v-for="d in departmentOptions" :key="d.value" :value="d.value">{{ d.label }}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div class="space-y-2">
-            <Label>岗位</Label>
-            <Select v-model="filterPositionId">
-              <SelectTrigger><SelectValue placeholder="全部岗位" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">全部岗位</SelectItem>
-                <SelectItem v-for="p in positionOptions" :key="p.value" :value="p.value">{{ p.label }}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <el-card class="shadow-sm">
+      <div class="flex flex-wrap gap-4">
+        <el-select v-model="filterDepartmentId" placeholder="选择部门" clearable class="w-48">
+          <el-option
+            v-for="d in departmentOptions"
+            :key="d.value"
+            :label="d.label"
+            :value="d.value"
+          />
+        </el-select>
+        <el-select v-model="filterPositionId" placeholder="选择岗位" clearable class="w-48">
+          <el-option
+            v-for="p in positionOptions"
+            :key="p.value"
+            :label="p.label"
+            :value="p.value"
+          />
+        </el-select>
+      </div>
+    </el-card>
 
-    <Card>
-      <CardContent class="p-0">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>部门</TableHead>
-              <TableHead>岗位</TableHead>
-              <TableHead>是否主岗</TableHead>
-              <TableHead>排序</TableHead>
-              <TableHead class="text-right">操作</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow v-if="store.loading">
-              <TableCell colspan="5" class="text-center py-8">
-                <div class="flex justify-center items-center space-x-2">
-                  <Loader2 class="h-5 w-5 animate-spin" /><span class="text-muted-foreground">加载中...</span>
-                </div>
-              </TableCell>
-            </TableRow>
-            <TableRow v-else-if="filteredData.length === 0">
-              <TableCell colspan="5" class="text-center py-8 text-muted-foreground">暂无部门岗位关联数据</TableCell>
-            </TableRow>
-            <TableRow v-for="item in filteredData" :key="item.id">
-              <TableCell class="font-medium">{{ item.departmentName }}</TableCell>
-              <TableCell>{{ item.positionName }}</TableCell>
-              <TableCell>
-                <Badge :variant="item.isPrimary ? 'default' : 'secondary'">{{ item.isPrimary ? '主岗' : '普通岗' }}</Badge>
-              </TableCell>
-              <TableCell class="text-muted-foreground">{{ item.sortOrder }}</TableCell>
-              <TableCell class="text-right">
-                <Button variant="ghost" size="sm" @click="confirmDelete(item)"><Trash2 class="h-4 w-4 text-destructive" /></Button>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+    <!-- 表格 -->
+    <el-card class="shadow-sm">
+      <el-table v-loading="store.loading" :data="filteredData" stripe highlight-current-row>
+        <el-table-column prop="departmentName" label="部门" min-width="150">
+          <template #default="{ row }">
+            <span class="font-medium">{{ row.departmentName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="positionName" label="岗位" min-width="150" />
+        <el-table-column prop="isPrimary" label="岗位类型" width="120" align="center">
+          <template #default="{ row }">
+            <el-tag :type="row.isPrimary ? 'primary' : 'info'" size="small">
+              {{ row.isPrimary ? '主岗' : '普通岗' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="sortOrder" label="排序" width="80" align="center" />
+        <el-table-column prop="createTime" label="创建时间" width="180">
+          <template #default="{ row }">
+            {{ formatDate(row.createTime) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="80" fixed="right">
+          <template #default="{ row }">
+            <el-button type="danger" link size="small" @click="confirmDelete(row)">
+              <el-icon><Trash /></el-icon>
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <DepartmentPositionModal v-model:show="showCreateModal" :department-options="departmentOptions" :position-options="positionOptions" @save="handleSave" @close="handleClose" />
+      <!-- 空状态 -->
+      <el-empty v-if="filteredData.length === 0 && !store.loading" description="暂无部门岗位关联数据" />
+    </el-card>
 
-    <AlertDialog :open="showDeleteDialog" @update:open="showDeleteDialog = false">
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>确认删除</AlertDialogTitle>
-          <AlertDialogDescription>确定要删除部门 "{{ deletingItem?.departmentName }}" 的岗位 "{{ deletingItem?.positionName }}" 配置吗？</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>取消</AlertDialogCancel>
-          <AlertDialogAction @click="handleDelete">删除</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <!-- 新建弹窗 -->
+    <DepartmentPositionModal
+      v-model:show="showCreateModal"
+      @save="handleSave"
+      @close="showCreateModal = false"
+    />
+
+    <!-- 删除确认对话框 -->
+    <el-dialog v-model="showDeleteDialog" title="确认删除" width="400">
+      <p>确定要删除部门 "{{ deletingItem?.departmentName }}" 的岗位 "{{ deletingItem?.positionName }}" 配置吗？</p>
+      <template #footer>
+        <el-button @click="showDeleteDialog = false">取消</el-button>
+        <el-button type="danger" @click="handleDelete">删除</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -96,14 +94,8 @@ import { useDepartmentStore } from '@/stores/department'
 import { usePositionStore } from '@/stores/position'
 import type { DepartmentPosition, DepartmentPositionReq } from '@/types'
 import DepartmentPositionModal from '@/components/common/DepartmentPositionModal.vue'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
-import { Plus, Trash2, Loader2 } from 'lucide-vue-next'
+import { Plus, Trash } from 'lucide-vue-next'
+import { ElMessage } from 'element-plus'
 
 const store = useDepartmentPositionStore()
 const departmentStore = useDepartmentStore()
@@ -115,23 +107,63 @@ const deletingItem = ref<DepartmentPosition | null>(null)
 const filterDepartmentId = ref('')
 const filterPositionId = ref('')
 
-const departmentOptions = computed(() => departmentStore.departments.map((d) => ({ label: d.name, value: d.id })))
-const positionOptions = computed(() => positionStore.positions.map((p) => ({ label: p.name, value: p.id })))
+const departmentOptions = computed(() =>
+  departmentStore.departments.map((d) => ({ label: d.name, value: d.id }))
+)
+
+const positionOptions = computed(() =>
+  positionStore.positions.map((p) => ({ label: p.name, value: p.id }))
+)
 
 const filteredData = computed(() => {
   let data = store.departmentPositions
-  if (filterDepartmentId.value) data = data.filter((item) => item.departmentId === filterDepartmentId.value)
-  if (filterPositionId.value) data = data.filter((item) => item.positionId === filterPositionId.value)
+  if (filterDepartmentId.value) {
+    data = data.filter((item) => item.departmentId === filterDepartmentId.value)
+  }
+  if (filterPositionId.value) {
+    data = data.filter((item) => item.positionId === filterPositionId.value)
+  }
   return data
 })
 
-onMounted(() => { store.fetchAllDepartmentPositions(); departmentStore.fetchDepartments(); positionStore.fetchPositions() })
+onMounted(() => {
+  store.fetchAllDepartmentPositions()
+  departmentStore.fetchDepartments()
+  positionStore.fetchPositions()
+})
 
-function confirmDelete(item: DepartmentPosition) { deletingItem.value = item; showDeleteDialog.value = true }
-function handleDelete() {
-  if (deletingItem.value) store.deleteDepartmentPosition(deletingItem.value.departmentId, deletingItem.value.positionId)
-  showDeleteDialog.value = false; deletingItem.value = null
+function formatDate(dateString: string) {
+  return new Date(dateString).toLocaleString('zh-CN')
 }
-function handleSave(data: DepartmentPositionReq) { store.createDepartmentPosition(data); handleClose() }
-function handleClose() { showCreateModal.value = false }
+
+function confirmDelete(item: DepartmentPosition) {
+  deletingItem.value = item
+  showDeleteDialog.value = true
+}
+
+async function handleDelete() {
+  if (deletingItem.value) {
+    try {
+      await store.deleteDepartmentPosition(
+        deletingItem.value.departmentId,
+        deletingItem.value.positionId
+      )
+      ElMessage.success('删除成功')
+    } catch {
+      ElMessage.error('删除失败')
+    }
+  }
+  showDeleteDialog.value = false
+  deletingItem.value = null
+}
+
+async function handleSave(data: DepartmentPositionReq) {
+  try {
+    await store.createDepartmentPosition(data)
+    ElMessage.success('配置成功')
+    showCreateModal.value = false
+  } catch {
+    ElMessage.error('配置失败')
+  }
+}
 </script>

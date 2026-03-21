@@ -1,91 +1,118 @@
 <template>
-  <Dialog :open="show" @update:open="$emit('close')">
-    <DialogContent class="sm:max-w-md">
-      <DialogHeader>
-        <DialogTitle>{{ department ? '编辑部门' : '新建部门' }}</DialogTitle>
-      </DialogHeader>
+  <el-dialog
+    :model-value="show"
+    :title="department ? '编辑部门' : '新建部门'"
+    width="500"
+    @update:model-value="$emit('close')"
+  >
+    <el-form
+      ref="formRef"
+      :model="formData"
+      :rules="rules"
+      label-width="100px"
+      label-position="left"
+    >
+      <el-form-item label="部门名称" prop="name">
+        <el-input v-model="formData.name" placeholder="请输入部门名称" />
+      </el-form-item>
 
-      <form @submit.prevent="handleSubmit" class="space-y-4">
-        <div class="space-y-2">
-          <Label for="name">部门名称</Label>
-          <Input id="name" v-model="formData.name" type="text" required placeholder="请输入部门名称" />
-        </div>
+      <el-form-item label="部门编码" prop="code">
+        <el-input v-model="formData.code" placeholder="请输入部门编码" />
+      </el-form-item>
 
-        <div class="space-y-2">
-          <Label for="code">部门编码</Label>
-          <Input id="code" v-model="formData.code" type="text" required placeholder="请输入部门编码" />
-        </div>
+      <el-form-item label="上级部门" prop="parentId">
+        <el-tree-select
+          v-model="formData.parentId"
+          :data="departmentTreeData"
+          :props="{ label: 'name', value: 'id', children: 'children' }"
+          placeholder="请选择上级部门"
+          clearable
+          check-strictly
+          :render-after-expand="false"
+        />
+      </el-form-item>
 
-        <div class="space-y-2">
-          <Label for="parentId">上级部门</Label>
-          <Select v-model="formData.parentId">
-            <SelectTrigger><SelectValue placeholder="请选择上级部门" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="__null__">无（作为顶级部门）</SelectItem>
-              <SelectItem v-for="dept in departmentOptions" :key="dept.value" :value="dept.value">{{ dept.label }}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <el-form-item label="描述" prop="description">
+        <el-input
+          v-model="formData.description"
+          type="textarea"
+          :rows="3"
+          placeholder="请输入部门描述"
+        />
+      </el-form-item>
 
-        <div class="space-y-2">
-          <Label for="description">描述</Label>
-          <Textarea id="description" v-model="formData.description" rows="3" placeholder="请输入部门描述" />
-        </div>
+      <el-form-item label="排序" prop="sortOrder">
+        <el-input-number v-model="formData.sortOrder" :min="0" :max="999" />
+      </el-form-item>
 
-        <div class="space-y-2">
-          <Label for="sortOrder">排序</Label>
-          <Input id="sortOrder" v-model.number="formData.sortOrder" type="number" placeholder="数字越小越靠前" />
-        </div>
+      <el-form-item label="状态" prop="status">
+        <el-radio-group v-model="formData.status">
+          <el-radio :value="1">启用</el-radio>
+          <el-radio :value="0">禁用</el-radio>
+        </el-radio-group>
+      </el-form-item>
+    </el-form>
 
-        <div class="space-y-2">
-          <Label for="status">状态</Label>
-          <Select v-model="statusValue">
-            <SelectTrigger><SelectValue placeholder="请选择状态" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">启用</SelectItem>
-              <SelectItem value="0">禁用</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </form>
-
-      <DialogFooter>
-        <Button type="button" variant="outline" @click="$emit('close')">取消</Button>
-        <Button type="submit" @click="handleSubmit">保存</Button>
-      </DialogFooter>
-    </DialogContent>
-  </Dialog>
+    <template #footer>
+      <el-button @click="$emit('close')">取消</el-button>
+      <el-button type="primary" :loading="submitting" @click="handleSubmit">
+        保存
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
+import type { FormInstance, FormRules } from 'element-plus'
 import type { Department, DepartmentCreateReq, DepartmentUpdateReq } from '@/types'
 import { useDepartmentStore } from '@/stores/department'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-interface Props { show: boolean; department?: Department | null }
+interface Props {
+  show: boolean
+  department?: Department | null
+}
+
 const props = withDefaults(defineProps<Props>(), { department: null })
-const emit = defineEmits<{ close: []; save: [data: DepartmentCreateReq | DepartmentUpdateReq] }>()
+const emit = defineEmits<{
+  close: []
+  save: [data: DepartmentCreateReq | DepartmentUpdateReq]
+}>()
 
 const departmentStore = useDepartmentStore()
+const formRef = ref<FormInstance>()
+const submitting = ref(false)
 
-const formData = ref<{ name: string; code: string; description: string; parentId: string; sortOrder: number; status: number }>({
-  name: '', code: '', description: '', parentId: '__null__', sortOrder: 0, status: 1,
+const formData = ref({
+  name: '',
+  code: '',
+  description: '',
+  parentId: null as string | null,
+  sortOrder: 0,
+  status: 1,
 })
 
-const statusValue = computed({
-  get: () => String(formData.value.status),
-  set: (val: string) => { formData.value.status = Number(val) },
-})
+const rules: FormRules = {
+  name: [{ required: true, message: '请输入部门名称', trigger: 'blur' }],
+  code: [{ required: true, message: '请输入部门编码', trigger: 'blur' }],
+}
 
-const departmentOptions = computed(() => {
+// 部门树形数据
+const departmentTreeData = computed(() => {
   const excludeId = props.department?.id
-  return departmentStore.departments.filter((d) => d.id !== excludeId).map((d) => ({ label: d.name, value: d.id }))
+  const departments = departmentStore.departments.filter((d) => d.id !== excludeId)
+
+  // 构建树形结构
+  const buildTree = (items: typeof departments, parentId: string | null = null): any[] => {
+    return items
+      .filter((item) => item.parentId === parentId)
+      .map((item) => ({
+        ...item,
+        children: buildTree(items, item.id),
+      }))
+  }
+
+  return buildTree(departments)
 })
 
 watch(
@@ -93,21 +120,43 @@ watch(
   (dept) => {
     if (dept) {
       formData.value = {
-        name: dept.name, code: dept.code, description: dept.description || '',
-        parentId: dept.parentId || '__null__', sortOrder: dept.sortOrder, status: dept.status,
+        name: dept.name,
+        code: dept.code,
+        description: dept.description || '',
+        parentId: dept.parentId || null,
+        sortOrder: dept.sortOrder,
+        status: dept.status,
       }
     } else {
-      formData.value = { name: '', code: '', description: '', parentId: '__null__', sortOrder: 0, status: 1 }
+      formData.value = {
+        name: '',
+        code: '',
+        description: '',
+        parentId: null,
+        sortOrder: 0,
+        status: 1,
+      }
     }
   },
   { immediate: true }
 )
 
-function handleSubmit() {
-  emit('save', {
-    name: formData.value.name, code: formData.value.code, description: formData.value.description,
-    parentId: formData.value.parentId === '__null__' ? null : formData.value.parentId,
-    sortOrder: formData.value.sortOrder || 0, status: formData.value.status || 1,
-  })
+async function handleSubmit() {
+  const valid = await formRef.value?.validate().catch(() => false)
+  if (!valid) return
+
+  submitting.value = true
+  try {
+    emit('save', {
+      name: formData.value.name,
+      code: formData.value.code,
+      description: formData.value.description || undefined,
+      parentId: formData.value.parentId || null,
+      sortOrder: formData.value.sortOrder || 0,
+      status: formData.value.status || 1,
+    })
+  } finally {
+    submitting.value = false
+  }
 }
 </script>

@@ -14,6 +14,9 @@ Vue 3 frontend for Organization Management Service.
 - Vue Router 5+
 - Pinia 3+
 - Axios
+- **Element Plus** - Complex UI components (Table, Form, Select, DatePicker, etc.)
+- **shadcn-vue** - Base UI components (Button, Card, Dialog, AlertDialog, Badge)
+- **lucide-vue-next** + **@element-plus/icons-vue** - Icon libraries
 
 ## Commands
 
@@ -28,6 +31,9 @@ npm run type-check     # Type check only
 # Build
 npm run build          # Production build to dist/
 npm run preview        # Preview production build
+
+# Screenshots (using Puppeteer)
+node screenshot.cjs    # Capture screenshots to screenshots/
 ```
 
 ## Architecture
@@ -42,13 +48,15 @@ src/
 │   ├── departmentPosition.ts
 │   └── personnelPosition.ts
 ├── components/
-│   └── common/             # Modal components for CRUD forms
+│   ├── common/             # Modal components for CRUD forms
+│   └── ui/                 # shadcn-vue UI components (Button, Card, Dialog, etc.)
 ├── layouts/
-│   └── MainLayout.vue      # Main layout with navigation
+│   └── TopBarLayout.vue    # Top navigation layout with theme toggle
 ├── router/
 │   └── index.ts            # Route definitions
 ├── stores/
 │   ├── index.ts            # Pinia setup
+│   ├── theme.ts            # Dark/Light theme management
 │   ├── department.ts
 │   ├── personnel.ts
 │   ├── position.ts
@@ -57,13 +65,15 @@ src/
 ├── types/
 │   └── index.ts            # TypeScript interfaces (ApiResult, entities, DTOs)
 ├── views/                  # Page components
+│   ├── Dashboard.vue       # Dashboard with statistics
 │   ├── DepartmentList.vue
 │   ├── PersonnelList.vue
 │   ├── PositionList.vue
 │   ├── DepartmentPositionList.vue
 │   └── PersonnelPositionList.vue
 ├── App.vue
-└── main.ts
+├── main.ts                 # Entry point with Element Plus setup
+└── style.css               # Tailwind CSS + theme variables
 ```
 
 ## Key Conventions
@@ -81,15 +91,34 @@ src/
 **State Management (Pinia):**
 - One store per domain entity
 - Stores manage local state for list views and modals
+- `theme.ts` manages dark/light mode with localStorage persistence
 
 **Components:**
 - Use `<script setup>` Composition API
 - Modal components in `components/common/` for CRUD forms
 - PascalCase naming
+- **Element Plus** for complex components (el-table, el-form, el-dialog, etc.)
+- **shadcn-vue** for base components (Button, Card, Badge, etc.)
+
+**Icons:**
+- **Prefer lucide-vue-next** for all icons (Plus, Search, Edit, Trash, MoreVertical, etc.)
+- Only use `@element-plus/icons-vue` when lucide-vue-next doesn't have the icon
+- Common lucide icons: `Plus`, `Search`, `Edit`, `Trash`, `List`, `Grid`, `MoreVertical`, `X`, `Menu`, `Sun`, `Moon`
+
+**Views:**
+- Support table/card view toggle
+- Include search and filter functionality
+- Support batch selection and deletion
+- Dark/Light theme compatible
 
 **Routes:**
-- All routes under `MainLayout`
-- Default redirect: `/departments`
+- All routes under `TopBarLayout`
+- Default redirect: `/dashboard`
+
+**Theming:**
+- CSS variables for colors (see `style.css`)
+- Dark mode via `.dark` class on `<html>`
+- Theme toggle via `useThemeStore().toggleTheme()`
 
 ## Development Workflow
 

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Monorepo containing a full-stack Organization Management Service with:
 - **Backend**: Spring Boot 4.0 + Java 17 + PostgreSQL (in `backend/`)
-- **Frontend**: Vue 3 + Vite + TypeScript + Tailwind CSS (in `frontend/`)
+- **Frontend**: Vue 3 + Vite + TypeScript + Tailwind CSS + Element Plus + shadcn-vue (in `frontend/`)
 
 ## Quick Commands
 
@@ -41,6 +41,9 @@ npm run type-check     # Type check only
 # Build
 npm run build          # Production build to dist/
 npm run preview        # Preview production build
+
+# Screenshots (using Puppeteer)
+node screenshot.cjs    # Capture screenshots to frontend/screenshots/
 ```
 
 ## Architecture
@@ -72,19 +75,32 @@ src/main/java/com/reythecoder/organization/
 
 ```
 src/
-├── api/          # Axios-based API clients
-├── components/   # Reusable components
-├── layouts/      # Layout components (MainLayout.vue)
-├── router/       # Vue Router config
-├── stores/       # Pinia stores
-├── types/        # TypeScript types
-└── views/        # Page components
+├── api/              # Axios-based API clients
+├── components/
+│   ├── common/       # Business modal components
+│   └── ui/           # shadcn-vue UI components (Button, Card, Dialog, etc.)
+├── layouts/          # Layout components (TopBarLayout.vue)
+├── router/           # Vue Router config
+├── stores/           # Pinia stores (including theme.ts for dark mode)
+├── types/            # TypeScript types
+└── views/            # Page components
 ```
+
+**Technology Stack:**
+- **Vue 3.5+**: Composition API with `<script setup>`
+- **Element Plus**: Complex components (Table, Form, Select, DatePicker, etc.)
+- **shadcn-vue**: Base UI components (Button, Card, Dialog, AlertDialog, Badge)
+- **Tailwind CSS 4**: Styling with CSS variables for theming
+- **lucide-vue-next**: Primary icon library
+- **@element-plus/icons-vue**: Secondary icons (only when lucide doesn't have the icon)
 
 **Key Conventions:**
 - Composition API with `<script setup>`
 - PascalCase for component names
 - API base URL proxied to backend at `http://localhost:8080`
+- Dark/Light theme toggle via `useThemeStore()`
+- Views support table/card toggle and batch operations
+- **Icons**: Prefer lucide-vue-next over @element-plus/icons-vue
 
 ## Core Entities
 
@@ -102,6 +118,7 @@ src/
 ### Frontend
 - Vite proxy to backend in dev mode
 - No `.env` required for local development
+- Theme preference stored in localStorage
 
 ## Development Workflow
 
@@ -120,7 +137,26 @@ src/
 ## Docs
 
 - [Backend README](backend/README.md)
+- [Frontend README](frontend/README.md)
 - [Project Architecture](backend/docs/project-architecture.md)
 - [Database Design Guide](backend/docs/database-design-develop-guide-for-postgresql.md)
 - [Development Guidelines](backend/docs/development-guidelines.md)
 - [API Documentation](backend/docs/API_DOCUMENTATION.md)
+
+## Screenshot Tool
+
+For UI verification, use Puppeteer to capture screenshots:
+
+```bash
+# Prerequisites
+cd frontend
+npm install  # Puppeteer is included in devDependencies
+
+# Start dev server first
+npm run dev
+
+# In another terminal, capture screenshots
+node screenshot.cjs
+```
+
+Screenshots are saved to `frontend/screenshots/` directory.

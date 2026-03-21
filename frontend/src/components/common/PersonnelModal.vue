@@ -1,87 +1,127 @@
 <template>
-  <Dialog :open="show" @update:open="$emit('close')">
-    <DialogContent class="sm:max-w-md">
-      <DialogHeader>
-        <DialogTitle>{{ personnel ? '编辑人员' : '新建人员' }}</DialogTitle>
-      </DialogHeader>
+  <el-dialog
+    :model-value="show"
+    :title="personnel ? '编辑人员' : '新建人员'"
+    width="550"
+    @update:model-value="$emit('close')"
+  >
+    <el-form
+      ref="formRef"
+      :model="formData"
+      :rules="rules"
+      label-width="80px"
+      label-position="left"
+    >
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="姓名" prop="name">
+            <el-input v-model="formData.name" placeholder="请输入姓名" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="工号" prop="code">
+            <el-input v-model="formData.code" placeholder="请输入工号" />
+          </el-form-item>
+        </el-col>
+      </el-row>
 
-      <form @submit.prevent="handleSubmit" class="space-y-4">
-        <div class="space-y-2">
-          <Label for="name">姓名</Label>
-          <Input id="name" v-model="formData.name" type="text" required placeholder="请输入姓名" />
-        </div>
+      <el-form-item label="所属部门" prop="departmentId">
+        <el-tree-select
+          v-model="formData.departmentId"
+          :data="departmentTreeData"
+          :props="{ label: 'name', value: 'id', children: 'children' }"
+          placeholder="请选择所属部门"
+          check-strictly
+          :render-after-expand="false"
+        />
+      </el-form-item>
 
-        <div class="space-y-2">
-          <Label for="code">工号</Label>
-          <Input id="code" v-model="formData.code" type="text" required placeholder="请输入工号" />
-        </div>
+      <el-form-item label="职位" prop="position">
+        <el-input v-model="formData.position" placeholder="请输入职位" />
+      </el-form-item>
 
-        <div class="space-y-2">
-          <Label for="departmentId">所属部门</Label>
-          <Select v-model="formData.departmentId" required>
-            <SelectTrigger><SelectValue placeholder="请选择部门" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem v-for="dept in departmentOptions" :key="dept.value" :value="dept.value">{{ dept.label }}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="formData.email" placeholder="请输入邮箱" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="电话" prop="phone">
+            <el-input v-model="formData.phone" placeholder="请输入电话" />
+          </el-form-item>
+        </el-col>
+      </el-row>
 
-        <div class="space-y-2">
-          <Label for="position">职位</Label>
-          <Input id="position" v-model="formData.position" type="text" placeholder="请输入职位" />
-        </div>
+      <el-form-item label="状态" prop="status">
+        <el-radio-group v-model="formData.status">
+          <el-radio :value="1">在职</el-radio>
+          <el-radio :value="0">离职</el-radio>
+        </el-radio-group>
+      </el-form-item>
+    </el-form>
 
-        <div class="space-y-2">
-          <Label for="email">邮箱</Label>
-          <Input id="email" v-model="formData.email" type="email" placeholder="请输入邮箱" />
-        </div>
-
-        <div class="space-y-2">
-          <Label for="phone">电话</Label>
-          <Input id="phone" v-model="formData.phone" type="tel" placeholder="请输入电话" />
-        </div>
-
-        <div class="space-y-2">
-          <Label for="status">状态</Label>
-          <Select v-model="statusValue">
-            <SelectTrigger><SelectValue placeholder="请选择状态" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">启用</SelectItem>
-              <SelectItem value="0">禁用</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </form>
-
-      <DialogFooter>
-        <Button type="button" variant="outline" @click="$emit('close')">取消</Button>
-        <Button type="submit" @click="handleSubmit">保存</Button>
-      </DialogFooter>
-    </DialogContent>
-  </Dialog>
+    <template #footer>
+      <el-button @click="$emit('close')">取消</el-button>
+      <el-button type="primary" :loading="submitting" @click="handleSubmit">
+        保存
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
+import type { FormInstance, FormRules } from 'element-plus'
 import type { Personnel, PersonnelCreateReq, PersonnelUpdateReq } from '@/types'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useDepartmentStore } from '@/stores/department'
 
-interface Option { label: string; value: string }
-interface Props { show: boolean; personnel?: Personnel | null; departmentOptions: Option[] }
-const props = withDefaults(defineProps<Props>(), { personnel: null, departmentOptions: () => [] })
-const emit = defineEmits<{ close: []; save: [data: PersonnelCreateReq | PersonnelUpdateReq] }>()
+interface Props {
+  show: boolean
+  personnel?: Personnel | null
+}
 
-const formData = ref<{ name: string; code: string; email: string; phone: string; departmentId: string; position: string; status: number }>({
-  name: '', code: '', email: '', phone: '', departmentId: '', position: '', status: 1,
+const props = withDefaults(defineProps<Props>(), { personnel: null })
+const emit = defineEmits<{
+  close: []
+  save: [data: PersonnelCreateReq | PersonnelUpdateReq]
+}>()
+
+const departmentStore = useDepartmentStore()
+const formRef = ref<FormInstance>()
+const submitting = ref(false)
+
+const formData = ref({
+  name: '',
+  code: '',
+  email: '',
+  phone: '',
+  departmentId: '' as string,
+  position: '',
+  status: 1,
 })
 
-const statusValue = computed({
-  get: () => String(formData.value.status),
-  set: (val: string) => { formData.value.status = Number(val) },
+const rules: FormRules = {
+  name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+  code: [{ required: true, message: '请输入工号', trigger: 'blur' }],
+  departmentId: [{ required: true, message: '请选择所属部门', trigger: 'change' }],
+  email: [{ type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }],
+}
+
+// 部门树形数据
+const departmentTreeData = computed(() => {
+  const departments = departmentStore.departments
+
+  const buildTree = (items: typeof departments, parentId: string | null = null): any[] => {
+    return items
+      .filter((item) => item.parentId === parentId)
+      .map((item) => ({
+        ...item,
+        children: buildTree(items, item.id),
+      }))
+  }
+
+  return buildTree(departments)
 })
 
 watch(
@@ -89,17 +129,46 @@ watch(
   (person) => {
     if (person) {
       formData.value = {
-        name: person.name, code: person.code, email: person.email || '', phone: person.phone || '',
-        departmentId: person.departmentId, position: person.position || '', status: person.status,
+        name: person.name,
+        code: person.code,
+        email: person.email || '',
+        phone: person.phone || '',
+        departmentId: person.departmentId,
+        position: person.position || '',
+        status: person.status,
       }
     } else {
-      formData.value = { name: '', code: '', email: '', phone: '', departmentId: '', position: '', status: 1 }
+      formData.value = {
+        name: '',
+        code: '',
+        email: '',
+        phone: '',
+        departmentId: '',
+        position: '',
+        status: 1,
+      }
     }
   },
   { immediate: true }
 )
 
-function handleSubmit() {
-  emit('save', { ...formData.value, status: formData.value.status || 1 })
+async function handleSubmit() {
+  const valid = await formRef.value?.validate().catch(() => false)
+  if (!valid) return
+
+  submitting.value = true
+  try {
+    emit('save', {
+      name: formData.value.name,
+      code: formData.value.code,
+      email: formData.value.email || undefined,
+      phone: formData.value.phone || undefined,
+      departmentId: formData.value.departmentId,
+      position: formData.value.position || undefined,
+      status: formData.value.status || 1,
+    })
+  } finally {
+    submitting.value = false
+  }
 }
 </script>

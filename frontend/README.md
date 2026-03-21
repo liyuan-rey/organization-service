@@ -11,13 +11,24 @@
 - **路由**: Vue Router 5+
 - **状态管理**: Pinia 3+
 - **HTTP 客户端**: Axios
+- **UI 组件**:
+  - **Element Plus**: 复杂组件 (Table, Form, Select, DatePicker 等)
+  - **shadcn-vue**: 基础组件 (Button, Card, Dialog, Badge 等)
+- **图标**: lucide-vue-next + @element-plus/icons-vue
+- **测试工具**: Puppeteer (截图验证)
 
 ## 📦 功能特性
 
-- ✅ 部门管理（增删改查）
-- ✅ 人员管理（增删改查）
+- ✅ 仪表盘首页（统计卡片、快捷入口）
+- ✅ 部门管理（增删改查、搜索筛选、批量操作）
+- ✅ 人员管理（增删改查、搜索筛选、批量操作）
+- ✅ 岗位管理（增删改查、搜索筛选、批量操作）
+- ✅ 部门岗位关联管理
+- ✅ 人员岗位任职管理
+- ✅ 表格/卡片视图切换
+- ✅ 亮色/暗色主题切换
 - ✅ 响应式布局（支持桌面和移动端）
-- ✅ Admin 风格界面
+- ✅ 简约现代风格界面
 - ✅ TypeScript 类型安全
 - ✅ RESTful API 集成
 
@@ -49,6 +60,18 @@ npm run build
 npm run preview
 ```
 
+### 截图验证 (Puppeteer)
+
+```bash
+# 确保开发服务器正在运行
+npm run dev
+
+# 在另一个终端运行截图脚本
+node screenshot.cjs
+```
+
+截图保存在 `screenshots/` 目录。
+
 ## 📁 项目结构
 
 ```
@@ -57,22 +80,29 @@ frontend/
 │   ├── api/              # API 调用封装
 │   │   ├── request.ts    # Axios 实例和拦截器
 │   │   ├── department.ts # 部门相关 API
-│   │   └── personnel.ts  # 人员相关 API
-│   ├── components/       # 可复用组件
-│   │   └── common/       # 通用组件（模态框等）
+│   │   ├── personnel.ts  # 人员相关 API
+│   │   └── ...
+│   ├── components/
+│   │   ├── common/       # 业务组件（模态框等）
+│   │   └── ui/           # shadcn-vue UI 组件
 │   ├── layouts/          # 布局组件
-│   │   └── MainLayout.vue
+│   │   └── TopBarLayout.vue
 │   ├── router/           # 路由配置
 │   ├── stores/           # Pinia 状态管理
+│   │   ├── theme.ts      # 主题切换
 │   │   ├── department.ts
-│   │   └── personnel.ts
+│   │   └── ...
 │   ├── types/            # TypeScript 类型定义
 │   ├── views/            # 页面组件
+│   │   ├── Dashboard.vue
 │   │   ├── DepartmentList.vue
-│   │   └── PersonnelList.vue
+│   │   ├── PersonnelList.vue
+│   │   └── ...
 │   ├── App.vue           # 根组件
 │   ├── main.ts           # 入口文件
-│   └── style.css         # 全局样式
+│   └── style.css         # 全局样式 + 主题变量
+├── screenshot.cjs        # Puppeteer 截图脚本
+├── screenshots/          # 截图输出目录
 ├── index.html
 ├── package.json
 ├── tsconfig.json
@@ -108,8 +138,8 @@ VITE_API_BASE_URL=/api
 ## 🚧 待办事项
 
 - [ ] 用户认证和登录
-- [ ] 权限控制
+- [ ] 权限控制（RBAC）
 - [ ] 部门树形结构展示
-- [ ] 批量操作
 - [ ] 数据导入/导出
-- [ ] 搜索和筛选功能
+- [ ] 表格分页
+- [ ] 国际化支持
