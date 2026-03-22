@@ -10,7 +10,6 @@ on:
 jobs:
   main:
     name: Semantic Pull Request
-    if: github.repository == 'vbenjs/vue-vben-admin'
     runs-on: ubuntu-latest
     steps:
       - name: Validate PR title
