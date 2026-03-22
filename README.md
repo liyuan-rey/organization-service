@@ -47,19 +47,14 @@ organization-service/
 │   ├── docs/             # 后端文档
 │   └── .github/          # CI/CD 配置（已迁移到根目录）
 │
-├── frontend/             # 前端工程（Vue3 + Vite + TypeScript）
-│   ├── src/              # 源代码
-│   │   ├── api/              # API 调用封装
-│   │   ├── components/       # 可复用组件
-│   │   ├── layouts/          # 布局组件
-│   │   ├── router/           # 路由配置
-│   │   ├── stores/           # Pinia 状态管理
-│   │   ├── types/            # TypeScript 类型
-│   │   └── views/            # 页面组件
-│   ├── package.json      # NPM 依赖配置
-│   ├── vite.config.ts    # Vite 构建配置
-│   ├── tsconfig.json     # TypeScript 配置
-│   └── README.md         # 前端文档
+├── frontend/             # 前端工程（Vue3 + Vite + TypeScript + Element Plus）
+│   ├── apps/             # 应用目录
+│   │   ├── backend-mock/ # Nitro Mock 服务器
+│   │   └── web-ele/      # Element Plus 主应用
+│   ├── packages/         # 共享包（核心、状态、类型等）
+│   ├── internal/         # 内部工具（lint、vite 配置等）
+│   ├── docs/             # VitePress 文档
+│   └── CLAUDE.md         # 前端开发文档
 │
 ├── scripts/              # 公共脚本
 ├── .github/workflows/    # GitHub Actions 工作流
@@ -94,10 +89,13 @@ organization-service/
 | 技术 | 版本 | 说明 |
 |------|------|------|
 | **框架** | Vue 3.5+ | Composition API |
+| **基础模板** | Vben Admin 5.6.0 | 企业级后台管理模板 |
+| **UI 组件** | Element Plus 2.x | UI 组件库 |
 | **构建工具** | Vite 7+ | 快速构建 |
+| **包管理** | pnpm 10+ | Monorepo 包管理 |
 | **语言** | TypeScript 5.9+ | 类型安全 |
-| **样式** | Tailwind CSS 4+ | 原子化 CSS |
-| **路由** | Vue Router 5+ | 单页路由 |
+| **样式** | Tailwind CSS 3.x | 原子化 CSS |
+| **路由** | Vue Router 4+ | 单页路由 |
 | **状态管理** | Pinia 3+ | 状态管理 |
 | **HTTP** | Axios | 请求库 |
 
@@ -108,7 +106,7 @@ organization-service/
 ### 环境要求
 
 - **后端**: Java 17+, Docker (可选，用于本地数据库)
-- **前端**: Node.js 18+, npm 9+
+- **前端**: Node.js 20.19+, pnpm 10+
 
 ### 后端启动
 
@@ -140,13 +138,13 @@ API 文档：http://localhost:8080/swagger-ui.html
 cd frontend
 
 # 2. 安装依赖
-npm install
+pnpm install
 
 # 3. 启动开发服务器（自动代理到后端）
-npm run dev
+pnpm dev:ele
 ```
 
-前端服务运行在 http://localhost:3000
+前端服务运行在 http://localhost:5555
 
 ---
 
@@ -170,10 +168,10 @@ cd backend
 ```bash
 # ✅ 正确
 cd frontend
-npm run build
+pnpm build
 
 # ❌ 错误 - 根目录没有 package.json
-npm run build
+pnpm build
 ```
 
 ### Git 提交规范
@@ -224,10 +222,13 @@ refactor: 调整目录结构
 
 ```bash
 # 类型检查
-npm run build
+pnpm check:type
 
-# 代码规范检查（待配置）
-npm run lint
+# 代码规范检查
+pnpm lint
+
+# 单元测试
+pnpm test:unit
 ```
 
 ---
@@ -255,8 +256,8 @@ cd backend
 
 # 前端
 cd frontend
-npm run build
-# 输出：dist/
+pnpm build
+# 输出：apps/web-ele/dist/
 ```
 
 ---
@@ -279,7 +280,7 @@ npm run build
 - [后端 API 文档](backend/docs/)
 - [数据库设计](backend/db/)
 - [项目架构](backend/docs/project-architecture.md)
-- [前端文档](frontend/README.md)
+- [前端开发文档](frontend/CLAUDE.md)
 
 ---
 
@@ -292,13 +293,13 @@ npm run build
 - [ ] 添加缓存支持（Redis）
 
 ### 前端
+- [x] 基于 Vben Admin 重构前端
+- [x] 组织机构管理功能
 - [ ] 用户认证和登录
 - [ ] 权限控制（RBAC）
 - [ ] 部门树形结构展示
 - [ ] 批量操作
 - [ ] 数据导入/导出
-- [ ] 搜索和筛选功能
-- [ ] 表格分页
 
 ---
 
@@ -315,4 +316,4 @@ Apache License 2.0 - 详见 [LICENSE](LICENSE) 文件
 
 ---
 
-**最后更新：** 2026-02-26
+**最后更新：** 2026-03-22
