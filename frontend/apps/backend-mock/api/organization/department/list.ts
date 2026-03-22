@@ -1,0 +1,198 @@
+import { defineEventHandler, getQuery } from 'h3';
+
+import { usePageResponseSuccess, useResponseSuccess } from '~/utils/response';
+
+// 模拟部门数据
+const mockDepartments = [
+  {
+    id: '018df1b0-1234-7000-8000-000000000101',
+    name: '人力资源部',
+    englishName: 'Human Resources Department',
+    shortName: 'HR',
+    orgCode: 'ORG-HR-001',
+    phone: '+86-010-12345601',
+    fax: '+86-010-12345602',
+    email: 'hr@company.com',
+    address: '北京市朝阳区某某街道123号',
+    postalCode: '100000',
+    createTime: '2026-02-22T10:00:00+08:00',
+    updateTime: '2026-02-22T10:00:00+08:00',
+  },
+  {
+    id: '018df1b0-1234-7000-8000-000000000102',
+    name: '技术部',
+    englishName: 'Technology Department',
+    shortName: 'Tech',
+    orgCode: 'ORG-TECH-001',
+    phone: '+86-010-12345603',
+    fax: '+86-010-12345604',
+    email: 'tech@company.com',
+    address: '北京市海淀区某某科技园区456号',
+    postalCode: '100001',
+    createTime: '2026-02-22T10:00:00+08:00',
+    updateTime: '2026-02-22T10:00:00+08:00',
+  },
+  {
+    id: '018df1b0-1234-7000-8000-000000000103',
+    name: '财务部',
+    englishName: 'Finance Department',
+    shortName: 'Finance',
+    orgCode: 'ORG-FIN-001',
+    phone: '+86-010-12345605',
+    fax: '+86-010-12345606',
+    email: 'finance@company.com',
+    address: '北京市朝阳区某某街道789号',
+    postalCode: '100002',
+    createTime: '2026-02-22T10:00:00+08:00',
+    updateTime: '2026-02-22T10:00:00+08:00',
+  },
+  {
+    id: '018df1b0-1234-7000-8000-000000000104',
+    name: '市场部',
+    englishName: 'Marketing Department',
+    shortName: 'Mkt',
+    orgCode: 'ORG-MKT-001',
+    phone: '+86-010-12345607',
+    fax: '+86-010-12345608',
+    email: 'marketing@company.com',
+    address: '北京市朝阳区某某街道321号',
+    postalCode: '100003',
+    createTime: '2026-02-22T10:00:00+08:00',
+    updateTime: '2026-02-22T10:00:00+08:00',
+  },
+  {
+    id: '018df1b0-1234-7000-8000-000000000105',
+    name: '研发部',
+    englishName: 'Research & Development',
+    shortName: 'R&D',
+    orgCode: 'ORG-RD-001',
+    phone: '+86-010-12345609',
+    fax: '+86-010-12345610',
+    email: 'rd@company.com',
+    address: '北京市海淀区某某科技园区654号',
+    postalCode: '100004',
+    createTime: '2026-02-22T10:00:00+08:00',
+    updateTime: '2026-02-22T10:00:00+08:00',
+  },
+  {
+    id: '018df1b0-1234-7000-8000-000000000106',
+    name: '运营部',
+    englishName: 'Operations Department',
+    shortName: 'Ops',
+    orgCode: 'ORG-OPS-001',
+    phone: '+86-010-12345611',
+    fax: '+86-010-12345612',
+    email: 'ops@company.com',
+    address: '北京市朝阳区某某街道555号',
+    postalCode: '100005',
+    createTime: '2026-02-22T10:00:00+08:00',
+    updateTime: '2026-02-22T10:00:00+08:00',
+  },
+  {
+    id: '018df1b0-1234-7000-8000-000000000107',
+    name: '客户服务部',
+    englishName: 'Customer Service',
+    shortName: 'CS',
+    orgCode: 'ORG-CS-001',
+    phone: '+86-010-12345613',
+    fax: '+86-010-12345614',
+    email: 'cs@company.com',
+    address: '北京市朝阳区某某街道666号',
+    postalCode: '100006',
+    createTime: '2026-02-22T10:00:00+08:00',
+    updateTime: '2026-02-22T10:00:00+08:00',
+  },
+  {
+    id: '018df1b0-1234-7000-8000-000000000108',
+    name: '行政部',
+    englishName: 'Administration',
+    shortName: 'Admin',
+    orgCode: 'ORG-ADMIN-001',
+    phone: '+86-010-12345615',
+    fax: '+86-010-12345616',
+    email: 'admin@company.com',
+    address: '北京市朝阳区某某街道777号',
+    postalCode: '100007',
+    createTime: '2026-02-22T10:00:00+08:00',
+    updateTime: '2026-02-22T10:00:00+08:00',
+  },
+  {
+    id: '018df1b0-1234-7000-8000-000000000109',
+    name: '法务部',
+    englishName: 'Legal Department',
+    shortName: 'Legal',
+    orgCode: 'ORG-LEGAL-001',
+    phone: '+86-010-12345617',
+    fax: '+86-010-12345618',
+    email: 'legal@company.com',
+    address: '北京市朝阳区某某街道888号',
+    postalCode: '100008',
+    createTime: '2026-02-22T10:00:00+08:00',
+    updateTime: '2026-02-22T10:00:00+08:00',
+  },
+  {
+    id: '018df1b0-1234-7000-8000-000000000110',
+    name: '采购部',
+    englishName: 'Procurement',
+    shortName: 'Proc',
+    orgCode: 'ORG-PROC-001',
+    phone: '+86-010-12345619',
+    fax: '+86-010-12345620',
+    email: 'procurement@company.com',
+    address: '北京市朝阳区某某街道999号',
+    postalCode: '100009',
+    createTime: '2026-02-22T10:00:00+08:00',
+    updateTime: '2026-02-22T10:00:00+08:00',
+  },
+  {
+    id: '018df1b0-1234-7000-8000-000000000111',
+    name: '质量部',
+    englishName: 'Quality Assurance',
+    shortName: 'QA',
+    orgCode: 'ORG-QA-001',
+    phone: '+86-010-12345621',
+    fax: '+86-010-12345622',
+    email: 'qa@company.com',
+    address: '北京市海淀区某某科技园区111号',
+    postalCode: '100010',
+    createTime: '2026-02-22T10:00:00+08:00',
+    updateTime: '2026-02-22T10:00:00+08:00',
+  },
+  {
+    id: '018df1b0-1234-7000-8000-000000000112',
+    name: '产品部',
+    englishName: 'Product Department',
+    shortName: 'Prod',
+    orgCode: 'ORG-PROD-001',
+    phone: '+86-010-12345623',
+    fax: '+86-010-12345624',
+    email: 'product@company.com',
+    address: '北京市海淀区某某科技园区222号',
+    postalCode: '100011',
+    createTime: '2026-02-22T10:00:00+08:00',
+    updateTime: '2026-02-22T10:00:00+08:00',
+  },
+];
+
+export default defineEventHandler(async (event) => {
+  const query = getQuery(event);
+  const { page = 1, pageSize = 10, name } = query;
+
+  // 按名称筛选
+  let filteredData = mockDepartments;
+  if (name && typeof name === 'string' && name.trim() !== '') {
+    filteredData = mockDepartments.filter(
+      (dept) =>
+        dept.name.includes(name) ||
+        dept.englishName?.toLowerCase().includes(name.toLowerCase()) ||
+        dept.shortName?.toLowerCase().includes(name.toLowerCase()),
+    );
+  }
+
+  // 分页响应
+  return usePageResponseSuccess(
+    Number(page),
+    Number(pageSize),
+    filteredData,
+  );
+});
