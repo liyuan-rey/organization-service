@@ -6,7 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Monorepo containing a full-stack Organization Management Service with:
 - **Backend**: Spring Boot 4.0 + Java 17 + PostgreSQL (in `backend/`)
-- **Frontend**: Vue 3 + Vite + TypeScript + Tailwind CSS (in `frontend/`)
+- **Frontend**: Vue 3 + Vite + TypeScript + Tailwind CSS + Element Plus (in `frontend/`)
+
+Frontend is based on **Vben Admin v5.6.0** with pnpm monorepo structure.
 
 ## Quick Commands
 
@@ -32,15 +34,24 @@ docker-compose up -d
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Development
-npm run dev            # Start dev server at http://localhost:3000
-npm run type-check     # Type check only
+pnpm dev              # Start dev server (interactive app selection)
+pnpm dev:ele          # Start web-ele app specifically
 
 # Build
-npm run build          # Production build to dist/
-npm run preview        # Preview production build
+pnpm build            # Build all
+pnpm build:ele        # Build web-ele
+pnpm preview          # Preview production build
+
+# Code Quality
+pnpm lint             # Lint code
+pnpm format           # Format code
+pnpm check:type       # Type check
+
+# Testing
+pnpm test:unit        # Unit tests
 ```
 
 ## Architecture
@@ -70,20 +81,36 @@ src/main/java/com/reythecoder/organization/
 
 ### Frontend Structure (`frontend/`)
 
+Monorepo structure managed by pnpm workspaces:
+
 ```
-src/
-├── api/          # Axios-based API clients
-├── components/   # Reusable components
-├── layouts/      # Layout components (MainLayout.vue)
-├── router/       # Vue Router config
-├── stores/       # Pinia stores
-├── types/        # TypeScript types
-└── views/        # Page components
+frontend/
+├── apps/                    # Applications
+│   ├── backend-mock/        # Nitro mock server
+│   └── web-ele/             # Element Plus app (main)
+│       └── src/
+│           ├── api/         # API requests
+│           ├── adapter/     # Form/table adapters
+│           ├── layouts/     # Layout components
+│           ├── router/      # Vue Router config
+│           ├── store/       # Pinia stores
+│           ├── views/       # Page components
+│           └── locales/     # i18n resources
+├── packages/                # Shared packages
+│   ├── @core/               # Core packages (base, composables, ui-kit)
+│   ├── effects/             # Side effects (access, plugins, request)
+│   ├── stores/              # Shared Pinia stores
+│   ├── types/               # TypeScript types
+│   └── utils/               # Utilities
+├── internal/                # Internal tooling (lint, vite, tailwind configs)
+└── docs/                    # VitePress documentation
 ```
 
 **Key Conventions:**
-- Composition API with `<script setup>`
+- Vue 3 Composition API with `<script setup>`
 - PascalCase for component names
+- Path alias: `#/*` maps to `./src/*`
+- Icons: Use Tailwind CSS classes like `icon-[lucide--search]`
 - API base URL proxied to backend at `http://localhost:8080`
 
 ## Core Entities
@@ -107,8 +134,8 @@ src/
 
 1. **Start database**: `cd backend && docker-compose up -d`
 2. **Start backend**: `cd backend && ./gradlew bootRun -Dspring-boot.run.profiles=local`
-3. **Start frontend**: `cd frontend && npm run dev`
-4. Access: Frontend http://localhost:3000, Backend API http://localhost:8080, Swagger http://localhost:8080/swagger-ui.html
+3. **Start frontend**: `cd frontend && pnpm dev:ele`
+4. Access: Frontend http://localhost:5555, Backend API http://localhost:8080
 
 ## Testing
 
@@ -124,3 +151,4 @@ src/
 - [Database Design Guide](backend/docs/database-design-develop-guide-for-postgresql.md)
 - [Development Guidelines](backend/docs/development-guidelines.md)
 - [API Documentation](backend/docs/API_DOCUMENTATION.md)
+- [Frontend CLAUDE.md](frontend/CLAUDE.md) - Detailed frontend development guide
