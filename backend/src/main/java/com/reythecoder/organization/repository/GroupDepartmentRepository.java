@@ -22,4 +22,6 @@ public interface GroupDepartmentRepository extends JpaRepository<GroupDepartment
     void deleteByGroupIdAndDepartmentId(UUID groupId, UUID departmentId);
     
     boolean existsByGroupIdAndDepartmentId(UUID groupId, UUID departmentId);
+
+    long countByGroupId(UUID groupId);
 }

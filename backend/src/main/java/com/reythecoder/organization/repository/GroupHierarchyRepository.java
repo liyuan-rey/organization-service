@@ -20,4 +20,6 @@ public interface GroupHierarchyRepository extends JpaRepository<GroupHierarchyEn
     void deleteByChildId(UUID childId);
     
     boolean existsByChildId(UUID childId);
+
+    long countByParentId(UUID parentId);
 }

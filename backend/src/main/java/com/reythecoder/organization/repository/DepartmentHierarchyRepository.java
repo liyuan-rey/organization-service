@@ -20,4 +20,6 @@ public interface DepartmentHierarchyRepository extends JpaRepository<DepartmentH
     void deleteByChildId(UUID childId);
     
     boolean existsByChildId(UUID childId);
+
+    long countByParentId(UUID parentId);
 }

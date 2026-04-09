@@ -24,4 +24,6 @@ public interface DepartmentPersonnelRepository extends JpaRepository<DepartmentP
     void deleteByDepartmentIdAndPersonnelId(UUID departmentId, UUID personnelId);
     
     boolean existsByDepartmentIdAndPersonnelId(UUID departmentId, UUID personnelId);
+
+    long countByDepartmentId(UUID departmentId);
 }

@@ -22,4 +22,6 @@ public interface GroupPersonnelRepository extends JpaRepository<GroupPersonnelEn
     void deleteByGroupIdAndPersonnelId(UUID groupId, UUID personnelId);
     
     boolean existsByGroupIdAndPersonnelId(UUID groupId, UUID personnelId);
+
+    long countByGroupId(UUID groupId);
 }
