@@ -41,7 +41,7 @@ status: Approved
 | Position 处理 | 不纳入树结构，保留关联表 | 岗位是角色定义，与人员关联更符合业务语义 |
 | 多归属支持 | 同一实体可对应多个树节点 | 每节点单父节点，树结构严格；多节点实现多归属 |
 | 排序算法 | LexoRank 字符排序 | 动态插入无需重排其他元素，性能最优 |
-| 删除策略 | 逻辑删除（removed 字段） | 支持数据恢复，审计追溯 |
+| 删除策略 | 节点物理删除 + 实体条件逻辑删除 | 删除节点时物理删除；若为实体最后一个节点则同步逻辑删除实体 |
 | 路径存储 | UUID[] 数组 + GIN 索引 | PostgreSQL 原生支持，查询效率高 |
 
 ## 3. 数据库设计
@@ -58,7 +58,6 @@ status: Approved
 | `level` | INTEGER | NOT NULL | 0 | 层级深度。虚拟根为 0，业务根节点为 1，依次递增 |
 | `path` | UUID[] | NOT NULL | '{}' | 节点路径数组，从根到父节点的 UUID 序列 |
 | `sort_rank` | VARCHAR(12) | NOT NULL | 'a0' | LexoRank 排序值，字典序排序 |
-| `removed` | BOOLEAN | NOT NULL | FALSE | 逻辑删除标记 |
 | `create_time` | TIMESTAMP | NOT NULL | '2000-01-01 00:00:00' | 创建时间 |
 | `update_time` | TIMESTAMP | NOT NULL | '2000-01-01 00:00:00' | 更新时间 |
 | `tenant_id` | UUID | NOT NULL | - | 租户ID |
@@ -71,9 +70,21 @@ status: Approved
 | `idx_org_tree_parent` | B-tree | `(parent_id, sort_rank)` | 查询子节点并排序 |
 | `idx_org_tree_entity` | B-tree | `(entity_type, entity_id)` | 反向查询实体节点 |
 | `idx_org_tree_path_gin` | GIN | `path` | 高效路径查询（PostgreSQL 数组索引） |
-| `uk_org_tree_parent_entity` | 唯一 | `(parent_id, entity_type, entity_id)` WHERE removed=FALSE | 防止同一父节点下重复挂载 |
+| `uk_org_tree_parent_entity` | 唯一 | `(parent_id, entity_type, entity_id)` | 防止同一父节点下重复挂载 |
 
-### 3.3 虚拟根节点设计
+### 3.3 业务实体表新增字段
+
+Group、Department、Personnel 表新增逻辑删除字段：
+
+| 表名 | 字段 | 类型 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `org_group` | `removed` | BOOLEAN NOT NULL | FALSE | 逻辑删除标记 |
+| `org_department` | `removed` | BOOLEAN NOT NULL | FALSE | 逻辑删除标记 |
+| `org_personnel` | `removed` | BOOLEAN NOT NULL | FALSE | 逻辑删除标记 |
+
+**Position 表保持现状**，沿用 `status` 字段（status=0 表示已删除）。
+
+### 3.4 虚拟根节点设计
 
 - 系统初始化时创建虚拟根节点（id = `00000000-0000-0000-0000-000000000000`）
 - entity_type = 'ROOT'，parent_id = id（指向自身）
@@ -84,14 +95,30 @@ status: Approved
 - parent_id 永远非空，递归查询逻辑统一
 - 无需处理 NULL parent_id 的特殊情况
 
-### 3.4 唯一约束设计
+### 3.5 唯一约束设计
 
-`(parent_id, entity_type, entity_id)` 组合唯一约束（排除已删除记录）：
+`(parent_id, entity_type, entity_id)` 组合唯一约束：
 
 - 同一个父节点下，不能有两个子节点指向同一个业务实体
 - 支持同一实体在不同父节点下有多个节点（多归属）
 
-### 3.5 LexoRank 排序算法
+### 3.6 删除节点逻辑设计
+
+删除节点时的处理逻辑：
+
+| 步骤 | 操作 | 说明 |
+|------|------|------|
+| 1 | 检查该实体在树上的节点数量 | `count(entity_type, entity_id)` |
+| 2 | 判断是否为最后一个节点 | 数量 = 1 |
+| 3a | 物理删除节点 + 逻辑删除实体 | 最后一个节点时，设置实体 `removed = true` |
+| 3b | 仅物理删除节点 | 实体还有其他节点时 |
+
+**设计理由：**
+- 节点采用物理删除：树结构变更频繁，物理删除简化逻辑
+- 实体采用逻辑删除：业务数据有审计追溯需求
+- 条件性删除：避免误删实体（实体可能在多个位置出现）
+
+### 3.7 LexoRank 排序算法
 
 **核心原理：**
 - 使用字符集 `0-9a-z`（36个字符）
@@ -106,7 +133,7 @@ status: Approved
 
 **字段长度：VARCHAR(12)** 可支持极细粒度排序。
 
-### 3.6 建库脚本
+### 3.8 建库脚本
 
 **脚本文件：**
 - `V1__Create_base_tables.sql`：DDL，创建所有表结构、索引、约束
@@ -162,9 +189,6 @@ public class OrgTreeNodeEntity {
     @Column(name = "sort_rank", length = 12, nullable = false)
     private String sortRank;
 
-    @Column(name = "removed", nullable = false)
-    private Boolean removed;
-
     @Column(name = "create_time", nullable = false)
     private OffsetDateTime createTime;
 
@@ -217,14 +241,14 @@ public interface OrgTreeNodeRepository extends JpaRepository<OrgTreeNodeEntity, 
 
     @Query(value = """
         SELECT * FROM org_tree
-        WHERE (:nodeId = ANY(path) OR id = :nodeId) AND removed = false
+        WHERE :nodeId = ANY(path) OR id = :nodeId
         ORDER BY level, sort_rank
         """, nativeQuery = true)
-    List<OrgTreeNodeEntity> findAllDescendantsNotRemoved(@Param("nodeId") UUID nodeId);
+    List<OrgTreeNodeEntity> findAllDescendants(@Param("nodeId") UUID nodeId);
 
     @Query(value = """
         SELECT * FROM org_tree
-        WHERE parent_id = :parentId AND removed = false
+        WHERE parent_id = :parentId
         ORDER BY sort_rank
         """, nativeQuery = true)
     List<OrgTreeNodeEntity> findChildrenByParentId(@Param("parentId") UUID parentId);
@@ -236,21 +260,18 @@ public interface OrgTreeNodeRepository extends JpaRepository<OrgTreeNodeEntity, 
 
     @Query(value = """
         SELECT * FROM org_tree
-        WHERE parent_id IN (:parentIds) AND removed = false
+        WHERE parent_id IN (:parentIds)
         ORDER BY parent_id, sort_rank
         """, nativeQuery = true)
     List<OrgTreeNodeEntity> findChildrenByParentIds(@Param("parentIds") List<UUID> parentIds);
 
     // ===== 统计查询 =====
 
-    @Query("SELECT n.entityType, COUNT(n) FROM OrgTreeNodeEntity n WHERE n.parentId = :parentId AND n.removed = false GROUP BY n.entityType")
+    @Query("SELECT n.entityType, COUNT(n) FROM OrgTreeNodeEntity n WHERE n.parentId = :parentId GROUP BY n.entityType")
     List<Object[]> countChildrenByType(@Param("parentId") UUID parentId);
 
-    @Query("SELECT n FROM OrgTreeNodeEntity n WHERE n.id = :nodeId AND n.removed = false")
-    Optional<OrgTreeNodeEntity> findByIdNotRemoved(@Param("nodeId") UUID nodeId);
-
-    @Query("SELECT COUNT(n) FROM OrgTreeNodeEntity n WHERE n.parentId = :parentId AND n.removed = false")
-    long countChildrenByParentId(@Param("parentId") UUID parentId);
+    // 统计某实体在树上的节点数量（用于删除判断）
+    long countByEntityTypeAndEntityId(EntityType entityType, UUID entityId);
 }
 ```
 
@@ -489,7 +510,22 @@ List<OrgTreeNodeEntity> findByPathContains(@Param("nodeId") UUID nodeId);
 
 ### 5.4 逻辑删除查询约定
 
-所有查询必须排除已删除记录（`removed = false`）。
+业务实体表（Group、Department、Personnel）查询时需排除已删除记录：
+
+```java
+// 方式 1：方法命名约定
+List<GroupEntity> findByRemovedFalse();
+
+// 方式 2：JPQL
+@Query("SELECT g FROM GroupEntity g WHERE g.removed = false")
+List<GroupEntity> findAllNotRemoved();
+
+// 方式 3：原生 SQL
+@Query(value = "SELECT * FROM org_group WHERE removed = false", nativeQuery = true)
+List<GroupEntity> findAllNotRemoved();
+```
+
+**注意：** `org_tree` 表不使用逻辑删除，节点采用物理删除。
 
 ## 6. 测试策略
 
@@ -531,6 +567,9 @@ List<OrgTreeNodeEntity> findByPathContains(@Param("nodeId") UUID nodeId);
 | DTO | 修改 TreeStatistics.java | 统计信息 DTO |
 | Mapper | 新增 OrgTreeNodeMapper.java | 树节点 Mapper |
 | Utils | 新增 LexoRankUtils.java | LexoRank 工具类 |
+| Entity | 修改 GroupEntity.java | 新增 removed 字段 |
+| Entity | 修改 DepartmentEntity.java | 新增 removed 字段 |
+| Entity | 修改 PersonnelEntity.java | 新增 removed 字段 |
 | OpenAPI | 更新 openapi.yaml | API 文档 |
 
 ### 7.2 可删除的文件（可选，建议保留用于回滚）
@@ -565,10 +604,11 @@ List<OrgTreeNodeEntity> findByPathContains(@Param("nodeId") UUID nodeId);
 4. 多归属场景正确支持（同一实体可出现在多个父节点下）
 5. LexoRank 排序正常工作（插入、移动无需重排其他元素）
 6. 路径查询高效（GIN 索引生效）
-7. 逻辑删除正确（removed=true 的记录不出现在查询结果中）
-8. 单元测试覆盖率 ≥ 80%
-9. 集成测试通过
-10. openapi.yaml 文档同步更新
+7. 删除逻辑正确（节点物理删除；最后一个节点时实体逻辑删除）
+8. 实体逻辑删除正确（removed=true 的实体不出现在查询结果中）
+9. 单元测试覆盖率 ≥ 80%
+10. 集成测试通过
+11. openapi.yaml 文档同步更新
 
 ## 9. 附录
 
@@ -601,5 +641,9 @@ ROOT (虚拟根)
 
 ---
 
-**文档版本：** 1.0
+**文档版本：** 1.1
 **最后更新：** 2026-04-10
+
+**版本历史：**
+- v1.1: 调整删除逻辑（节点物理删除 + 实体条件逻辑删除）
+- v1.0: 初始版本
