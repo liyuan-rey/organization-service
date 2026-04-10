@@ -67,7 +67,8 @@ class DepartmentServiceTest {
                 "123456",
                 now,
                 now,
-                tenantId);
+                tenantId,
+                false);
 
         departmentRsp = new DepartmentRsp(
                 departmentId,
@@ -194,7 +195,8 @@ class DepartmentServiceTest {
                 "654321",
                 departmentEntity.getCreateTime(),
                 OffsetDateTime.now(),
-                departmentEntity.getTenantId());
+                departmentEntity.getTenantId(),
+                false);
 
         when(departmentRepository.findById(departmentId)).thenReturn(Optional.of(departmentEntity));
         when(departmentRepository.save(departmentEntity)).thenReturn(updatedEntity);

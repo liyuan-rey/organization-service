@@ -190,7 +190,7 @@ CREATE TRIGGER update_org_entity_relation_updated_at BEFORE UPDATE ON org_entity
 -- =====================================================
 CREATE TABLE IF NOT EXISTS org_tree (
     id UUID NOT NULL,
-    parent_id UUID NOT NULL,
+    parent_id UUID,
     entity_type VARCHAR(20) NOT NULL,
     entity_id UUID NOT NULL,
     alias VARCHAR(100) NOT NULL DEFAULT '',

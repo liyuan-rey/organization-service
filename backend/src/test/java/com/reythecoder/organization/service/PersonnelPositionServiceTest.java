@@ -83,7 +83,8 @@ class PersonnelPositionServiceTest {
                 null,
                 now,
                 now,
-                tenantId);
+                tenantId,
+                false);
 
         positionEntity = new PositionEntity(
                 positionId,
@@ -112,7 +113,8 @@ class PersonnelPositionServiceTest {
                 "100000",
                 now,
                 now,
-                tenantId);
+                tenantId,
+                false);
 
         relationEntity = new PersonnelPositionEntity(
                 relationId,

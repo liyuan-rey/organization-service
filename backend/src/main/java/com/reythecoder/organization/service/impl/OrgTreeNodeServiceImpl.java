@@ -444,6 +444,19 @@ public class OrgTreeNodeServiceImpl implements OrgTreeNodeService {
         return repository.countByParentId(parentId);
     }
 
+    @Override
+    public TreeNodeRsp getRootNode() {
+        logger.info("获取根节点");
+
+        // Find the root node (level = 0)
+        List<OrgTreeNodeEntity> rootNodes = repository.findByLevel(0);
+        if (rootNodes.isEmpty()) {
+            throw new ApiException(404, "根节点不存在");
+        }
+
+        return toTreeNodeRsp(rootNodes.get(0));
+    }
+
     // =====================================================
     // Helper methods
     // =====================================================

@@ -54,7 +54,8 @@ class GroupServiceTest {
                 "测试分组描述",
                 now,
                 now,
-                UUID.fromString("00000000-0000-0000-0000-000000000000"));
+                UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                false);
 
         groupRsp = new GroupRsp(
                 groupId,
@@ -135,7 +136,8 @@ class GroupServiceTest {
                 "更新后的分组描述",
                 groupEntity.getCreateTime(),
                 OffsetDateTime.now(),
-                groupEntity.getTenantId());
+                groupEntity.getTenantId(),
+                false);
 
         when(groupRepository.findById(groupId)).thenReturn(Optional.of(groupEntity));
         when(groupRepository.save(groupEntity)).thenReturn(updatedEntity);

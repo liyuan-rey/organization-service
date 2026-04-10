@@ -74,7 +74,8 @@ class DepartmentRepositoryTest {
                 "test@example.com",
                 "测试地址", "123456",
                 now, now,
-                tenantId);
+                tenantId,
+                false);
     }
 
     @Test

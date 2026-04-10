@@ -70,7 +70,8 @@ class PersonnelMapperTest {
                 null,
                 now,
                 now,
-                tenantId
+                tenantId,
+                false
         );
 
         // Act

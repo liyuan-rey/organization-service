@@ -76,7 +76,8 @@ class DepartmentMapperTest {
                 "123456",
                 now,
                 now,
-                tenantId);
+                tenantId,
+                false);
 
         // Act
         DepartmentRsp rsp = departmentMapper.toRsp(entity);

@@ -59,7 +59,8 @@ class PersonnelServiceTest {
                 null,
                 now,
                 now,
-                tenantId
+                tenantId,
+                false
         );
 
         personnelRsp = new PersonnelRsp(
@@ -181,7 +182,8 @@ class PersonnelServiceTest {
                 null,
                 personnelEntity.getCreateTime(),
                 OffsetDateTime.now(),
-                personnelEntity.getTenantId()
+                personnelEntity.getTenantId(),
+                false
         );
 
         when(personnelRepository.findById(personnelId)).thenReturn(Optional.of(personnelEntity));

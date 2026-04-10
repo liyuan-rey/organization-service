@@ -68,7 +68,8 @@ class PersonnelRepositoryTest {
                 null, // photo
                 now,
                 now,
-                tenantId
+                tenantId,
+                false
         );
     }
 

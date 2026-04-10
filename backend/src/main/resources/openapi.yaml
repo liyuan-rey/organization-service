@@ -286,6 +286,123 @@ components:
         - code
         - message
 
+    # Tree Node Related Schemas
+    EntityType:
+      type: string
+      enum:
+        - ROOT
+        - GROUP
+        - DEPARTMENT
+        - PERSONNEL
+      description: 实体类型
+
+    TreeStatistics:
+      type: object
+      properties:
+        subGroupCount:
+          type: integer
+          description: 子组数量
+        subDepartmentCount:
+          type: integer
+          description: 子部门数量
+        personnelCount:
+          type: integer
+          description: 人员数量
+
+    TreeNode:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: 树节点 ID
+        type:
+          $ref: '#/components/schemas/NodeType'
+          description: 节点类型
+        name:
+          type: string
+          description: 节点名称/别名
+        sortOrder:
+          type: integer
+          description: 排序顺序
+        statistics:
+          $ref: '#/components/schemas/TreeStatistics'
+          description: 节点统计信息
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/TreeNode'
+          description: 子节点列表
+
+    CreateTreeNodeRequest:
+      type: object
+      properties:
+        parentId:
+          type: string
+          format: uuid
+          nullable: true
+          description: 父节点 ID（根节点可为 null）
+        entityType:
+          $ref: '#/components/schemas/EntityType'
+          description: 实体类型（GROUP, DEPARTMENT, PERSONNEL）
+        entityId:
+          type: string
+          format: uuid
+          description: 实体 ID（实际的组/部门/人员 ID）
+        alias:
+          type: string
+          maxLength: 100
+          description: 节点别名（显示名称）
+        sortRank:
+          type: string
+          maxLength: 12
+          description: 排序值（LexoRank 格式）
+      required:
+        - entityType
+        - entityId
+        - alias
+        - sortRank
+
+    UpdateTreeNodeRequest:
+      type: object
+      properties:
+        alias:
+          type: string
+          maxLength: 100
+          description: 新的节点别名
+        sortRank:
+          type: string
+          maxLength: 12
+          description: 新的排序值
+
+    MoveTreeNodeRequest:
+      type: object
+      properties:
+        nodeId:
+          type: string
+          format: uuid
+          description: 要移动的节点 ID
+        newParentId:
+          type: string
+          format: uuid
+          description: 新的父节点 ID
+        newSortRank:
+          type: string
+          maxLength: 12
+          description: 在新父节点下的排序值
+      required:
+        - nodeId
+        - newParentId
+        - newSortRank
+
+    NodeType:
+      type: string
+      enum:
+        - GROUP
+        - DEPARTMENT
+        - PERSONNEL
+      description: 节点类型（用于树结构）
+
   responses:
     NotFound:
       description: 资源不存在
@@ -315,6 +432,15 @@ components:
       in: path
       required: true
       description: 资源 ID
+      schema:
+        type: string
+        format: uuid
+
+    NodeIdPathParam:
+      name: nodeId
+      in: path
+      required: true
+      description: 树节点 ID
       schema:
         type: string
         format: uuid
@@ -667,3 +793,465 @@ paths:
       responses:
         '204':
           description: 人员删除成功
+
+  # Tree Node API Paths
+  /tree/nodes:
+    post:
+      tags:
+        - 树节点管理
+      summary: 创建树节点
+      description: 创建一个新的树节点，可以是组、部门或人员节点
+      operationId: createTreeNode
+      requestBody:
+        description: 树节点创建请求参数
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTreeNodeRequest'
+            example:
+              parentId: 00000000-0000-0000-0000-000000000001
+              entityType: DEPARTMENT
+              entityId: 00000000-0000-0000-0000-000000000002
+              alias: 技术部
+              sortRank: "100"
+      responses:
+        '201':
+          description: 树节点创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TreeNode'
+              example:
+                code: 200
+                message: 节点创建成功
+                data:
+                  id: 00000000-0000-0000-0000-000000000003
+                  type: DEPARTMENT
+                  name: 技术部
+                  sortOrder: 1
+                  statistics:
+                    subGroupCount: 0
+                    subDepartmentCount: 0
+                    personnelCount: 0
+                  children: []
+
+  /tree/nodes/{nodeId}:
+    get:
+      tags:
+        - 树节点管理
+      summary: 获取树节点
+      description: 根据树节点 ID 获取单个节点的详细信息
+      operationId: getTreeNode
+      parameters:
+        - $ref: '#/components/parameters/NodeIdPathParam'
+      responses:
+        '200':
+          description: 成功获取树节点信息
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TreeNode'
+              example:
+                code: 200
+                message: success
+                data:
+                  id: 00000000-0000-0000-0000-000000000003
+                  type: DEPARTMENT
+                  name: 技术部
+                  sortOrder: 1
+                  statistics:
+                    subGroupCount: 0
+                    subDepartmentCount: 0
+                    personnelCount: 0
+                  children: []
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags:
+        - 树节点管理
+      summary: 更新树节点
+      description: 根据树节点 ID 更新节点信息（别名和排序）
+      operationId: updateTreeNode
+      parameters:
+        - $ref: '#/components/parameters/NodeIdPathParam'
+      requestBody:
+        description: 树节点更新请求参数
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTreeNodeRequest'
+            example:
+              alias: 技术研发部
+              sortRank: "150"
+      responses:
+        '200':
+          description: 树节点更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TreeNode'
+              example:
+                code: 200
+                message: 节点更新成功
+                data:
+                  id: 00000000-0000-0000-0000-000000000003
+                  type: DEPARTMENT
+                  name: 技术研发部
+                  sortOrder: 2
+                  statistics:
+                    subGroupCount: 0
+                    subDepartmentCount: 0
+                    personnelCount: 0
+                  children: []
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tree/nodes/{nodeId}/remove:
+    post:
+      tags:
+        - 树节点管理
+      summary: 删除树节点
+      description: 根据树节点 ID 删除节点（级联删除子节点）
+      operationId: removeTreeNode
+      parameters:
+        - $ref: '#/components/parameters/NodeIdPathParam'
+      responses:
+        '204':
+          description: 树节点删除成功
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tree/nodes/{nodeId}/move:
+    post:
+      tags:
+        - 树节点管理
+      summary: 移动树节点
+      description: 将树节点移动到新的父节点下
+      operationId: moveTreeNode
+      parameters:
+        - $ref: '#/components/parameters/NodeIdPathParam'
+      requestBody:
+        description: 树节点移动请求参数
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoveTreeNodeRequest'
+            example:
+              nodeId: 00000000-0000-0000-0000-000000000003
+              newParentId: 00000000-0000-0000-0000-000000000001
+              newSortRank: "200"
+      responses:
+        '200':
+          description: 树节点移动成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TreeNode'
+              example:
+                code: 200
+                message: 节点移动成功
+                data:
+                  id: 00000000-0000-0000-0000-000000000003
+                  type: DEPARTMENT
+                  name: 技术部
+                  sortOrder: 3
+                  statistics:
+                    subGroupCount: 0
+                    subDepartmentCount: 0
+                    personnelCount: 0
+                  children: []
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tree/nodes/{nodeId}/children:
+    get:
+      tags:
+        - 树节点管理
+      summary: 获取子节点列表
+      description: 获取指定节点的所有直接子节点
+      operationId: getTreeNodeChildren
+      parameters:
+        - $ref: '#/components/parameters/NodeIdPathParam'
+      responses:
+        '200':
+          description: 成功获取子节点列表
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TreeNode'
+              example:
+                code: 200
+                message: success
+                data:
+                  - id: 00000000-0000-0000-0000-000000000003
+                    type: DEPARTMENT
+                    name: 技术部
+                    sortOrder: 1
+                    statistics:
+                      subGroupCount: 0
+                      subDepartmentCount: 0
+                      personnelCount: 0
+                    children: []
+                  - id: 00000000-0000-0000-0000-000000000004
+                    type: DEPARTMENT
+                    name: 市场部
+                    sortOrder: 2
+                    statistics:
+                      subGroupCount: 0
+                      subDepartmentCount: 0
+                      personnelCount: 0
+                    children: []
+
+  /tree/nodes/{nodeId}/subtree:
+    get:
+      tags:
+        - 树节点管理
+      summary: 获取子树
+      description: 获取指定节点的完整子树结构（可限制深度）
+      operationId: getTreeNodeSubtree
+      parameters:
+        - $ref: '#/components/parameters/NodeIdPathParam'
+        - name: depth
+          in: query
+          required: false
+          description: 最大深度（-1 表示无限制）
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 成功获取子树结构
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TreeNode'
+              example:
+                code: 200
+                message: success
+                data:
+                  id: 00000000-0000-0000-0000-000000000001
+                  type: GROUP
+                  name: 总公司
+                  sortOrder: 1
+                  statistics:
+                    subGroupCount: 1
+                    subDepartmentCount: 2
+                    personnelCount: 5
+                  children:
+                    - id: 00000000-0000-0000-0000-000000000003
+                      type: DEPARTMENT
+                      name: 技术部
+                      sortOrder: 1
+                      statistics:
+                        subGroupCount: 0
+                        subDepartmentCount: 0
+                        personnelCount: 3
+                      children: []
+
+  /tree/nodes/{nodeId}/descendants:
+    get:
+      tags:
+        - 树节点管理
+      summary: 获取所有后代节点
+      description: 获取指定节点的所有后代节点（扁平列表）
+      operationId: getTreeNodeDescendants
+      parameters:
+        - $ref: '#/components/parameters/NodeIdPathParam'
+      responses:
+        '200':
+          description: 成功获取所有后代节点
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TreeNode'
+              example:
+                code: 200
+                message: success
+                data:
+                  - id: 00000000-0000-0000-0000-000000000003
+                    type: DEPARTMENT
+                    name: 技术部
+                    sortOrder: 1
+                    statistics:
+                      subGroupCount: 0
+                      subDepartmentCount: 0
+                      personnelCount: 3
+                    children: []
+                  - id: 00000000-0000-0000-0000-000000000004
+                    type: DEPARTMENT
+                    name: 市场部
+                    sortOrder: 2
+                    statistics:
+                      subGroupCount: 0
+                      subDepartmentCount: 0
+                      personnelCount: 2
+                    children: []
+
+  /tree/nodes/{nodeId}/ancestors:
+    get:
+      tags:
+        - 树节点管理
+      summary: 获取所有祖先节点
+      description: 获取指定节点的所有祖先节点（从根节点到父节点）
+      operationId: getTreeNodeAncestors
+      parameters:
+        - $ref: '#/components/parameters/NodeIdPathParam'
+      responses:
+        '200':
+          description: 成功获取所有祖先节点
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TreeNode'
+              example:
+                code: 200
+                message: success
+                data:
+                  - id: 00000000-0000-0000-0000-000000000001
+                    type: GROUP
+                    name: 总公司
+                    sortOrder: 1
+                    statistics:
+                      subGroupCount: 1
+                      subDepartmentCount: 2
+                      personnelCount: 5
+                    children: []
+                  - id: 00000000-0000-0000-0000-000000000002
+                    type: GROUP
+                    name: 研发中心
+                    sortOrder: 2
+                    statistics:
+                      subGroupCount: 0
+                      subDepartmentCount: 1
+                      personnelCount: 3
+                    children: []
+
+  /tree/root:
+    get:
+      tags:
+        - 树节点管理
+      summary: 获取根节点
+      description: 获取组织树的根节点
+      operationId: getTreeRootNode
+      responses:
+        '200':
+          description: 成功获取根节点
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TreeNode'
+              example:
+                code: 200
+                message: success
+                data:
+                  id: 00000000-0000-0000-0000-000000000000
+                  type: ROOT
+                  name: 根节点
+                  sortOrder: 0
+                  statistics:
+                    subGroupCount: 1
+                    subDepartmentCount: 5
+                    personnelCount: 20
+                  children: []
+
+  /tree/root/children:
+    get:
+      tags:
+        - 树节点管理
+      summary: 获取根节点的子节点
+      description: 获取组织树根节点的所有直接子节点
+      operationId: getTreeRootChildren
+      responses:
+        '200':
+          description: 成功获取根节点的子节点列表
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResult'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TreeNode'
+              example:
+                code: 200
+                message: success
+                data:
+                  - id: 00000000-0000-0000-0000-000000000001
+                    type: GROUP
+                    name: 总公司
+                    sortOrder: 1
+                    statistics:
+                      subGroupCount: 1
+                      subDepartmentCount: 2
+                      personnelCount: 5
+                    children: []
+                  - id: 00000000-0000-0000-0000-000000000002
+                    type: GROUP
+                    name: 分公司
+                    sortOrder: 2
+                    statistics:
+                      subGroupCount: 0
+                      subDepartmentCount: 1
+                      personnelCount: 3
+                    children: []

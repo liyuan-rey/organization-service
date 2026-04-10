@@ -136,4 +136,11 @@ public interface OrgTreeNodeService {
      * @return the count of children
      */
     long countChildren(UUID parentId);
+
+    /**
+     * Get the root node of the organization tree.
+     *
+     * @return the root node
+     */
+    TreeNodeRsp getRootNode();
 }

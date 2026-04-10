@@ -75,7 +75,8 @@ class DepartmentPositionServiceTest {
                 "100000",
                 now,
                 now,
-                tenantId);
+                tenantId,
+                false);
 
         positionEntity = new PositionEntity(
                 positionId,
