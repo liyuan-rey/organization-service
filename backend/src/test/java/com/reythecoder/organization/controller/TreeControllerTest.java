@@ -1,6 +1,6 @@
 package com.reythecoder.organization.controller;
 
-import com.reythecoder.organization.dto.NodeType;
+import com.reythecoder.organization.entity.EntityType;
 import com.reythecoder.organization.dto.response.TreeNodeRsp;
 import com.reythecoder.organization.dto.response.TreeStatistics;
 import com.reythecoder.organization.service.TreeService;
@@ -41,7 +41,7 @@ class TreeControllerTest {
 
         treeRsp = new TreeNodeRsp();
         treeRsp.setId(groupId);
-        treeRsp.setType(NodeType.GROUP);
+        treeRsp.setType(EntityType.GROUP);
         treeRsp.setName("基础通讯录");
         treeRsp.setSortOrder(1);
         treeRsp.setStatistics(new TreeStatistics(2, 5, 10));

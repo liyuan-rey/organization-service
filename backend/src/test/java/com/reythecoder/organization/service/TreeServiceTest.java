@@ -1,6 +1,6 @@
 package com.reythecoder.organization.service;
 
-import com.reythecoder.organization.dto.NodeType;
+import com.reythecoder.organization.entity.EntityType;
 import com.reythecoder.organization.dto.response.TreeNodeRsp;
 import com.reythecoder.organization.entity.*;
 import com.reythecoder.organization.exception.ApiException;
@@ -88,7 +88,7 @@ class TreeServiceTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(groupId);
-        assertThat(result.getType()).isEqualTo(NodeType.GROUP);
+        assertThat(result.getType()).isEqualTo(EntityType.GROUP);
         assertThat(result.getName()).isEqualTo("基础通讯录");
         assertThat(result.getStatistics().getSubGroupCount()).isEqualTo(2);
         assertThat(result.getStatistics().getSubDepartmentCount()).isEqualTo(5);
@@ -133,8 +133,8 @@ class TreeServiceTest {
         TreeNodeRsp result = treeService.getTreeByGroupId(groupId, 2);
 
         assertThat(result.getChildren()).hasSize(2);
-        assertThat(result.getChildren().get(0).getType()).isEqualTo(NodeType.GROUP);
-        assertThat(result.getChildren().get(1).getType()).isEqualTo(NodeType.DEPARTMENT);
+        assertThat(result.getChildren().get(0).getType()).isEqualTo(EntityType.GROUP);
+        assertThat(result.getChildren().get(1).getType()).isEqualTo(EntityType.DEPARTMENT);
         // Children should not have their children loaded (depth=2 loads only one level of children)
         assertThat(result.getChildren().get(0).getChildren()).isEmpty();
         assertThat(result.getChildren().get(1).getChildren()).isEmpty();
@@ -172,7 +172,7 @@ class TreeServiceTest {
 
         assertThat(result.getChildren()).hasSize(2);
         // GROUP(0) < DEPARTMENT(1) < PERSONNEL(2), so DEPARTMENT should come before PERSONNEL
-        assertThat(result.getChildren().get(0).getType()).isEqualTo(NodeType.DEPARTMENT);
-        assertThat(result.getChildren().get(1).getType()).isEqualTo(NodeType.PERSONNEL);
+        assertThat(result.getChildren().get(0).getType()).isEqualTo(EntityType.DEPARTMENT);
+        assertThat(result.getChildren().get(1).getType()).isEqualTo(EntityType.PERSONNEL);
     }
 }

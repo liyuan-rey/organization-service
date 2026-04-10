@@ -1,6 +1,6 @@
 package com.reythecoder.organization.service.impl;
 
-import com.reythecoder.organization.dto.NodeType;
+import com.reythecoder.organization.entity.EntityType;
 import com.reythecoder.organization.dto.response.TreeNodeRsp;
 import com.reythecoder.organization.dto.response.TreeStatistics;
 import com.reythecoder.organization.entity.*;
@@ -70,7 +70,7 @@ public class TreeServiceImpl implements TreeService {
     private TreeNodeRsp buildGroupNode(GroupEntity group, int currentDepth, int maxDepth, boolean loadAll) {
         TreeNodeRsp node = new TreeNodeRsp();
         node.setId(group.getId());
-        node.setType(NodeType.GROUP);
+        node.setType(EntityType.GROUP);
         node.setName(group.getName());
         node.setSortOrder(0);
 
@@ -119,7 +119,7 @@ public class TreeServiceImpl implements TreeService {
     private TreeNodeRsp buildDepartmentNode(DepartmentEntity dept, int currentDepth, int maxDepth, boolean loadAll, Integer sortOrder) {
         TreeNodeRsp node = new TreeNodeRsp();
         node.setId(dept.getId());
-        node.setType(NodeType.DEPARTMENT);
+        node.setType(EntityType.DEPARTMENT);
         node.setName(dept.getName());
         node.setSortOrder(sortOrder != null ? sortOrder : 0);
 
@@ -168,7 +168,7 @@ public class TreeServiceImpl implements TreeService {
     private TreeNodeRsp buildPersonnelNode(PersonnelEntity personnel, Integer sortOrder) {
         TreeNodeRsp node = new TreeNodeRsp();
         node.setId(personnel.getId());
-        node.setType(NodeType.PERSONNEL);
+        node.setType(EntityType.PERSONNEL);
         node.setName(personnel.getName());
         node.setSortOrder(sortOrder != null ? sortOrder : 0);
         node.setStatistics(new TreeStatistics(0, 0, 0));
