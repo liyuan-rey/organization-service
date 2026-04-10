@@ -34,6 +34,9 @@ public class GroupEntity {
     @Column(name = "tenant_id", nullable = false)
     private UUID tenantId;
 
+    @Column(name = "removed", nullable = false)
+    private boolean removed = false;
+
     public GroupEntity(String name, String description) {
         this.id = UUIDv7.randomUUID();
         this.name = name;
@@ -41,5 +44,6 @@ public class GroupEntity {
         this.createTime = OffsetDateTime.now();
         this.updateTime = OffsetDateTime.now();
         this.tenantId = UUID.fromString("00000000-0000-0000-0000-000000000000");
+        this.removed = false;
     }
 }

@@ -59,8 +59,11 @@ public class DepartmentEntity {
     //@JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID tenantId;
 
+    @Column(name = "removed", nullable = false)
+    private boolean removed = false;
+
     // JPA requires a no-args constructor, which is provided by @NoArgsConstructor
-    
+
     // Custom constructor for creating new entities with default values
     public DepartmentEntity(String name, String englishName, String shortName, String orgCode,
                           String phone, String fax, String email, String address, String postalCode) {
@@ -77,5 +80,6 @@ public class DepartmentEntity {
         this.createTime = OffsetDateTime.now();
         this.updateTime = OffsetDateTime.now();
         this.tenantId = UUID.fromString("00000000-0000-0000-0000-000000000000");
+        this.removed = false;
     }
 }

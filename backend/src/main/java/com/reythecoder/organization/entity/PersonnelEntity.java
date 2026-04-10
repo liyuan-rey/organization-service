@@ -56,6 +56,9 @@ public class PersonnelEntity {
     //@JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID tenantId;
 
+    @Column(name = "removed", nullable = false)
+    private boolean removed = false;
+
     // Custom constructor for creating new personnel with default values
     public PersonnelEntity(String name, String gender, String idCard, String mobile,
                           String telephone, String fax, String email, byte[] photo) {
@@ -71,5 +74,6 @@ public class PersonnelEntity {
         this.createTime = OffsetDateTime.now();
         this.updateTime = OffsetDateTime.now();
         this.tenantId = UUID.fromString("00000000-0000-0000-0000-000000000000");
+        this.removed = false;
     }
 }
