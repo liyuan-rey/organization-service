@@ -8,7 +8,7 @@ import com.reythecoder.organization.exception.ApiException;
 import com.reythecoder.organization.mapper.OrgTreeNodeMapper;
 import com.reythecoder.organization.repository.OrgTreeNodeRepository;
 import com.reythecoder.organization.service.OrgTreeNodeService;
-import com.reythecoder.organization.utils.LexoRankUtils;
+import com.reythecoder.common.utils.LexoRankUtils;
 import io.github.robsonkades.uuidv7.UUIDv7;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package com.reythecoder.organization.utils;
+package com.reythecoder.common.utils;
 
 import org.junit.jupiter.api.Test;
 

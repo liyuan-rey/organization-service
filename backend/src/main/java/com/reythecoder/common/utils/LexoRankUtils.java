@@ -1,4 +1,4 @@
-package com.reythecoder.organization.utils;
+package com.reythecoder.common.utils;
 
 /**
  * LexoRank 排序工具类
