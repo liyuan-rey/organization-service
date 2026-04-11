@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS org_department (
     email VARCHAR(100) NOT NULL DEFAULT '', -- Department email address
     address VARCHAR(500) NOT NULL DEFAULT '', -- Department address
     postal_code VARCHAR(20) NOT NULL DEFAULT '', -- Postal code
+    removed BOOLEAN NOT NULL DEFAULT FALSE, -- Soft delete flag
     create_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp, -- Record creation time
     update_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp, -- Record last update time
     tenant_id UUID NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000' -- Tenant identifier for multi-tenant data isolation
@@ -46,6 +47,7 @@ CREATE TABLE IF NOT EXISTS org_personnel (
     fax VARCHAR(20) NOT NULL DEFAULT '', -- Fax number
     email VARCHAR(100) NOT NULL DEFAULT '', -- Email address
     photo BYTEA, -- Personnel photo (binary data)
+    removed BOOLEAN NOT NULL DEFAULT FALSE, -- Soft delete flag
     create_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp, -- Record creation time
     update_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp, -- Record last update time
     tenant_id UUID NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000' -- Tenant identifier for multi-tenant data isolation
@@ -76,6 +78,7 @@ CREATE TABLE IF NOT EXISTS org_group (
     id UUID PRIMARY KEY, -- Primary key using 128-bit UUID v7 algorithm
     name VARCHAR(100) NOT NULL DEFAULT '', -- Group name
     description TEXT NOT NULL DEFAULT '', -- Group description
+    removed BOOLEAN NOT NULL DEFAULT FALSE, -- Soft delete flag
     create_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp, -- Record creation time
     update_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp, -- Record last update time
     tenant_id UUID NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000' -- Tenant identifier for multi-tenant data isolation

@@ -43,25 +43,8 @@ INSERT INTO org_position (id, name, code, description, job_level, job_category, 
 ON CONFLICT (id) DO NOTHING;
 
 -- ============================================================================
--- 三、层级与关联关系数据
+-- 三、关联关系数据
 -- ============================================================================
-
--- 部门层级：人力资源部(根) -> 技术部 -> 开发部
-INSERT INTO org_department_hierarchy (id, parent_id, child_id, level, path, sort_order, tenant_id) VALUES
-    ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', NULL, '11111111-1111-1111-1111-111111111111', 1, '/11111111-1111-1111-1111-111111111111/', 1, '00000000-0000-0000-0000-000000000000'),
-    ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222', 2, '/11111111-1111-1111-1111-111111111111/22222222-2222-2222-2222-222222222222/', 1, '00000000-0000-0000-0000-000000000000'),
-    ('cccccccc-cccc-cccc-cccc-cccccccccccc', '22222222-2222-2222-2222-222222222222', '33333333-3333-3333-3333-333333333333', 3, '/11111111-1111-1111-1111-111111111111/22222222-2222-2222-2222-222222222222/33333333-3333-3333-3333-333333333333/', 1, '00000000-0000-0000-0000-000000000000')
-ON CONFLICT (child_id) DO NOTHING;
-
--- 部门人员关联：张三属于人力资源部，职位HR经理，主部门
-INSERT INTO org_department_personnel (id, department_id, personnel_id, is_primary, position, sort_order, tenant_id) VALUES
-    ('dddddddd-dddd-dddd-dddd-dddddddddddd', '11111111-1111-1111-1111-111111111111', '44444444-4444-4444-4444-444444444444', TRUE, 'HR经理', 1, '00000000-0000-0000-0000-000000000000')
-ON CONFLICT (department_id, personnel_id) DO NOTHING;
-
--- 分组人员关联：张三属于开发组，角色为组长
-INSERT INTO org_group_personnel (id, group_id, personnel_id, role, sort_order, tenant_id) VALUES
-    ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '77777777-7777-7777-7777-777777777777', '44444444-4444-4444-4444-444444444444', '组长', 1, '00000000-0000-0000-0000-000000000000')
-ON CONFLICT (group_id, personnel_id) DO NOTHING;
 
 -- 部门职位关联
 -- 人力资源部 -> 人力资源经理
