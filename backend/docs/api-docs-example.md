@@ -374,12 +374,12 @@
 - 状态码: 204 No Content
 - 无响应体
 
-## OpenAPI 规范文件
+## OpenAPI 规范的接口定义文件
 
-本项目使用 OpenAPI 3.0 规范的 YAML 文件来描述 API：
+本项目使用 OpenAPI 3.1 规范的 YAML 文件来描述 API：
 
-- **位置**: `src/main/resources/openapi.yaml`
-- **版本**: OpenAPI 3.0.3
+- **位置**: `backend/docs/openapi.yaml`
+- **版本**: OpenAPI 3.1
 
 该文件包含了所有 API 端点的完整描述，包括：
 - 请求/响应格式
@@ -388,7 +388,8 @@
 - 数据结构定义
 
 可以使用以下工具查看和测试 API：
-- **Swagger Editor**: 将 YAML 文件导入 https://editor.swagger.io/
+- **Apifox**: 将 YAML 文件导入，可视化编辑和预览
+- **Swagger Editor**: 将 YAML 文件导入 https://editor.swagger.io/ 预览
 - **Stoplight Studio**: 可视化编辑和预览
 - **Redoc**: 生成美观的静态文档
 

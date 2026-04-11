@@ -275,7 +275,7 @@ All existing references in `com.reythecoder.organization` and new references in 
 
 | File | Content |
 |------|---------|
-| `backend/src/main/resources/openapi.yaml` | Append tag category, tag, and tag relation schemas + paths |
+| `backend/docs/openapi.yaml` | Append tag category, tag, and tag relation schemas + paths |
 
 ## Implementation Patterns
 

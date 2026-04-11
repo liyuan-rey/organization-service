@@ -158,28 +158,6 @@ public class OrganizationServiceImpl {
 
 The project uses externalized version properties defined in `gradle.properties` for centralized dependency management.
 
-### Version Property Structure
-
-```conf
-### organization-service 自定义配置 ###
-
-### 版本约定 ###
-javaVersion=17
-
-# Spring Boot
-springBootVersion=3.5.11
-springDependencyManagementVersion=1.1.7
-lombokPluginVersion=8.14
-
-# External dependencies
-mapstructVersion=1.6.3
-logstashLogbackEncoderVersion=7.4
-
-### 项目配置 ###
-defaultProjectGroup=com.reythecoder
-defaultProjectVersion=0.0.1-SNAPSHOT
-```
-
 ### Using Version Properties in Build Files
 
 In `build.gradle`, reference properties using `${property.name}` syntax:
@@ -231,3 +209,30 @@ Gradle performance settings in `gradle.properties`:
 - Daemon enabled: `org.gradle.daemon=true`
 - Build cache enabled: `org.gradle.caching=true`
 - JVM memory optimized: `org.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8`
+
+## Database Development Conventions
+
+### Repository Query Method Priority
+
+1. **Method name convention**: For simple single-table queries
+2. **@Query - JPQL**: For standard JPA operations, type-safe
+3. **@Query - Native SQL**: For PostgreSQL-specific features (array operations, GIN indexes)
+4. **Specification**: For dynamic condition composition
+
+### Approaches to Avoid
+
+- Custom Repository implementation classes (RepositoryCustom + Impl) — only use in extremely complex scenarios
+
+### PostgreSQL Array Operation Conventions
+
+When querying UUID[] arrays, use native SQL:
+
+```java
+@Query(value = "SELECT * FROM org_tree WHERE :nodeId = ANY(path)", nativeQuery = true)
+List<OrgTreeNodeEntity> findByPathContains(@Param("nodeId") UUID nodeId);
+```
+
+### Synchronization Rules
+
+- When modifying HTTP API endpoints in Controllers, you must also update the `backend/docs/openapi.yaml` spec file.
+- When modifying database table structures, you must also update the DDL scripts (`backend/db/init-scripts/*.sql`) and seed data scripts.

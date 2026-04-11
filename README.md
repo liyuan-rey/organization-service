@@ -124,12 +124,10 @@ docker-compose up -d
 ./gradlew clean build
 
 # 5. 启动开发服务器
-./gradlew bootRun -Dspring-boot.run.profiles=local
+./gradlew bootRun -Dspring-boot.run.profiles=dev
 ```
 
 后端服务运行在 http://localhost:8080
-
-API 文档：http://localhost:8080/swagger-ui.html
 
 ### 前端启动
 
@@ -277,29 +275,9 @@ pnpm build
 
 ## 📚 文档
 
-- [后端 API 文档](backend/docs/)
-- [数据库设计](backend/db/)
-- [项目架构](backend/docs/project-architecture.md)
-- [前端开发文档](frontend/CLAUDE.md)
-
----
-
-## 🚧 待办事项
-
-### 后端
-- [ ] 实现部门树形结构查询接口
-- [ ] 添加批量导入/导出功能
-- [ ] 实现软删除
-- [ ] 添加缓存支持（Redis）
-
-### 前端
-- [x] 基于 Vben Admin 重构前端
-- [x] 组织机构管理功能
-- [ ] 用户认证和登录
-- [ ] 权限控制（RBAC）
-- [ ] 部门树形结构展示
-- [ ] 批量操作
-- [ ] 数据导入/导出
+- [后端文档](backend/README.md)
+- [前端开发文档](frontend/README.md)
+- [HTTP API 接口定义](backend/docs/openapi.yaml)
 
 ---
 

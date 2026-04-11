@@ -46,19 +46,19 @@
 | 8 | `src/test/java/com/reythecoder/taglib/service/TagCategoryServiceTest.java` | Category service unit tests |
 | 8 | `src/test/java/com/reythecoder/taglib/controller/TagCategoryControllerTest.java` | Category controller tests |
 | 9 | `src/main/java/com/reythecoder/taglib/controller/TagCategoryController.java` | Category REST controller |
-| 9 | `src/main/resources/openapi.yaml` (modify) | Category API documentation |
+| 9 | `backend/docs/openapi.yaml` (modify) | Category API documentation |
 | 10 | `src/main/java/com/reythecoder/taglib/service/TagService.java` | Tag service interface |
 | 10 | `src/main/java/com/reythecoder/taglib/service/impl/TagServiceImpl.java` | Tag service implementation |
 | 11 | `src/test/java/com/reythecoder/taglib/service/TagServiceTest.java` | Tag service unit tests |
 | 11 | `src/test/java/com/reythecoder/taglib/controller/TagControllerTest.java` | Tag controller tests |
 | 12 | `src/main/java/com/reythecoder/taglib/controller/TagController.java` | Tag REST controller |
-| 12 | `src/main/resources/openapi.yaml` (modify) | Tag API documentation |
+| 12 | `backend/docs/openapi.yaml` (modify) | Tag API documentation |
 | 13 | `src/main/java/com/reythecoder/taglib/service/TagRelationService.java` | Relation service interface |
 | 13 | `src/main/java/com/reythecoder/taglib/service/impl/TagRelationServiceImpl.java` | Relation service implementation |
 | 14 | `src/test/java/com/reythecoder/taglib/service/TagRelationServiceTest.java` | Relation service unit tests |
 | 14 | `src/test/java/com/reythecoder/taglib/controller/TagRelationControllerTest.java` | Relation controller tests |
 | 15 | `src/main/java/com/reythecoder/taglib/controller/TagRelationController.java` | Relation REST controller |
-| 15 | `src/main/resources/openapi.yaml` (modify) | Relation API documentation |
+| 15 | `backend/docs/openapi.yaml` (modify) | Relation API documentation |
 
 ### Modified existing files
 
@@ -1571,7 +1571,7 @@ git commit -m "test(taglib): add tag category service and controller tests"
 
 **Files:**
 - Create: `src/main/java/com/reythecoder/taglib/controller/TagCategoryController.java`
-- Modify: `src/main/resources/openapi.yaml`
+- Modify: `backend/docs/openapi.yaml`
 
 - [ ] **Step 1: Write TagCategoryController**
 
@@ -1647,7 +1647,7 @@ Expected: All tests PASS
 
 - [ ] **Step 3: Add OpenAPI schemas and paths for tag categories**
 
-Append to `src/main/resources/openapi.yaml` — add schemas in `components.schemas` section and paths in `paths` section. Follow the existing OpenAPI 3.1.0 patterns already in the file. Add:
+Append to `backend/docs/openapi.yaml` — add schemas in `components.schemas` section and paths in `paths` section. Follow the existing OpenAPI 3.1.0 patterns already in the file. Add:
 
 In `components.schemas`:
 - `TagCategory`, `TagCategoryCreateRequest`, `TagCategoryUpdateRequest`
@@ -1665,7 +1665,7 @@ In `paths`:
 - [ ] **Step 4: Commit**
 
 ```bash
-git add src/main/java/com/reythecoder/taglib/controller/ src/main/resources/openapi.yaml
+git add src/main/java/com/reythecoder/taglib/controller/ backend/docs/openapi.yaml
 git commit -m "feat(taglib): add tag category controller and OpenAPI documentation"
 ```
 

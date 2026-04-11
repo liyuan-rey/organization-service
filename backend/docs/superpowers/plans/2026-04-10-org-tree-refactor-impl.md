@@ -1781,7 +1781,7 @@ git commit -m "test(integration): add OrgTree integration tests"
 ### Task 10: 更新 OpenAPI 文档
 
 **Files:**
-- Modify: `src/main/resources/static/openapi.yaml` (if exists)
+- Modify: `backend/docs/openapi.yaml` (if exists)
 
 - [ ] **Step 1: 更新 OpenAPI 文档**
 
@@ -1790,7 +1790,7 @@ git commit -m "test(integration): add OrgTree integration tests"
 - [ ] **Step 2: 提交**
 
 ```bash
-git add src/main/resources/static/openapi.yaml
+git add backend/docs/openapi.yaml
 git commit -m "docs(api): update OpenAPI spec for tree node endpoints"
 ```
 

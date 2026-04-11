@@ -8,11 +8,15 @@
 
 ## 📖 项目简介
 
-提供组织和人员管理的核心业务逻辑和 RESTful API，支持部门和人员的增删改查操作。
+提供组织和人员管理的核心业务逻辑和 RESTful API，支持组织树、标签库等多维度管理。
 
 **核心功能：**
+- ✅ 组织树管理（基于 LexoRank 排序的树形结构 CRUD）
 - ✅ 部门管理（CRUD、层级结构）
 - ✅ 人员管理（CRUD、部门关联）
+- ✅ 职位管理（CRUD、部门/人员关联）
+- ✅ 分组管理（CRUD、层级结构、部门/人员关联）
+- ✅ 标签库管理（分类、标签树、标签关联）
 - ✅ 自定义 API 响应结构（`ApiResult<T>`）
 - ✅ 全局异常处理
 - ✅ AOP 日志切面
@@ -32,9 +36,10 @@
 | **验证** | Hibernate Validator | Bean 验证 |
 | **工具库** | Lombok | 简化代码（@Data, @Builder 等） |
 | **对象映射** | MapStruct 1.6.3 | DTO ↔ Entity 映射 |
+| **主键生成** | UUIDv7 | 趋势递增的全局唯一标识 |
 | **日志** | Logback + Logstash | 结构化日志（支持 JSON 格式） |
 | **AOP** | AspectJ 1.9.22 | 切面编程（日志切面） |
-| **测试** | JUnit 5, Testcontainers | 单元测试和集成测试 |
+| **测试** | JUnit 5, Testcontainers 2.0.2 | 单元测试和集成测试 |
 
 ---
 
@@ -42,47 +47,43 @@
 
 ```
 backend/
-├── src/main/java/com/reythecoder/organization/
-│   ├── OrganizationServiceApplication.java  # 启动类
-│   ├── aspect/                              # AOP 切面
-│   │   └── LoggingAspect.java               # 日志切面
-│   ├── config/                              # 配置类
-│   ├── controller/                          # REST 控制器
-│   │   ├── DepartmentController.java        # 部门控制器
-│   │   └── PersonnelController.java         # 人员控制器
-│   ├── service/                             # 业务逻辑层
-│   │   ├── DepartmentService.java
-│   │   ├── PersonnelService.java
-│   │   └── impl/
-│   ├── repository/                          # 数据访问层
-│   │   ├── DepartmentRepository.java
-│   │   └── PersonnelRepository.java
-│   ├── entity/                              # 实体类
-│   │   ├── DepartmentEntity.java
-│   │   └── PersonnelEntity.java
-│   ├── dto/                                 # 数据传输对象
-│   │   ├── request/                         # 请求 DTO
-│   │   ├── response/                        # 响应 DTO
-│   │   └── ApiResult.java                   # 统一响应结构
-│   ├── mapper/                              # MapStruct 映射器
-│   │   ├── DepartmentMapper.java
-│   │   └── PersonnelMapper.java
-│   └── exception/                           # 异常处理
-│       ├── ApiException.java                # 自定义异常
-│       └── GlobalExceptionHandler.java      # 全局异常处理器
+├── src/main/java/com/reythecoder/
+│   ├── organization/                        # 组织管理核心域
+│   │   ├── OrganizationServiceApplication.java  # 启动类
+│   │   ├── aspect/                          # AOP 切面（LoggingAspect）
+│   │   ├── controller/                      # REST 控制器
+│   │   ├── service/                         # 业务逻辑层（接口 + impl/）
+│   │   ├── repository/                      # 数据访问层
+│   │   ├── entity/                          # JPA 实体
+│   │   ├── dto/
+│   │   │   ├── request/                     # 请求 DTO（*Req.java）
+│   │   │   └── response/                    # 响应 DTO（*Rsp.java）+ ApiResult<T>
+│   │   ├── mapper/                          # MapStruct 映射器
+│   │   └── exception/                       # ApiException + GlobalExceptionHandler
+│   ├── taglib/                              # 标签库管理
+│   │   ├── controller/                      # TagCategory, Tag, TagRelation 控制器
+│   │   ├── service/                         # 业务逻辑层（接口 + impl/）
+│   │   ├── repository/                      # 数据访问层
+│   │   ├── entity/                          # TagCategory, Tag, TagRelation 实体
+│   │   ├── dto/
+│   │   │   ├── request/                     # 请求 DTO
+│   │   │   └── response/                    # 响应 DTO
+│   │   └── mapper/                          # MapStruct 映射器
+│   └── common/                              # 共享工具
+│       └── utils/LexoRankUtils.java         # LexoRank 排序工具
 ├── src/main/resources/
 │   ├── application.yml                      # 主配置文件
-│   ├── application-local.yml                # 本地环境配置
 │   ├── application-dev.yml                  # 开发环境配置
 │   ├── application-prod.yml                 # 生产环境配置
+│   ├── application-test.yml                 # 测试环境配置
 │   ├── logback-spring.xml                   # 日志配置
-│   └── db/init-scripts/                     # 数据库初始化脚本
-├── db/                                      # 数据库相关
-├── docs/                                    # 文档
+│   └── openapi.yaml                         # 符合 OpenAPI 3.1 规范的接口描述
+├── db/init-scripts/                         # 数据库初始化脚本
+├── docs/                                    # 项目文档
 ├── build.gradle                             # Gradle 构建配置
 ├── settings.gradle                          # Gradle 设置
-├── gradle.properties                        # Gradle 属性
-├── docker-compose.yml                       # Docker 配置
+├── gradle.properties                        # Gradle 属性（版本管理）
+├── docker-compose.yml                       # Docker 配置（PostgreSQL）
 ├── Dockerfile                               # Docker 镜像
 └── .env.example                             # 环境变量示例
 ```
@@ -145,8 +146,8 @@ docker-compose up -d
 ### 5. 启动应用
 
 ```bash
-# 使用本地配置启动
-./gradlew bootRun -Dspring-boot.run.profiles=local
+# 使用 dev 配置启动
+./gradlew bootRun -Dspring-boot.run.profiles=dev
 
 # 或指定环境变量
 env $(cat .env | xargs) ./gradlew bootRun
@@ -156,13 +157,43 @@ env $(cat .env | xargs) ./gradlew bootRun
 
 ---
 
-## 📡 API 文档
+## OpenAPI 规范的接口定义文件
 
-### Swagger/OpenAPI
+本项目使用 OpenAPI 3.1 规范的 YAML 文件来描述 API：
 
-启动应用后访问：http://localhost:8080/swagger-ui.html
+- **位置**: `backend/docs/openapi.yaml`
+- **版本**: OpenAPI 3.1
+
+该文件包含了所有 API 端点的完整描述，包括：
+- 请求/响应格式
+- 参数说明
+- 状态码
+- 数据结构定义
+
+可以使用以下工具查看和测试 API：
+- **Apifox**: 将 YAML 文件导入，可视化编辑和预览
+- **Swagger Editor**: 将 YAML 文件导入 https://editor.swagger.io/ 预览
+- **Stoplight Studio**: 可视化编辑和预览
+- **Redoc**: 生成美观的静态文档
 
 ### 主要接口
+
+#### 组织树管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/api/tree/nodes` | 创建节点 |
+| GET | `/api/tree/nodes/{nodeId}` | 获取节点详情 |
+| PUT | `/api/tree/nodes/{nodeId}` | 更新节点 |
+| POST | `/api/tree/nodes/{nodeId}/remove` | 移除节点 |
+| POST | `/api/tree/nodes/{nodeId}/move` | 移动节点 |
+| GET | `/api/tree/nodes/{nodeId}/children` | 获取子节点 |
+| GET | `/api/tree/nodes/{nodeId}/subtree` | 获取子树 |
+| GET | `/api/tree/nodes/{nodeId}/descendants` | 获取所有后代 |
+| GET | `/api/tree/nodes/{nodeId}/ancestors` | 获取所有祖先 |
+| GET | `/api/tree/nodes/root` | 获取根节点 |
+| GET | `/api/tree/nodes/root/children` | 获取根节点的子节点 |
+| GET | `/api/trees/{groupId}?depth=N` | 获取树结构（指定深度） |
 
 #### 部门管理
 
@@ -183,6 +214,94 @@ env $(cat .env | xargs) ./gradlew bootRun
 | POST | `/api/personnel` | 创建人员 |
 | PUT | `/api/personnel/{id}` | 更新人员 |
 | DELETE | `/api/personnel/{id}` | 删除人员 |
+
+#### 职位管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/positions` | 获取所有职位 |
+| GET | `/api/positions/{id}` | 获取职位详情 |
+| POST | `/api/positions` | 创建职位 |
+| PUT | `/api/positions/{id}` | 更新职位 |
+| DELETE | `/api/positions/{id}` | 删除职位 |
+
+#### 分组管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/groups` | 获取所有分组 |
+| GET | `/api/groups/{id}` | 获取分组详情 |
+| POST | `/api/groups` | 创建分组 |
+| PUT | `/api/groups/{id}` | 更新分组 |
+| DELETE | `/api/groups/{id}` | 删除分组 |
+
+#### 部门层级
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/department-hierarchy/roots` | 获取根部门 |
+| GET | `/api/department-hierarchy/children/{parentId}` | 获取子部门 |
+| GET | `/api/department-hierarchy/{childId}` | 获取层级关系 |
+| POST | `/api/department-hierarchy` | 创建层级关系 |
+| DELETE | `/api/department-hierarchy/{childId}` | 删除层级关系 |
+
+#### 分组层级
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/group-hierarchy/roots` | 获取根分组 |
+| GET | `/api/group-hierarchy/children/{parentId}` | 获取子分组 |
+| GET | `/api/group-hierarchy/{childId}` | 获取层级关系 |
+| POST | `/api/group-hierarchy` | 创建层级关系 |
+| DELETE | `/api/group-hierarchy/{childId}` | 删除层级关系 |
+
+#### 关联关系
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/department-personnel/department/{departmentId}` | 获取部门下的人员 |
+| GET | `/api/department-personnel/personnel/{personnelId}` | 获取人员所属部门 |
+| POST | `/api/department-personnel` | 创建部门-人员关联 |
+| DELETE | `/api/department-personnel/{departmentId}/{personnelId}` | 删除部门-人员关联 |
+| PUT | `/api/department-personnel/set-primary/{personnelId}/{departmentId}` | 设置主部门 |
+| GET | `/api/department-positions` | 获取所有部门-职位关联 |
+| GET | `/api/department-positions/department/{departmentId}` | 获取部门下的职位 |
+| POST | `/api/department-positions` | 创建部门-职位关联 |
+| DELETE | `/api/department-positions/{departmentId}/{positionId}` | 删除部门-职位关联 |
+| GET | `/api/personnel-positions` | 获取所有人员-职位关联 |
+| GET | `/api/personnel-positions/personnel/{personnelId}` | 获取人员的职位 |
+| POST | `/api/personnel-positions` | 创建人员-职位关联 |
+| PUT | `/api/personnel-positions/{id}` | 更新人员-职位关联 |
+| DELETE | `/api/personnel-positions/{id}` | 删除人员-职位关联 |
+| GET | `/api/department-group/department/{departmentId}` | 获取部门所属分组 |
+| POST | `/api/department-group` | 创建部门-分组关联 |
+| DELETE | `/api/department-group/{departmentId}/{groupId}` | 删除部门-分组关联 |
+| GET | `/api/group-department/group/{groupId}` | 获取分组下的部门 |
+| POST | `/api/group-department` | 创建分组-部门关联 |
+| DELETE | `/api/group-department/{groupId}/{departmentId}` | 删除分组-部门关联 |
+| GET | `/api/group-personnel/group/{groupId}` | 获取分组下的人员 |
+| POST | `/api/group-personnel` | 创建分组-人员关联 |
+| DELETE | `/api/group-personnel/{groupId}/{personnelId}` | 删除分组-人员关联 |
+
+#### 标签库管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/tag-categories` | 获取所有标签分类 |
+| GET | `/api/tag-categories/{id}` | 获取分类详情 |
+| POST | `/api/tag-categories` | 创建标签分类 |
+| PUT | `/api/tag-categories/{id}` | 更新标签分类 |
+| DELETE | `/api/tag-categories/{id}` | 删除标签分类 |
+| GET | `/api/tags?categoryId={id}` | 获取标签树 |
+| GET | `/api/tags/{id}` | 获取标签详情 |
+| POST | `/api/tags` | 创建标签 |
+| PUT | `/api/tags/{id}` | 更新标签 |
+| DELETE | `/api/tags/{id}` | 删除标签（递归） |
+| GET | `/api/tag-relations?objectType={type}&objectId={id}` | 按对象查询标签关联 |
+| GET | `/api/tag-relations?tagId={id}` | 按标签查询关联对象 |
+| POST | `/api/tag-relations/batch` | 批量创建标签关联 |
+| DELETE | `/api/tag-relations/{id}` | 删除标签关联 |
+| POST | `/api/tag-relations/query` | 多标签组合查询 |
 
 ### API 响应格式
 
@@ -293,10 +412,10 @@ java -jar build/libs/organization-service-0.0.1-SNAPSHOT.jar \
 
 | 文件 | 环境 | 说明 |
 |------|------|------|
-| `application.yml` | 默认 | 基础配置 |
-| `application-local.yml` | local | 本地开发（DEBUG 日志） |
-| `application-dev.yml` | dev | 开发环境（INFO 日志） |
+| `application.yml` | 默认 | 基础配置（JPA ddl-auto: validate） |
+| `application-dev.yml` | dev | 开发环境（DEBUG 日志） |
 | `application-prod.yml` | prod | 生产环境（WARN 日志） |
+| `application-test.yml` | test | 测试环境（ddl-auto: create-drop，Testcontainers） |
 
 **激活环境：**
 
@@ -308,23 +427,10 @@ java -jar build/libs/organization-service-0.0.1-SNAPSHOT.jar \
 
 ## 📚 相关文档
 
-- [API 文档](docs/API_DOCUMENTATION.md)
-- [数据库设计](docs/database-structure-design.md)
-- [项目架构](docs/project-architecture.md)
+- [数据库设计指南](docs/database-design-guide-for-postgresql.md)
 - [开发指南](docs/development-guidelines.md)
-- [本地开发](docs/local-development.md)
+- [Git 规范](docs/git-instructions.md)
 - [CI/CD 配置](docs/ci-cd-setup.md)
-
----
-
-## 🚧 待办事项
-
-- [ ] 实现部门树形结构查询接口
-- [ ] 添加批量导入/导出功能
-- [ ] 实现软删除
-- [ ] 添加缓存支持（Redis）
-- [ ] 添加分页查询支持
-- [ ] 实现审计字段（创建人、更新人）
 
 ---
 
@@ -341,4 +447,4 @@ Apache License 2.0 - 详见根目录 [LICENSE](../LICENSE) 文件
 
 ---
 
-**最后更新：** 2026-02-26
+**最后更新：** 2026-04-11
