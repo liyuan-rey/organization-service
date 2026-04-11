@@ -1,6 +1,6 @@
 package com.reythecoder.taglib.controller;
 
-import com.reythecoder.organization.dto.response.ApiResult;
+import com.reythecoder.common.dto.ApiResult;
 import com.reythecoder.taglib.dto.request.TagCategoryCreateReq;
 import com.reythecoder.taglib.dto.request.TagCategoryUpdateReq;
 import com.reythecoder.taglib.dto.response.TagCategoryRsp;

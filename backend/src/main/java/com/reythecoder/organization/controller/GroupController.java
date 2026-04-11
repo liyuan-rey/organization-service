@@ -2,7 +2,7 @@ package com.reythecoder.organization.controller;
 
 import com.reythecoder.organization.dto.request.GroupCreateReq;
 import com.reythecoder.organization.dto.request.GroupUpdateReq;
-import com.reythecoder.organization.dto.response.ApiResult;
+import com.reythecoder.common.dto.ApiResult;
 import com.reythecoder.organization.dto.response.GroupRsp;
 import com.reythecoder.organization.service.GroupService;
 import jakarta.validation.Valid;

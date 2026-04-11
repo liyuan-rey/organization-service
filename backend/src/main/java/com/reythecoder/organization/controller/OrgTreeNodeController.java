@@ -3,7 +3,7 @@ package com.reythecoder.organization.controller;
 import com.reythecoder.organization.dto.request.CreateTreeNodeReq;
 import com.reythecoder.organization.dto.request.MoveTreeNodeReq;
 import com.reythecoder.organization.dto.request.UpdateTreeNodeReq;
-import com.reythecoder.organization.dto.response.ApiResult;
+import com.reythecoder.common.dto.ApiResult;
 import com.reythecoder.organization.dto.response.TreeNodeRsp;
 import com.reythecoder.organization.service.OrgTreeNodeService;
 import jakarta.validation.Valid;

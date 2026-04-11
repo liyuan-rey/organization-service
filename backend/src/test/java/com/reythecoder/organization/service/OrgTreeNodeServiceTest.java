@@ -3,7 +3,7 @@ package com.reythecoder.organization.service;
 import com.reythecoder.organization.dto.response.TreeNodeRsp;
 import com.reythecoder.organization.entity.EntityType;
 import com.reythecoder.organization.entity.OrgTreeNodeEntity;
-import com.reythecoder.organization.exception.ApiException;
+import com.reythecoder.common.exception.ApiException;
 import com.reythecoder.organization.mapper.OrgTreeNodeMapper;
 import com.reythecoder.organization.repository.OrgTreeNodeRepository;
 import com.reythecoder.organization.service.impl.OrgTreeNodeServiceImpl;

@@ -6,7 +6,7 @@ import com.reythecoder.organization.entity.DepartmentEntity;
 import com.reythecoder.organization.entity.PersonnelEntity;
 import com.reythecoder.organization.entity.PersonnelPositionEntity;
 import com.reythecoder.organization.entity.PositionEntity;
-import com.reythecoder.organization.exception.ApiException;
+import com.reythecoder.common.exception.ApiException;
 import com.reythecoder.organization.repository.DepartmentRepository;
 import com.reythecoder.organization.repository.PersonnelPositionRepository;
 import com.reythecoder.organization.repository.PersonnelRepository;

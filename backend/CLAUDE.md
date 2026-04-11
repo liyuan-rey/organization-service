@@ -16,42 +16,47 @@ Reference: @./README.md
 
 ## Project Architecture
 
-Three top-level packages under `com.reythecoder`:
+Packages under `com.reythecoder`:
 
 ```
 src/main/java/com/reythecoder/
-├── organization/                          # Core organization domain
-│   ├── OrganizationServiceApplication.java
-│   ├── controller/       # 14 REST controllers
-│   ├── service/          # 14 service interfaces + impl/
-│   ├── repository/       # 13 Spring Data JPA repositories
-│   ├── entity/           # 14 JPA entities + EntityType enum
+├── ServiceApplication.java                 # Main entry point
+├── common/                                 # Shared components
+│   ├── aspect/
+│   │   └── LoggingAspect.java             # AOP logging aspect
 │   ├── dto/
-│   │   ├── NodeType.java # Enum for tree node types
-│   │   ├── request/      # 19 Request DTOs (*Req.java)
-│   │   └── response/     # 14 Response DTOs (*Rsp.java) + ApiResult<T>
-│   ├── mapper/           # 5 MapStruct mappers
-│   ├── exception/        # ApiException + GlobalExceptionHandler
-│   └── aspect/           # AOP logging aspect (LoggingAspect)
-├── taglib/                                # Tag library management system
-│   ├── controller/       # 3 controllers (TagCategory, Tag, TagRelation)
-│   ├── service/          # 3 service interfaces + impl/
-│   ├── repository/       # 3 repositories
-│   ├── entity/           # 3 entities (TagCategory, Tag, TagRelation) + TagObjectType enum
+│   │   └── ApiResult.java                 # API response wrapper
+│   ├── exception/
+│   │   ├── ApiException.java              # Custom API exception
+│   │   └── GlobalExceptionHandler.java    # Global exception handler
+│   └── utils/
+│       └── LexoRankUtils.java             # LexoRank sorting utility
+├── organization/                           # Core organization domain
+│   ├── controller/                         # 14 REST controllers
+│   ├── service/                            # 14 service interfaces + impl/
+│   ├── repository/                         # 13 Spring Data JPA repositories
+│   ├── entity/                             # 14 JPA entities + EntityType enum
 │   ├── dto/
-│   │   ├── request/      # 6 Request DTOs
-│   │   └── response/     # 4 Response DTOs (TagCategoryRsp, TagRsp, TagTreeRsp, TagRelationRsp)
-│   └── mapper/           # 2 MapStruct mappers
-└── common/                                # Shared utilities
-    └── utils/
-        └── LexoRankUtils.java            # LexoRank sorting utility
+│   │   ├── NodeType.java                   # Enum for tree node types
+│   │   ├── request/                        # 19 Request DTOs (*Req.java)
+│   │   └── response/                       # 13 Response DTOs (*Rsp.java)
+│   └── mapper/                             # 5 MapStruct mappers
+├── taglib/                                 # Tag library management system
+│   ├── controller/                         # 3 controllers (TagCategory, Tag, TagRelation)
+│   ├── service/                            # 3 service interfaces + impl/
+│   ├── repository/                         # 3 repositories
+│   ├── entity/                             # 3 entities (TagCategory, Tag, TagRelation) + TagObjectType enum
+│   ├── dto/
+│   │   ├── request/                        # 6 Request DTOs
+│   │   └── response/                       # 4 Response DTOs (TagCategoryRsp, TagRsp, TagTreeRsp, TagRelationRsp)
+│   └── mapper/                             # 2 MapStruct mappers
 ```
 
 ## Key Conventions
 
 - DTOs use `Record` type (no Lombok on DTOs; Lombok used on entities)
 - Request DTOs suffixed with `Req`, Response DTOs with `Rsp`
-- `ApiResult<T>` returns `{ code, message, data }` — all controllers use this wrapper
+- `ApiResult<T>` in `common.dto` returns `{ code, message, data }` — all controllers use this wrapper
 - Primary keys use UUIDv7 via `UUIDv7.randomUUID()`
 - Service layer: interface in `service/`, implementation in `service/impl/`
 - MapStruct mappers use `componentModel = "spring"`

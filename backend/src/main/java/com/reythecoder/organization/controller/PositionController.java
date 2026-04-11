@@ -2,7 +2,7 @@ package com.reythecoder.organization.controller;
 
 import com.reythecoder.organization.dto.request.PositionCreateReq;
 import com.reythecoder.organization.dto.request.PositionUpdateReq;
-import com.reythecoder.organization.dto.response.ApiResult;
+import com.reythecoder.common.dto.ApiResult;
 import com.reythecoder.organization.dto.response.PositionRsp;
 import com.reythecoder.organization.service.PositionService;
 import jakarta.validation.Valid;

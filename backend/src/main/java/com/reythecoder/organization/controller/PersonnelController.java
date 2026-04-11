@@ -2,7 +2,7 @@ package com.reythecoder.organization.controller;
 
 import com.reythecoder.organization.dto.request.PersonnelCreateReq;
 import com.reythecoder.organization.dto.request.PersonnelUpdateReq;
-import com.reythecoder.organization.dto.response.ApiResult;
+import com.reythecoder.common.dto.ApiResult;
 import com.reythecoder.organization.dto.response.PersonnelRsp;
 import com.reythecoder.organization.service.PersonnelService;
 import jakarta.validation.Valid;

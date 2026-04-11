@@ -4,7 +4,7 @@ import com.reythecoder.organization.dto.request.PositionCreateReq;
 import com.reythecoder.organization.dto.request.PositionUpdateReq;
 import com.reythecoder.organization.dto.response.PositionRsp;
 import com.reythecoder.organization.entity.PositionEntity;
-import com.reythecoder.organization.exception.ApiException;
+import com.reythecoder.common.exception.ApiException;
 import com.reythecoder.organization.repository.PositionRepository;
 import com.reythecoder.organization.service.impl.PositionServiceImpl;
 

@@ -4,7 +4,7 @@ import com.reythecoder.organization.dto.request.PersonnelCreateReq;
 import com.reythecoder.organization.dto.request.PersonnelUpdateReq;
 import com.reythecoder.organization.dto.response.PersonnelRsp;
 import com.reythecoder.organization.entity.PersonnelEntity;
-import com.reythecoder.organization.exception.ApiException;
+import com.reythecoder.common.exception.ApiException;
 import com.reythecoder.organization.mapper.PersonnelMapper;
 import com.reythecoder.organization.repository.PersonnelRepository;
 import com.reythecoder.organization.service.PersonnelService;

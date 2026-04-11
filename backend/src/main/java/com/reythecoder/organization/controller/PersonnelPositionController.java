@@ -1,7 +1,7 @@
 package com.reythecoder.organization.controller;
 
 import com.reythecoder.organization.dto.request.PersonnelPositionReq;
-import com.reythecoder.organization.dto.response.ApiResult;
+import com.reythecoder.common.dto.ApiResult;
 import com.reythecoder.organization.dto.response.PersonnelPositionRsp;
 import com.reythecoder.organization.service.PersonnelPositionService;
 import jakarta.validation.Valid;

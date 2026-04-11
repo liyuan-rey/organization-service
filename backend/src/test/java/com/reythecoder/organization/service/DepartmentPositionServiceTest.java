@@ -5,7 +5,7 @@ import com.reythecoder.organization.dto.response.DepartmentPositionRsp;
 import com.reythecoder.organization.entity.DepartmentEntity;
 import com.reythecoder.organization.entity.DepartmentPositionEntity;
 import com.reythecoder.organization.entity.PositionEntity;
-import com.reythecoder.organization.exception.ApiException;
+import com.reythecoder.common.exception.ApiException;
 import com.reythecoder.organization.repository.DepartmentPositionRepository;
 import com.reythecoder.organization.repository.DepartmentRepository;
 import com.reythecoder.organization.repository.PositionRepository;

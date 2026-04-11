@@ -1,6 +1,6 @@
 package com.reythecoder.taglib.service;
 
-import com.reythecoder.organization.exception.ApiException;
+import com.reythecoder.common.exception.ApiException;
 import com.reythecoder.taglib.dto.request.TagRelationQueryReq;
 import com.reythecoder.taglib.dto.request.TagRelationReq;
 import com.reythecoder.taglib.dto.response.TagRelationRsp;

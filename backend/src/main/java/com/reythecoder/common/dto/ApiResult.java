@@ -1,4 +1,4 @@
-package com.reythecoder.organization.dto.response;
+package com.reythecoder.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

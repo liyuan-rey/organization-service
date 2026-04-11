@@ -1,6 +1,6 @@
 package com.reythecoder.taglib.controller;
 
-import com.reythecoder.organization.dto.response.ApiResult;
+import com.reythecoder.common.dto.ApiResult;
 import com.reythecoder.taglib.dto.request.TagRelationQueryReq;
 import com.reythecoder.taglib.dto.request.TagRelationReq;
 import com.reythecoder.taglib.dto.response.TagRelationRsp;

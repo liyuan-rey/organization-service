@@ -27,8 +27,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Import(com.reythecoder.common.exception.GlobalExceptionHandler.class)
 @WebMvcTest(TagController.class)
-@Import(TagController.class)
 class TagControllerTest {
 
     @Autowired

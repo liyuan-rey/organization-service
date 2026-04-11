@@ -4,7 +4,7 @@ import com.reythecoder.organization.dto.request.DepartmentCreateReq;
 import com.reythecoder.organization.dto.request.DepartmentUpdateReq;
 import com.reythecoder.organization.dto.response.DepartmentRsp;
 import com.reythecoder.organization.entity.DepartmentEntity;
-import com.reythecoder.organization.exception.ApiException;
+import com.reythecoder.common.exception.ApiException;
 
 import com.reythecoder.organization.repository.DepartmentRepository;
 import com.reythecoder.organization.repository.PersonnelPositionRepository;

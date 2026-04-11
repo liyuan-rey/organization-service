@@ -1,7 +1,7 @@
 package com.reythecoder.taglib.service.impl;
 
 import com.reythecoder.common.utils.LexoRankUtils;
-import com.reythecoder.organization.exception.ApiException;
+import com.reythecoder.common.exception.ApiException;
 import com.reythecoder.taglib.dto.request.TagCreateReq;
 import com.reythecoder.taglib.dto.request.TagUpdateReq;
 import com.reythecoder.taglib.dto.response.TagRsp;

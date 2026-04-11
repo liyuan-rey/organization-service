@@ -2,7 +2,7 @@ package com.reythecoder.organization.controller;
 
 import com.reythecoder.organization.dto.request.DepartmentCreateReq;
 import com.reythecoder.organization.dto.request.DepartmentUpdateReq;
-import com.reythecoder.organization.dto.response.ApiResult;
+import com.reythecoder.common.dto.ApiResult;
 import com.reythecoder.organization.dto.response.DepartmentRsp;
 import com.reythecoder.organization.service.DepartmentService;
 import jakarta.validation.Valid;

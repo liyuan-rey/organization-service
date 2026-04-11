@@ -48,22 +48,29 @@
 ```
 backend/
 ├── src/main/java/com/reythecoder/
-│   ├── organization/                        # 组织管理核心域
-│   │   ├── OrganizationServiceApplication.java  # 启动类
-│   │   ├── aspect/                          # AOP 切面（LoggingAspect）
-│   │   ├── controller/                      # REST 控制器
-│   │   ├── service/                         # 业务逻辑层（接口 + impl/）
-│   │   ├── repository/                      # 数据访问层
-│   │   ├── entity/                          # JPA 实体
+│   ├── ServiceApplication.java                 # 启动类
+│   ├── common/                                 # 共享组件
+│   │   ├── aspect/                             # AOP 切面（LoggingAspect）
 │   │   ├── dto/
-│   │   │   ├── request/                     # 请求 DTO（*Req.java）
-│   │   │   └── response/                    # 响应 DTO（*Rsp.java）+ ApiResult<T>
-│   │   ├── mapper/                          # MapStruct 映射器
-│   │   └── exception/                       # ApiException + GlobalExceptionHandler
-│   ├── taglib/                              # 标签库管理
-│   │   ├── controller/                      # TagCategory, Tag, TagRelation 控制器
-│   │   ├── service/                         # 业务逻辑层（接口 + impl/）
-│   │   ├── repository/                      # 数据访问层
+│   │   │   └── ApiResult.java                 # API 响应包装
+│   │   ├── exception/
+│   │   │   ├── ApiException.java              # 自定义 API 异常
+│   │   │   └── GlobalExceptionHandler.java    # 全局异常处理
+│   │   └── utils/
+│   │       └── LexoRankUtils.java             # LexoRank 排序工具
+│   ├── organization/                           # 组织管理核心域
+│   │   ├── controller/                         # REST 控制器
+│   │   ├── service/                            # 业务逻辑层（接口 + impl/）
+│   │   ├── repository/                         # 数据访问层
+│   │   ├── entity/                             # JPA 实体
+│   │   ├── dto/
+│   │   │   ├── request/                        # 请求 DTO（*Req.java）
+│   │   │   └── response/                       # 响应 DTO（*Rsp.java）
+│   │   └── mapper/                             # MapStruct 映射器
+│   ├── taglib/                                 # 标签库管理
+│   │   ├── controller/                         # TagCategory, Tag, TagRelation 控制器
+│   │   ├── service/                            # 业务逻辑层（接口 + impl/）
+│   │   ├── repository/                         # 数据访问层
 │   │   ├── entity/                          # TagCategory, Tag, TagRelation 实体
 │   │   ├── dto/
 │   │   │   ├── request/                     # 请求 DTO

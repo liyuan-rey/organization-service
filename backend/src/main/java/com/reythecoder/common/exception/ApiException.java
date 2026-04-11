@@ -1,4 +1,4 @@
-package com.reythecoder.organization.exception;
+package com.reythecoder.common.exception;
 
 public class ApiException extends RuntimeException {
     private final int code;

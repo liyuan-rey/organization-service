@@ -4,7 +4,7 @@ import com.reythecoder.organization.dto.request.GroupCreateReq;
 import com.reythecoder.organization.dto.request.GroupUpdateReq;
 import com.reythecoder.organization.dto.response.GroupRsp;
 import com.reythecoder.organization.entity.GroupEntity;
-import com.reythecoder.organization.exception.ApiException;
+import com.reythecoder.common.exception.ApiException;
 import com.reythecoder.organization.repository.GroupRepository;
 import com.reythecoder.organization.service.impl.GroupServiceImpl;
 

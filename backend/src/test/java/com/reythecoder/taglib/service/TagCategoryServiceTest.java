@@ -1,6 +1,6 @@
 package com.reythecoder.taglib.service;
 
-import com.reythecoder.organization.exception.ApiException;
+import com.reythecoder.common.exception.ApiException;
 import com.reythecoder.taglib.dto.request.TagCategoryCreateReq;
 import com.reythecoder.taglib.dto.request.TagCategoryUpdateReq;
 import com.reythecoder.taglib.dto.response.TagCategoryRsp;
