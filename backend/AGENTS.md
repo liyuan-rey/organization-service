@@ -34,8 +34,6 @@ AI Agent 开发指南 - Organization Service Backend
 ```bash
 ./gradlew clean build
 
-./gradlew bootRun -Dspring-boot.run.profiles=local
-
 ./gradlew bootRun -Dspring-boot.run.profiles=dev
 ```
 

@@ -11,6 +11,7 @@
 提供组织和人员管理的核心业务逻辑和 RESTful API，支持组织树、标签库等多维度管理。
 
 **核心功能：**
+
 - ✅ 组织树管理（基于 LexoRank 排序的树形结构 CRUD）
 - ✅ 部门管理（CRUD、层级结构）
 - ✅ 人员管理（CRUD、部门关联）
@@ -26,20 +27,20 @@
 
 ## 🛠️ 技术栈
 
-| 技术 | 版本 | 说明 |
-|------|------|------|
-| **框架** | Spring Boot 4.0.3 | Web 应用框架 |
-| **语言** | Java 17 | 编程语言 |
-| **构建工具** | Gradle 9+ | 构建和依赖管理 |
-| **数据库** | PostgreSQL 15 | 关系型数据库 |
-| **ORM** | Spring Data JPA | 数据访问层 |
-| **验证** | Hibernate Validator | Bean 验证 |
-| **工具库** | Lombok | 简化代码（@Data, @Builder 等） |
-| **对象映射** | MapStruct 1.6.3 | DTO ↔ Entity 映射 |
-| **主键生成** | UUIDv7 | 趋势递增的全局唯一标识 |
-| **日志** | Logback + Logstash | 结构化日志（支持 JSON 格式） |
-| **AOP** | AspectJ 1.9.22 | 切面编程（日志切面） |
-| **测试** | JUnit 5, Testcontainers 2.0.2 | 单元测试和集成测试 |
+| 技术         | 版本                          | 说明                           |
+| ------------ | ----------------------------- | ------------------------------ |
+| **框架**     | Spring Boot 4.0.3             | Web 应用框架                   |
+| **语言**     | Java 17                       | 编程语言                       |
+| **构建工具** | Gradle 9+                     | 构建和依赖管理                 |
+| **数据库**   | PostgreSQL 15                 | 关系型数据库                   |
+| **ORM**      | Spring Data JPA               | 数据访问层                     |
+| **验证**     | Hibernate Validator           | Bean 验证                      |
+| **工具库**   | Lombok                        | 简化代码（@Data, @Builder 等） |
+| **对象映射** | MapStruct 1.6.3               | DTO ↔ Entity 映射              |
+| **主键生成** | UUIDv7                        | 趋势递增的全局唯一标识         |
+| **日志**     | Logback + Logstash            | 结构化日志（支持 JSON 格式）   |
+| **AOP**      | AspectJ 1.9.22                | 切面编程（日志切面）           |
+| **测试**     | JUnit 5, Testcontainers 2.0.2 | 单元测试和集成测试             |
 
 ---
 
@@ -172,12 +173,14 @@ env $(cat .env | xargs) ./gradlew bootRun
 - **版本**: OpenAPI 3.1
 
 该文件包含了所有 API 端点的完整描述，包括：
+
 - 请求/响应格式
 - 参数说明
 - 状态码
 - 数据结构定义
 
 可以使用以下工具查看和测试 API：
+
 - **Apifox**: 将 YAML 文件导入，可视化编辑和预览
 - **Swagger Editor**: 将 YAML 文件导入 https://editor.swagger.io/ 预览
 - **Stoplight Studio**: 可视化编辑和预览
@@ -187,128 +190,128 @@ env $(cat .env | xargs) ./gradlew bootRun
 
 #### 组织树管理
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| POST | `/api/tree/nodes` | 创建节点 |
-| GET | `/api/tree/nodes/{nodeId}` | 获取节点详情 |
-| PUT | `/api/tree/nodes/{nodeId}` | 更新节点 |
-| POST | `/api/tree/nodes/{nodeId}/remove` | 移除节点 |
-| POST | `/api/tree/nodes/{nodeId}/move` | 移动节点 |
-| GET | `/api/tree/nodes/{nodeId}/children` | 获取子节点 |
-| GET | `/api/tree/nodes/{nodeId}/subtree` | 获取子树 |
-| GET | `/api/tree/nodes/{nodeId}/descendants` | 获取所有后代 |
-| GET | `/api/tree/nodes/{nodeId}/ancestors` | 获取所有祖先 |
-| GET | `/api/tree/nodes/root` | 获取根节点 |
-| GET | `/api/tree/nodes/root/children` | 获取根节点的子节点 |
-| GET | `/api/trees/{groupId}?depth=N` | 获取树结构（指定深度） |
+| 方法 | 路径                                   | 说明                   |
+| ---- | -------------------------------------- | ---------------------- |
+| POST | `/api/tree/nodes`                      | 创建节点               |
+| GET  | `/api/tree/nodes/{nodeId}`             | 获取节点详情           |
+| PUT  | `/api/tree/nodes/{nodeId}`             | 更新节点               |
+| POST | `/api/tree/nodes/{nodeId}/remove`      | 移除节点               |
+| POST | `/api/tree/nodes/{nodeId}/move`        | 移动节点               |
+| GET  | `/api/tree/nodes/{nodeId}/children`    | 获取子节点             |
+| GET  | `/api/tree/nodes/{nodeId}/subtree`     | 获取子树               |
+| GET  | `/api/tree/nodes/{nodeId}/descendants` | 获取所有后代           |
+| GET  | `/api/tree/nodes/{nodeId}/ancestors`   | 获取所有祖先           |
+| GET  | `/api/tree/nodes/root`                 | 获取根节点             |
+| GET  | `/api/tree/nodes/root/children`        | 获取根节点的子节点     |
+| GET  | `/api/trees/{groupId}?depth=N`         | 获取树结构（指定深度） |
 
 #### 部门管理
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/departments` | 获取所有部门 |
-| GET | `/api/departments/{id}` | 获取部门详情 |
-| POST | `/api/departments` | 创建部门 |
-| PUT | `/api/departments/{id}` | 更新部门 |
-| DELETE | `/api/departments/{id}` | 删除部门 |
+| 方法   | 路径                    | 说明         |
+| ------ | ----------------------- | ------------ |
+| GET    | `/api/departments`      | 获取所有部门 |
+| GET    | `/api/departments/{id}` | 获取部门详情 |
+| POST   | `/api/departments`      | 创建部门     |
+| PUT    | `/api/departments/{id}` | 更新部门     |
+| DELETE | `/api/departments/{id}` | 删除部门     |
 
 #### 人员管理
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/personnel` | 获取所有人员 |
-| GET | `/api/personnel/{id}` | 获取人员详情 |
-| POST | `/api/personnel` | 创建人员 |
-| PUT | `/api/personnel/{id}` | 更新人员 |
-| DELETE | `/api/personnel/{id}` | 删除人员 |
+| 方法   | 路径                  | 说明         |
+| ------ | --------------------- | ------------ |
+| GET    | `/api/personnel`      | 获取所有人员 |
+| GET    | `/api/personnel/{id}` | 获取人员详情 |
+| POST   | `/api/personnel`      | 创建人员     |
+| PUT    | `/api/personnel/{id}` | 更新人员     |
+| DELETE | `/api/personnel/{id}` | 删除人员     |
 
 #### 职位管理
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/positions` | 获取所有职位 |
-| GET | `/api/positions/{id}` | 获取职位详情 |
-| POST | `/api/positions` | 创建职位 |
-| PUT | `/api/positions/{id}` | 更新职位 |
-| DELETE | `/api/positions/{id}` | 删除职位 |
+| 方法   | 路径                  | 说明         |
+| ------ | --------------------- | ------------ |
+| GET    | `/api/positions`      | 获取所有职位 |
+| GET    | `/api/positions/{id}` | 获取职位详情 |
+| POST   | `/api/positions`      | 创建职位     |
+| PUT    | `/api/positions/{id}` | 更新职位     |
+| DELETE | `/api/positions/{id}` | 删除职位     |
 
 #### 分组管理
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/groups` | 获取所有分组 |
-| GET | `/api/groups/{id}` | 获取分组详情 |
-| POST | `/api/groups` | 创建分组 |
-| PUT | `/api/groups/{id}` | 更新分组 |
-| DELETE | `/api/groups/{id}` | 删除分组 |
+| 方法   | 路径               | 说明         |
+| ------ | ------------------ | ------------ |
+| GET    | `/api/groups`      | 获取所有分组 |
+| GET    | `/api/groups/{id}` | 获取分组详情 |
+| POST   | `/api/groups`      | 创建分组     |
+| PUT    | `/api/groups/{id}` | 更新分组     |
+| DELETE | `/api/groups/{id}` | 删除分组     |
 
 #### 部门层级
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/department-hierarchy/roots` | 获取根部门 |
-| GET | `/api/department-hierarchy/children/{parentId}` | 获取子部门 |
-| GET | `/api/department-hierarchy/{childId}` | 获取层级关系 |
-| POST | `/api/department-hierarchy` | 创建层级关系 |
-| DELETE | `/api/department-hierarchy/{childId}` | 删除层级关系 |
+| 方法   | 路径                                            | 说明         |
+| ------ | ----------------------------------------------- | ------------ |
+| GET    | `/api/department-hierarchy/roots`               | 获取根部门   |
+| GET    | `/api/department-hierarchy/children/{parentId}` | 获取子部门   |
+| GET    | `/api/department-hierarchy/{childId}`           | 获取层级关系 |
+| POST   | `/api/department-hierarchy`                     | 创建层级关系 |
+| DELETE | `/api/department-hierarchy/{childId}`           | 删除层级关系 |
 
 #### 分组层级
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/group-hierarchy/roots` | 获取根分组 |
-| GET | `/api/group-hierarchy/children/{parentId}` | 获取子分组 |
-| GET | `/api/group-hierarchy/{childId}` | 获取层级关系 |
-| POST | `/api/group-hierarchy` | 创建层级关系 |
-| DELETE | `/api/group-hierarchy/{childId}` | 删除层级关系 |
+| 方法   | 路径                                       | 说明         |
+| ------ | ------------------------------------------ | ------------ |
+| GET    | `/api/group-hierarchy/roots`               | 获取根分组   |
+| GET    | `/api/group-hierarchy/children/{parentId}` | 获取子分组   |
+| GET    | `/api/group-hierarchy/{childId}`           | 获取层级关系 |
+| POST   | `/api/group-hierarchy`                     | 创建层级关系 |
+| DELETE | `/api/group-hierarchy/{childId}`           | 删除层级关系 |
 
 #### 关联关系
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/department-personnel/department/{departmentId}` | 获取部门下的人员 |
-| GET | `/api/department-personnel/personnel/{personnelId}` | 获取人员所属部门 |
-| POST | `/api/department-personnel` | 创建部门-人员关联 |
-| DELETE | `/api/department-personnel/{departmentId}/{personnelId}` | 删除部门-人员关联 |
-| PUT | `/api/department-personnel/set-primary/{personnelId}/{departmentId}` | 设置主部门 |
-| GET | `/api/department-positions` | 获取所有部门-职位关联 |
-| GET | `/api/department-positions/department/{departmentId}` | 获取部门下的职位 |
-| POST | `/api/department-positions` | 创建部门-职位关联 |
-| DELETE | `/api/department-positions/{departmentId}/{positionId}` | 删除部门-职位关联 |
-| GET | `/api/personnel-positions` | 获取所有人员-职位关联 |
-| GET | `/api/personnel-positions/personnel/{personnelId}` | 获取人员的职位 |
-| POST | `/api/personnel-positions` | 创建人员-职位关联 |
-| PUT | `/api/personnel-positions/{id}` | 更新人员-职位关联 |
-| DELETE | `/api/personnel-positions/{id}` | 删除人员-职位关联 |
-| GET | `/api/department-group/department/{departmentId}` | 获取部门所属分组 |
-| POST | `/api/department-group` | 创建部门-分组关联 |
-| DELETE | `/api/department-group/{departmentId}/{groupId}` | 删除部门-分组关联 |
-| GET | `/api/group-department/group/{groupId}` | 获取分组下的部门 |
-| POST | `/api/group-department` | 创建分组-部门关联 |
-| DELETE | `/api/group-department/{groupId}/{departmentId}` | 删除分组-部门关联 |
-| GET | `/api/group-personnel/group/{groupId}` | 获取分组下的人员 |
-| POST | `/api/group-personnel` | 创建分组-人员关联 |
-| DELETE | `/api/group-personnel/{groupId}/{personnelId}` | 删除分组-人员关联 |
+| 方法   | 路径                                                                 | 说明                  |
+| ------ | -------------------------------------------------------------------- | --------------------- |
+| GET    | `/api/department-personnel/department/{departmentId}`                | 获取部门下的人员      |
+| GET    | `/api/department-personnel/personnel/{personnelId}`                  | 获取人员所属部门      |
+| POST   | `/api/department-personnel`                                          | 创建部门-人员关联     |
+| DELETE | `/api/department-personnel/{departmentId}/{personnelId}`             | 删除部门-人员关联     |
+| PUT    | `/api/department-personnel/set-primary/{personnelId}/{departmentId}` | 设置主部门            |
+| GET    | `/api/department-positions`                                          | 获取所有部门-职位关联 |
+| GET    | `/api/department-positions/department/{departmentId}`                | 获取部门下的职位      |
+| POST   | `/api/department-positions`                                          | 创建部门-职位关联     |
+| DELETE | `/api/department-positions/{departmentId}/{positionId}`              | 删除部门-职位关联     |
+| GET    | `/api/personnel-positions`                                           | 获取所有人员-职位关联 |
+| GET    | `/api/personnel-positions/personnel/{personnelId}`                   | 获取人员的职位        |
+| POST   | `/api/personnel-positions`                                           | 创建人员-职位关联     |
+| PUT    | `/api/personnel-positions/{id}`                                      | 更新人员-职位关联     |
+| DELETE | `/api/personnel-positions/{id}`                                      | 删除人员-职位关联     |
+| GET    | `/api/department-group/department/{departmentId}`                    | 获取部门所属分组      |
+| POST   | `/api/department-group`                                              | 创建部门-分组关联     |
+| DELETE | `/api/department-group/{departmentId}/{groupId}`                     | 删除部门-分组关联     |
+| GET    | `/api/group-department/group/{groupId}`                              | 获取分组下的部门      |
+| POST   | `/api/group-department`                                              | 创建分组-部门关联     |
+| DELETE | `/api/group-department/{groupId}/{departmentId}`                     | 删除分组-部门关联     |
+| GET    | `/api/group-personnel/group/{groupId}`                               | 获取分组下的人员      |
+| POST   | `/api/group-personnel`                                               | 创建分组-人员关联     |
+| DELETE | `/api/group-personnel/{groupId}/{personnelId}`                       | 删除分组-人员关联     |
 
 #### 标签库管理
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/tag-categories` | 获取所有标签分类 |
-| GET | `/api/tag-categories/{id}` | 获取分类详情 |
-| POST | `/api/tag-categories` | 创建标签分类 |
-| PUT | `/api/tag-categories/{id}` | 更新标签分类 |
-| DELETE | `/api/tag-categories/{id}` | 删除标签分类 |
-| GET | `/api/tags?categoryId={id}` | 获取标签树 |
-| GET | `/api/tags/{id}` | 获取标签详情 |
-| POST | `/api/tags` | 创建标签 |
-| PUT | `/api/tags/{id}` | 更新标签 |
-| DELETE | `/api/tags/{id}` | 删除标签（递归） |
-| GET | `/api/tag-relations?objectType={type}&objectId={id}` | 按对象查询标签关联 |
-| GET | `/api/tag-relations?tagId={id}` | 按标签查询关联对象 |
-| POST | `/api/tag-relations/batch` | 批量创建标签关联 |
-| DELETE | `/api/tag-relations/{id}` | 删除标签关联 |
-| POST | `/api/tag-relations/query` | 多标签组合查询 |
+| 方法   | 路径                                                 | 说明               |
+| ------ | ---------------------------------------------------- | ------------------ |
+| GET    | `/api/tag-categories`                                | 获取所有标签分类   |
+| GET    | `/api/tag-categories/{id}`                           | 获取分类详情       |
+| POST   | `/api/tag-categories`                                | 创建标签分类       |
+| PUT    | `/api/tag-categories/{id}`                           | 更新标签分类       |
+| DELETE | `/api/tag-categories/{id}`                           | 删除标签分类       |
+| GET    | `/api/tags?categoryId={id}`                          | 获取标签树         |
+| GET    | `/api/tags/{id}`                                     | 获取标签详情       |
+| POST   | `/api/tags`                                          | 创建标签           |
+| PUT    | `/api/tags/{id}`                                     | 更新标签           |
+| DELETE | `/api/tags/{id}`                                     | 删除标签（递归）   |
+| GET    | `/api/tag-relations?objectType={type}&objectId={id}` | 按对象查询标签关联 |
+| GET    | `/api/tag-relations?tagId={id}`                      | 按标签查询关联对象 |
+| POST   | `/api/tag-relations/batch`                           | 批量创建标签关联   |
+| DELETE | `/api/tag-relations/{id}`                            | 删除标签关联       |
+| POST   | `/api/tag-relations/query`                           | 多标签组合查询     |
 
 ### API 响应格式
 
@@ -417,11 +420,11 @@ java -jar build/libs/organization-service-0.0.1-SNAPSHOT.jar \
 
 **多环境配置：**
 
-| 文件 | 环境 | 说明 |
-|------|------|------|
-| `application.yml` | 默认 | 基础配置（JPA ddl-auto: validate） |
-| `application-dev.yml` | dev | 开发环境（DEBUG 日志） |
-| `application-prod.yml` | prod | 生产环境（WARN 日志） |
+| 文件                   | 环境 | 说明                                              |
+| ---------------------- | ---- | ------------------------------------------------- |
+| `application.yml`      | 默认 | 基础配置（JPA ddl-auto: validate）                |
+| `application-dev.yml`  | dev  | 开发环境（DEBUG 日志）                            |
+| `application-prod.yml` | prod | 生产环境（WARN 日志）                             |
 | `application-test.yml` | test | 测试环境（ddl-auto: create-drop，Testcontainers） |
 
 **激活环境：**

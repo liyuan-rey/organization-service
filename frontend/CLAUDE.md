@@ -9,7 +9,7 @@
 ### 技术栈
 
 | 分类 | 技术 |
-|------|------|
+| --- | --- |
 | 包管理器 | pnpm (monorepo workspaces + catalog 协议) |
 | 构建编排 | Turborepo |
 | 构建工具 | Vite |
@@ -175,6 +175,7 @@ src/
 ```
 
 使用示例：
+
 ```ts
 import { useAuthStore } from '#/store/auth';
 ```
@@ -206,25 +207,25 @@ import { useAuthStore } from '#/store/auth';
 
 使用 Angular 风格（Commitlint 强制）：
 
-| 类型 | 描述 |
-|------|------|
-| `feat` | 新功能 |
-| `fix` | Bug 修复 |
-| `style` | 代码格式（不影响运行） |
-| `perf` | 性能优化 |
-| `refactor` | 重构 |
-| `revert` | 回滚 |
-| `test` | 测试相关 |
-| `docs` | 文档 |
-| `chore` | 构建/工具变动 |
-| `workflow` | 工作流改进 |
-| `ci` | CI/CD 变动 |
-| `types` | 类型定义变动 |
+| 类型       | 描述                   |
+| ---------- | ---------------------- |
+| `feat`     | 新功能                 |
+| `fix`      | Bug 修复               |
+| `style`    | 代码格式（不影响运行） |
+| `perf`     | 性能优化               |
+| `refactor` | 重构                   |
+| `revert`   | 回滚                   |
+| `test`     | 测试相关               |
+| `docs`     | 文档                   |
+| `chore`    | 构建/工具变动          |
+| `workflow` | 工作流改进             |
+| `ci`       | CI/CD 变动             |
+| `types`    | 类型定义变动           |
 
 ### 代码检查
 
 | 工具 | 配置位置 | 用途 |
-|------|---------|------|
+| --- | --- | --- |
 | ESLint | `eslint.config.mjs` → `internal/lint-configs/eslint-config` | JS/TS 代码质量 |
 | Stylelint | `stylelint.config.mjs` → `internal/lint-configs/stylelint-config` | CSS/Vue 样式验证 |
 | Prettier | `.prettierrc.mjs` → `internal/lint-configs/prettier-config` | 代码格式化 |
@@ -232,6 +233,7 @@ import { useAuthStore } from '#/store/auth';
 | Cspell | `cspell.json` | 拼写检查 |
 
 Git Hooks（Lefthook, `lefthook.yml`）：
+
 - `pre-commit`: 并行执行格式化和 lint 检查
 - `commit-msg`: Commitlint 验证
 - `post-merge`: 自动 `pnpm install`
@@ -240,11 +242,11 @@ Git Hooks（Lefthook, `lefthook.yml`）：
 
 ### 路由类型
 
-| 类型 | 位置 | 说明 |
-|------|------|------|
-| Core | `routes/core.ts` | 框架内置 (根路由, 认证页, 404) |
-| Static | `routes/index.ts` | 静态路由 (需手动开启) |
-| Dynamic | `routes/modules/*.ts` | 业务路由 (通过 glob 自动导入) |
+| 类型    | 位置                  | 说明                           |
+| ------- | --------------------- | ------------------------------ |
+| Core    | `routes/core.ts`      | 框架内置 (根路由, 认证页, 404) |
+| Static  | `routes/index.ts`     | 静态路由 (需手动开启)          |
+| Dynamic | `routes/modules/*.ts` | 业务路由 (通过 glob 自动导入)  |
 
 ### 路由 meta 字段
 
@@ -269,7 +271,7 @@ meta: {
 ### 当前路由模块
 
 | 模块 | 路径 | 子路由 |
-|------|------|--------|
+| --- | --- | --- |
 | Dashboard | `/dashboard` | Analytics (固定), Workspace |
 | Organization | `/organization` | Address Book, Structure |
 | Demos | `/demos` | Element Plus, Form |
@@ -299,15 +301,17 @@ meta: {
 ### 后端响应格式
 
 后端 API 必须返回：
+
 ```json
 { "code": 0, "data": T, "message": "success" }
 ```
+
 `code: 0` 表示成功，其他值为失败。
 
 ### 核心 API
 
 | 模块 | 端点 | 说明 |
-|------|------|------|
+| --- | --- | --- |
 | Auth | `POST /auth/login` | 登录，返回 `{ accessToken }` |
 | Auth | `POST /auth/refresh` | 刷新令牌 |
 | Auth | `POST /auth/logout` | 登出 |
@@ -332,6 +336,7 @@ meta: {
 3. **mixed**：前端权限 + 后端菜单合并
 
 按钮级权限：
+
 - 权限码：`<AccessControl :codes="['AC_100100']" type="code">` 或 `v-access:code="'AC_100100'"`
 - 角色：`<AccessControl :codes="['super']">` 或 `v-access:role="'super'"`
 - API 判断：`hasAccessByCodes()` / `hasAccessByRoles()`
@@ -392,18 +397,18 @@ export const overridesPreferences = defineOverridesPreferences({
 
 `.env` 文件位于 `apps/web-ele/`：
 
-| 变量 | 说明 | 示例 |
-|------|------|------|
-| `VITE_APP_TITLE` | 应用标题 | - |
-| `VITE_APP_NAMESPACE` | 命名空间 (用于缓存隔离) | - |
-| `VITE_PORT` | 开发端口 | `5555` |
-| `VITE_GLOB_API_URL` | API 基础路径 | `/api` |
-| `VITE_NITRO_MOCK` | 是否开启 Mock | `true` |
-| `VITE_DEVTOOLS` | 是否开启 Vue DevTools | `true` |
-| `VITE_INJECT_APP_LOADING` | 全局 loading 动画 | `true` |
-| `VITE_COMPRESS` | 压缩方式 (none/gzip/brotli) | `gzip` |
-| `VITE_PWA` | 是否开启 PWA | `false` |
-| `VITE_ROUTER_HISTORY` | 路由模式 (history/hash) | `hash` |
+| 变量                      | 说明                        | 示例    |
+| ------------------------- | --------------------------- | ------- |
+| `VITE_APP_TITLE`          | 应用标题                    | -       |
+| `VITE_APP_NAMESPACE`      | 命名空间 (用于缓存隔离)     | -       |
+| `VITE_PORT`               | 开发端口                    | `5555`  |
+| `VITE_GLOB_API_URL`       | API 基础路径                | `/api`  |
+| `VITE_NITRO_MOCK`         | 是否开启 Mock               | `true`  |
+| `VITE_DEVTOOLS`           | 是否开启 Vue DevTools       | `true`  |
+| `VITE_INJECT_APP_LOADING` | 全局 loading 动画           | `true`  |
+| `VITE_COMPRESS`           | 压缩方式 (none/gzip/brotli) | `gzip`  |
+| `VITE_PWA`                | 是否开启 PWA                | `false` |
+| `VITE_ROUTER_HISTORY`     | 路由模式 (history/hash)     | `hash`  |
 
 `VITE_GLOB_*` 变量会注入到 `dist/_app.config.js`，生产环境可动态修改。添加新的动态配置需同时更新：env 变量 → `packages/types/global.d.ts` 类型 → `packages/effects/hooks/src/use-app-config.ts` 映射。
 
@@ -453,6 +458,7 @@ proxy: {
 - **结构维护** (`/organization/structure`)：分组列表 + 部门表格/树形展示，含搜索、排序、分页
 
 API 类型定义位于 `src/api/organization/index.ts`：
+
 - `Group`: `{ id, name, description }`
 - `Department`: `{ id, name, englishName, shortName, orgCode, phone, fax, email, address, postalCode, createTime, updateTime }`
 - `PageResponse<T>`: `{ items: T[], total: number }`
