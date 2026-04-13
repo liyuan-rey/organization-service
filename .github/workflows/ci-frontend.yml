@@ -36,14 +36,14 @@ jobs:
         run: cd frontend && pnpm install --frozen-lockfile
 
       - name: Type check
-        run: cd frontend && pnpm run type-check
+        run: cd frontend && pnpm run check:type
 
       - name: Build
-        run: cd frontend && pnpm run build
+        run: cd frontend && pnpm run build:ele
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v5
         with:
           name: frontend-build-artifacts
-          path: frontend/dist/
+          path: frontend/apps/web-ele/dist/
           retention-days: 7
