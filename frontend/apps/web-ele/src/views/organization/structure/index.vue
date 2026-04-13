@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { Department, Group } from '#/api/organization';
+
 import { computed, onMounted, ref, watch } from 'vue';
 
 import { Page } from '@vben/common-ui';
@@ -17,8 +19,6 @@ import {
   ElTable,
   ElTableColumn,
 } from 'element-plus';
-
-import type { Department, Group } from '#/api/organization';
 
 import { getDepartmentListApi, getGroupListApi } from '#/api/organization';
 
@@ -115,7 +115,7 @@ function handleSearchDepartment() {
 }
 
 // 表格排序
-function handleSortChange({ prop, order }: { prop: string; order: string }) {
+function handleSortChange({ prop, order }: { order: string; prop: string }) {
   if (prop && order) {
     const sortDirection = order === 'ascending' ? 1 : -1;
     departments.value.sort((a: Record<string, any>, b: Record<string, any>) => {
@@ -182,8 +182,8 @@ onMounted(() => {
                 v-for="group in filteredGroups"
                 :key="group.id"
                 :body-style="{ padding: '12px' }"
+                class="cursor-pointer transition-all hover:shadow-md"
                 :class="[
-                  'cursor-pointer transition-all hover:shadow-md',
                   selectedGroupId === group.id
                     ? 'border-primary ring-1 ring-primary'
                     : '',
@@ -195,12 +195,14 @@ onMounted(() => {
                   <div
                     class="flex size-10 flex-shrink-0 items-center justify-center rounded bg-primary/10"
                   >
-                    <span class="icon-[lucide--folder] text-primary text-lg"></span>
+                    <span
+                      class="icon-[lucide--folder] text-lg text-primary"
+                    ></span>
                   </div>
                   <div class="min-w-0 flex-1">
                     <div class="truncate font-medium">{{ group.name }}</div>
                     <div
-                      class="text-muted-foreground mt-1 truncate text-sm"
+                      class="mt-1 truncate text-sm text-muted-foreground"
                       :title="group.description"
                     >
                       {{ group.description || '暂无描述' }}
@@ -339,7 +341,7 @@ onMounted(() => {
           <!-- 树型视图（占位） -->
           <div
             v-else
-            class="flex-1 overflow-hidden flex items-center justify-center"
+            class="flex flex-1 items-center justify-center overflow-hidden"
           >
             <span class="text-muted-foreground">树型展示（开发中）</span>
           </div>

@@ -40,9 +40,9 @@ export async function getGroupListApi() {
  * 获取部门列表
  */
 export async function getDepartmentListApi(params?: {
+  name?: string;
   page?: number;
   pageSize?: number;
-  name?: string;
 }) {
   return requestClient.get<PageResponse<Department>>(
     '/organization/department/list',

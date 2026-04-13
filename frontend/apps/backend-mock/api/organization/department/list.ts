@@ -1,6 +1,5 @@
 import { defineEventHandler, getQuery } from 'h3';
-
-import { usePageResponseSuccess, useResponseSuccess } from '~/utils/response';
+import { usePageResponseSuccess } from '~/utils/response';
 
 // 模拟部门数据
 const mockDepartments = [
@@ -190,9 +189,5 @@ export default defineEventHandler(async (event) => {
   }
 
   // 分页响应
-  return usePageResponseSuccess(
-    Number(page),
-    Number(pageSize),
-    filteredData,
-  );
+  return usePageResponseSuccess(Number(page), Number(pageSize), filteredData);
 });
