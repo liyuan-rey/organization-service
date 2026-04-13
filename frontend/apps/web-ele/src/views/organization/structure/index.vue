@@ -63,8 +63,9 @@ async function loadGroups() {
     const data = await getGroupListApi();
     groups.value = data;
     // 默认选中第一个
-    if (data.length > 0) {
-      selectedGroupId.value = data[0].id;
+    const firstGroup = data[0];
+    if (firstGroup) {
+      selectedGroupId.value = firstGroup.id;
     }
   } catch {
     // 错误已由全局拦截器处理
