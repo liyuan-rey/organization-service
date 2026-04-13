@@ -1,5 +1,4 @@
 import { defineEventHandler } from 'h3';
-
 import { useResponseSuccess } from '~/utils/response';
 
 // 模拟分组数据
