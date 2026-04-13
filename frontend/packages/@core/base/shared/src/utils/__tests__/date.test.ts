@@ -114,7 +114,8 @@ describe('dateUtils', () => {
     it('should return a valid IANA timezone string', () => {
       const tz = getSystemTimezone();
       expect(typeof tz).toBe('string');
-      expect(tz).toMatch(/^[A-Z]+\/[A-Z_]+/i);
+      // 支持 UTC 或 IANA 格式 (如 Asia/Shanghai)
+      expect(tz).toMatch(/^(UTC|[A-Z]+\/[A-Z_]+)/i);
     });
   });
 
