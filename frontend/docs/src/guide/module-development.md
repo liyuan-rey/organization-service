@@ -7,6 +7,7 @@ outline: deep
 ::: tip 适用对象
 
 本文档适用于：
+
 - **Coding Agent（AI 开发助手）**：按照文档流程自动生成符合规范的代码
 - **新入职开发者**：学习项目结构和开发流程，快速上手功能开发
 
@@ -24,12 +25,12 @@ outline: deep
 1. 定义路由 → 2. 编写 API → 3. 开发页面 → 4. 添加组件 → 5. 状态管理（可选）
 ```
 
-| 步骤 | 文件位置 | 说明 |
-|------|----------|------|
-| 路由配置 | `src/router/routes/modules/*.ts` | 定义页面路由和菜单 |
-| API 层 | `src/api/<module>/index.ts` | 封装接口请求和类型定义 |
-| 页面组件 | `src/views/<module>/*.vue` | 页面 UI 和业务逻辑 |
-| 状态管理 | `src/store/*.ts` | Pinia store（可选） |
+| 步骤     | 文件位置                         | 说明                   |
+| -------- | -------------------------------- | ---------------------- |
+| 路由配置 | `src/router/routes/modules/*.ts` | 定义页面路由和菜单     |
+| API 层   | `src/api/<module>/index.ts`      | 封装接口请求和类型定义 |
+| 页面组件 | `src/views/<module>/*.vue`       | 页面 UI 和业务逻辑     |
+| 状态管理 | `src/store/*.ts`                 | Pinia store（可选）    |
 
 ### 文件结构模板
 
@@ -72,8 +73,8 @@ import { $t } from '#/locales';
 const routes: RouteRecordRaw[] = [
   {
     meta: {
-      icon: 'lucide:users',           // 菜单图标（使用 lucide 图标集）
-      order: 100,                      // 菜单排序（仅一级菜单有效）
+      icon: 'lucide:users', // 菜单图标（使用 lucide 图标集）
+      order: 100, // 菜单排序（仅一级菜单有效）
       title: $t('page.userManagement.title'), // 国际化标题
     },
     name: 'UserManagement',
@@ -87,7 +88,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           icon: 'lucide:list',
           title: $t('page.userManagement.list'),
-          keepAlive: true,              // 开启页面缓存
+          keepAlive: true, // 开启页面缓存
         },
       },
       {
@@ -97,7 +98,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           icon: 'lucide:user',
           title: $t('page.userManagement.detail'),
-          hideInMenu: true,             // 隐藏菜单项
+          hideInMenu: true, // 隐藏菜单项
           activePath: '/user-management/list', // 激活父级菜单
         },
       },
@@ -110,18 +111,18 @@ export default routes;
 
 #### 路由 meta 常用字段
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `title` | `string` | 页面标题，支持 i18n key |
-| `icon` | `string` | 菜单图标，格式 `lucide:xxx` 或图片 URL |
-| `order` | `number` | 一级菜单排序，数值越小越靠前 |
-| `keepAlive` | `boolean` | 开启页面缓存（需 tabbar 启用） |
-| `hideInMenu` | `boolean` | 隐藏菜单项 |
-| `hideInTab` | `boolean` | 隐藏标签页 |
-| `hideChildrenInMenu` | `boolean` | 隐藏子菜单 |
-| `activePath` | `string` | 激活的父级菜单路径 |
-| `authority` | `string[]` | 角色权限控制 |
-| `affixTab` | `boolean` | 固定标签页 |
+| 字段                 | 类型       | 说明                                   |
+| -------------------- | ---------- | -------------------------------------- |
+| `title`              | `string`   | 页面标题，支持 i18n key                |
+| `icon`               | `string`   | 菜单图标，格式 `lucide:xxx` 或图片 URL |
+| `order`              | `number`   | 一级菜单排序，数值越小越靠前           |
+| `keepAlive`          | `boolean`  | 开启页面缓存（需 tabbar 启用）         |
+| `hideInMenu`         | `boolean`  | 隐藏菜单项                             |
+| `hideInTab`          | `boolean`  | 隐藏标签页                             |
+| `hideChildrenInMenu` | `boolean`  | 隐藏子菜单                             |
+| `activePath`         | `string`   | 激活的父级菜单路径                     |
+| `authority`          | `string[]` | 角色权限控制                           |
+| `affixTab`           | `boolean`  | 固定标签页                             |
 
 ::: warning 注意
 
@@ -261,11 +262,7 @@ import { Page } from '@vben/common-ui';
 </script>
 
 <template>
-  <Page
-    title="用户管理"
-    description="管理系统用户信息"
-    auto-content-height
-  >
+  <Page title="用户管理" description="管理系统用户信息" auto-content-height>
     <template #extra>
       <!-- 页面头部右侧内容 -->
       <ElButton type="primary">新增用户</ElButton>
@@ -281,23 +278,23 @@ import { Page } from '@vben/common-ui';
 
 #### Page Props
 
-| 属性 | 类型 | 说明 |
-|------|------|------|
-| `title` | `string \| slot` | 页面标题 |
-| `description` | `string \| slot` | 页面描述 |
-| `autoContentHeight` | `boolean` | 自动调整内容高度 |
-| `contentClass` | `string` | 内容区域 class |
-| `headerClass` | `string` | 头部区域 class |
+| 属性                | 类型             | 说明             |
+| ------------------- | ---------------- | ---------------- |
+| `title`             | `string \| slot` | 页面标题         |
+| `description`       | `string \| slot` | 页面描述         |
+| `autoContentHeight` | `boolean`        | 自动调整内容高度 |
+| `contentClass`      | `string`         | 内容区域 class   |
+| `headerClass`       | `string`         | 头部区域 class   |
 
 #### Page Slots
 
-| 插槽 | 说明 |
-|------|------|
-| `default` | 页面内容 |
-| `title` | 自定义标题 |
-| `description` | 自定义描述 |
-| `extra` | 页面头部右侧 |
-| `footer` | 页面底部 |
+| 插槽          | 说明         |
+| ------------- | ------------ |
+| `default`     | 页面内容     |
+| `title`       | 自定义标题   |
+| `description` | 自定义描述   |
+| `extra`       | 页面头部右侧 |
+| `footer`      | 页面底部     |
 
 ::: tip autoContentHeight
 
@@ -328,6 +325,7 @@ views/user-management/
 - **避免过度拆分**：简单页面不需要拆分，保持适度
 
 **何时拆分**：
+
 - 页面代码超过 100 行
 - 存在多个独立功能区域（如左侧列表 + 右侧表格）
 - 有可复用的子功能（如表单弹窗）
@@ -350,18 +348,18 @@ import { ElCard } from 'element-plus';
 
 const [BaseForm, baseFormApi] = useVbenForm({
   commonConfig: {
-    colon: true,                    // label 后显示冒号
+    colon: true, // label 后显示冒号
     componentProps: {
-      class: 'w-full',              // 组件宽度
+      class: 'w-full', // 组件宽度
     },
   },
-  layout: 'horizontal',             // 水平布局
+  layout: 'horizontal', // 水平布局
   schema: [
     {
       component: 'Input',
       fieldName: 'name',
       label: '用户名',
-      rules: 'required',            // 必填验证
+      rules: 'required', // 必填验证
       componentProps: {
         placeholder: '请输入用户名',
       },
@@ -415,52 +413,52 @@ function handleSetValues() {
 
 #### 表单 Schema 字段
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `component` | `string` | 组件类型，见下方列表 |
-| `fieldName` | `string` | 字段名，也作为插槽名 |
-| `label` | `string \| VNode` | 表单标签 |
-| `rules` | `string \| ZodSchema` | 验证规则 |
-| `componentProps` | `object \| Function` | 组件参数 |
-| `defaultValue` | `any` | 默认值 |
-| `dependencies` | `object` | 表单联动配置 |
-| `hide` | `boolean` | 隐藏字段 |
-| `help` | `string \| VNode` | 帮助信息 |
-| `suffix` | `string \| VNode` | 后缀内容 |
+| 字段             | 类型                  | 说明                 |
+| ---------------- | --------------------- | -------------------- |
+| `component`      | `string`              | 组件类型，见下方列表 |
+| `fieldName`      | `string`              | 字段名，也作为插槽名 |
+| `label`          | `string \| VNode`     | 表单标签             |
+| `rules`          | `string \| ZodSchema` | 验证规则             |
+| `componentProps` | `object \| Function`  | 组件参数             |
+| `defaultValue`   | `any`                 | 默认值               |
+| `dependencies`   | `object`              | 表单联动配置         |
+| `hide`           | `boolean`             | 隐藏字段             |
+| `help`           | `string \| VNode`     | 帮助信息             |
+| `suffix`         | `string \| VNode`     | 后缀内容             |
 
 #### 可用组件类型
 
-| 组件 | 说明 |
-|------|------|
-| `Input` | 文本输入框 |
-| `InputNumber` | 数字输入框 |
-| `InputPassword` | 密码输入框 |
-| `Select` | 下拉选择 |
-| `ApiSelect` | 远程数据下拉 |
+| 组件            | 说明         |
+| --------------- | ------------ |
+| `Input`         | 文本输入框   |
+| `InputNumber`   | 数字输入框   |
+| `InputPassword` | 密码输入框   |
+| `Select`        | 下拉选择     |
+| `ApiSelect`     | 远程数据下拉 |
 | `ApiTreeSelect` | 远程树形选择 |
-| `TreeSelect` | 树形选择 |
-| `DatePicker` | 日期选择 |
-| `TimePicker` | 时间选择 |
-| `Checkbox` | 复选框 |
-| `CheckboxGroup` | 复选框组 |
-| `RadioGroup` | 单选框组 |
-| `Switch` | 开关 |
-| `Upload` | 文件上传 |
-| `IconPicker` | 图标选择器 |
-| `Divider` | 分隔线 |
+| `TreeSelect`    | 树形选择     |
+| `DatePicker`    | 日期选择     |
+| `TimePicker`    | 时间选择     |
+| `Checkbox`      | 复选框       |
+| `CheckboxGroup` | 复选框组     |
+| `RadioGroup`    | 单选框组     |
+| `Switch`        | 开关         |
+| `Upload`        | 文件上传     |
+| `IconPicker`    | 图标选择器   |
+| `Divider`       | 分隔线       |
 
 #### 表单 API
 
-| 方法 | 说明 |
-|------|------|
-| `setValues(values)` | 设置表单值 |
+| 方法                          | 说明           |
+| ----------------------------- | -------------- |
+| `setValues(values)`           | 设置表单值     |
 | `setFieldValue(field, value)` | 设置单个字段值 |
-| `getValues()` | 获取表单值 |
-| `validate()` | 校验表单 |
-| `resetForm()` | 重置表单 |
-| `submitForm()` | 提交表单 |
-| `updateSchema(schema)` | 更新 schema |
-| `setState(state)` | 设置组件状态 |
+| `getValues()`                 | 获取表单值     |
+| `validate()`                  | 校验表单       |
+| `resetForm()`                 | 重置表单       |
+| `submitForm()`                | 提交表单       |
+| `updateSchema(schema)`        | 更新 schema    |
+| `setState(state)`             | 设置组件状态   |
 
 #### 表单联动示例
 
@@ -578,34 +576,34 @@ function handleRefresh() {
 
 #### 表格列配置
 
-| 字段 | 说明 |
-|------|------|
-| `field` | 数据字段名 |
-| `title` | 列标题 |
-| `width` | 列宽度 |
-| `sortable` | 是否可排序 |
-| `fixed` | 固定列 `'left' \| 'right'` |
-| `showOverflow` | 溢出隐藏并 tooltip |
-| `type` | 特殊列类型 `seq \| checkbox` |
+| 字段           | 说明                         |
+| -------------- | ---------------------------- |
+| `field`        | 数据字段名                   |
+| `title`        | 列标题                       |
+| `width`        | 列宽度                       |
+| `sortable`     | 是否可排序                   |
+| `fixed`        | 固定列 `'left' \| 'right'`   |
+| `showOverflow` | 溢出隐藏并 tooltip           |
+| `type`         | 特殊列类型 `seq \| checkbox` |
 
 #### 表格 API
 
-| 方法 | 说明 |
-|------|------|
-| `reload()` | 重载表格（重新请求） |
-| `query()` | 查询（保留当前分页） |
-| `setLoading(loading)` | 设置 loading 状态 |
-| `setGridOptions(options)` | 设置表格配置 |
-| `grid` | vxe-table 实例 |
-| `formApi` | 搜索表单 API |
+| 方法                      | 说明                 |
+| ------------------------- | -------------------- |
+| `reload()`                | 重载表格（重新请求） |
+| `query()`                 | 查询（保留当前分页） |
+| `setLoading(loading)`     | 设置 loading 状态    |
+| `setGridOptions(options)` | 设置表格配置         |
+| `grid`                    | vxe-table 实例       |
+| `formApi`                 | 搜索表单 API         |
 
 #### 表格 Slots
 
-| 插槽 | 说明 |
-|------|------|
+| 插槽              | 说明       |
+| ----------------- | ---------- |
 | `toolbar-actions` | 工具栏左侧 |
-| `toolbar-tools` | 工具栏右侧 |
-| `table-title` | 表格标题 |
+| `toolbar-tools`   | 工具栏右侧 |
+| `table-title`     | 表格标题   |
 
 ---
 
@@ -624,7 +622,12 @@ import { ElMessage } from 'element-plus';
 // 表单
 const [Form, formApi] = useVbenForm({
   schema: [
-    { component: 'Input', fieldName: 'name', label: '用户名', rules: 'required' },
+    {
+      component: 'Input',
+      fieldName: 'name',
+      label: '用户名',
+      rules: 'required',
+    },
     { component: 'Input', fieldName: 'email', label: '邮箱' },
   ],
 });
@@ -656,11 +659,7 @@ function handleOpen(data?: User) {
 </script>
 
 <template>
-  <Modal
-    class="w-[600px]"
-    title="新增用户"
-    :footer="true"
-  >
+  <Modal class="w-[600px]" title="新增用户" :footer="true">
     <Form />
   </Modal>
 </template>
@@ -668,27 +667,27 @@ function handleOpen(data?: User) {
 
 #### Modal Props
 
-| 属性 | 说明 |
-|------|------|
-| `title` | 弹窗标题 |
-| `class` | 弹窗 class（宽度通过此配置） |
-| `footer` | 是否显示底部 |
-| `draggable` | 是否可拖拽 |
-| `fullscreen` | 是否全屏 |
-| `closable` | 是否显示关闭按钮 |
-| `loading` | loading 状态 |
+| 属性         | 说明                         |
+| ------------ | ---------------------------- |
+| `title`      | 弹窗标题                     |
+| `class`      | 弹窗 class（宽度通过此配置） |
+| `footer`     | 是否显示底部                 |
+| `draggable`  | 是否可拖拽                   |
+| `fullscreen` | 是否全屏                     |
+| `closable`   | 是否显示关闭按钮             |
+| `loading`    | loading 状态                 |
 
 #### Modal API
 
-| 方法 | 说明 |
-|------|------|
-| `open()` | 打开弹窗 |
-| `close()` | 关闭弹窗 |
-| `setState(state)` | 设置状态 |
-| `setData(data)` | 设置共享数据 |
-| `getData()` | 获取共享数据 |
-| `lock()` | 锁定弹窗（提交时使用） |
-| `unlock()` | 解锁弹窗 |
+| 方法              | 说明                   |
+| ----------------- | ---------------------- |
+| `open()`          | 打开弹窗               |
+| `close()`         | 关闭弹窗               |
+| `setState(state)` | 设置状态               |
+| `setData(data)`   | 设置共享数据           |
+| `getData()`       | 获取共享数据           |
+| `lock()`          | 锁定弹窗（提交时使用） |
+| `unlock()`        | 解锁弹窗               |
 
 #### 抽屉用法
 
@@ -773,17 +772,17 @@ const users = computed(() => store.users);
 
 #### 常用颜色变量
 
-| 变量 | 用途 | Tailwind 类名 |
-|------|------|---------------|
-| `--primary` | 主题色 | `text-primary` / `bg-primary` |
-| `--background` | 背景色 | `bg-background` |
-| `--foreground` | 文字色 | `text-foreground` |
-| `--card` | 卡片背景 | `bg-card` |
-| `--border` | 边框色 | `border-border` |
-| `--muted` | 柔和背景 | `bg-muted` |
-| `--destructive` | 错误色 | `text-destructive` / `bg-destructive` |
-| `--success` | 成功色 | `text-success` |
-| `--warning` | 警告色 | `text-warning` |
+| 变量            | 用途     | Tailwind 类名                         |
+| --------------- | -------- | ------------------------------------- |
+| `--primary`     | 主题色   | `text-primary` / `bg-primary`         |
+| `--background`  | 背景色   | `bg-background`                       |
+| `--foreground`  | 文字色   | `text-foreground`                     |
+| `--card`        | 卡片背景 | `bg-card`                             |
+| `--border`      | 边框色   | `border-border`                       |
+| `--muted`       | 柔和背景 | `bg-muted`                            |
+| `--destructive` | 错误色   | `text-destructive` / `bg-destructive` |
+| `--success`     | 成功色   | `text-success`                        |
+| `--warning`     | 警告色   | `text-warning`                        |
 
 #### 颜色使用规范
 
@@ -832,7 +831,7 @@ const users = computed(() => store.users);
 
     <!-- Tailwind CSS 控制布局 -->
     <ElCard class="h-full">
-      <div class="h-full flex flex-col p-4">
+      <div class="flex h-full flex-col p-4">
         <!-- Tailwind 宽度 -->
         <ElInput class="w-[200px]" />
       </div>
@@ -850,34 +849,34 @@ const users = computed(() => store.users);
 
 #### 常用布局类
 
-| 类名 | 说明 |
-|------|------|
-| `flex` | Flex 布局 |
-| `flex-col` | 纵向 Flex |
-| `items-center` | 垂直居中 |
-| `justify-between` | 水平分布 |
-| `gap-4` | 间距 16px |
-| `p-4` | 内边距 16px |
-| `m-4` | 外边距 16px |
-| `w-full` | 宽度 100% |
-| `h-full` | 高度 100% |
+| 类名              | 说明        |
+| ----------------- | ----------- |
+| `flex`            | Flex 布局   |
+| `flex-col`        | 纵向 Flex   |
+| `items-center`    | 垂直居中    |
+| `justify-between` | 水平分布    |
+| `gap-4`           | 间距 16px   |
+| `p-4`             | 内边距 16px |
+| `m-4`             | 外边距 16px |
+| `w-full`          | 宽度 100%   |
+| `h-full`          | 高度 100%   |
 
 #### 常用样式类
 
-| 类名 | 说明 |
-|------|------|
-| `rounded-lg` | 圆角 8px |
-| `border` | 边框 |
-| `shadow-md` | 中等阴影 |
-| `text-sm` | 小号文字 |
-| `text-lg` | 大号文字 |
+| 类名          | 说明     |
+| ------------- | -------- |
+| `rounded-lg`  | 圆角 8px |
+| `border`      | 边框     |
+| `shadow-md`   | 中等阴影 |
+| `text-sm`     | 小号文字 |
+| `text-lg`     | 大号文字 |
 | `font-medium` | 中等字重 |
 
 #### 响应式类
 
 ```vue
 <!-- 大屏 3 列，中屏 2 列，小屏 1 列 -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
   <ElCard>卡片 1</ElCard>
   <ElCard>卡片 2</ElCard>
   <ElCard>卡片 3</ElCard>
@@ -888,13 +887,13 @@ const users = computed(() => store.users);
 
 使用 Tailwind 间距单位，保持一致性：
 
-| 类名 | 间距 | 推荐 |
-|------|------|------|
-| `gap-1` / `p-1` | 4px | ⚠️ 最小间距，谨慎使用 |
-| `gap-2` / `p-2` | 8px | ✅ 推荐用于紧凑布局 |
+| 类名            | 间距 | 推荐                         |
+| --------------- | ---- | ---------------------------- |
+| `gap-1` / `p-1` | 4px  | ⚠️ 最小间距，谨慎使用        |
+| `gap-2` / `p-2` | 8px  | ✅ 推荐用于紧凑布局          |
 | `gap-3` / `p-3` | 12px | ❌ 不推荐，使用 `gap-4` 替代 |
-| `gap-4` / `p-4` | 16px | ✅ **默认间距，推荐使用** |
-| `gap-6` / `p-6` | 24px | ✅ 推荐用于模块间隔 |
+| `gap-4` / `p-4` | 16px | ✅ **默认间距，推荐使用**    |
+| `gap-6` / `p-6` | 24px | ✅ 推荐用于模块间隔          |
 
 ::: warning 间距规范要点
 
@@ -971,6 +970,7 @@ Element Plus 的 `ElCard` 默认 padding 为 20px，项目中推荐使用 Tailwi
 ```
 
 **原因**：
+
 - 内联样式不利于主题切换
 - Tailwind CSS 类名更易维护和复用
 - 保持样式一致性
@@ -998,11 +998,11 @@ Element Plus 的 `ElCard` 默认 padding 为 20px，项目中推荐使用 Tailwi
 #### 响应式断点
 
 | 断点 | Tailwind 前缀 | 屏幕宽度 |
-|------|---------------|----------|
-| sm | `sm:` | ≥ 640px |
-| md | `md:` | ≥ 768px |
-| lg | `lg:` | ≥ 1024px |
-| xl | `xl:` | ≥ 1280px |
+| ---- | ------------- | -------- |
+| sm   | `sm:`         | ≥ 640px  |
+| md   | `md:`         | ≥ 768px  |
+| lg   | `lg:`         | ≥ 1024px |
+| xl   | `xl:`         | ≥ 1280px |
 
 #### 响应式示例
 
@@ -1058,11 +1058,11 @@ import { MdiKeyboardEsc } from '@vben/icons';
 
 #### 常用图标集
 
-| 图标集 | 格式 |
-|--------|------|
-| Lucide | `lucide:xxx` 或 `icon-[lucide--xxx]` |
-| MDI | `mdi:xxx` 或 `icon-[mdi--xxx]` |
-| IconPark | `icon-park:xxx` |
+| 图标集   | 格式                                 |
+| -------- | ------------------------------------ |
+| Lucide   | `lucide:xxx` 或 `icon-[lucide--xxx]` |
+| MDI      | `mdi:xxx` 或 `icon-[mdi--xxx]`       |
+| IconPark | `icon-park:xxx`                      |
 
 ::: tip 推荐使用 Lucide
 
