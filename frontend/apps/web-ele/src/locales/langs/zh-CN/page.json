@@ -11,5 +11,31 @@
     "title": "概览",
     "analytics": "分析页",
     "workspace": "工作台"
+  },
+  "organization": {
+    "title": "组织机构",
+    "addressBook": {
+      "title": "通讯录",
+      "description": "组织机构通讯录管理页面"
+    },
+    "structure": {
+      "title": "结构维护",
+      "description": "管理组织机构的分组和部门信息",
+      "searchGroup": "搜索分组名称",
+      "searchDepartment": "请输入部门名称",
+      "departmentName": "部门名称",
+      "englishName": "英文名",
+      "shortName": "简称",
+      "orgCode": "组织编码",
+      "phone": "电话",
+      "email": "邮箱",
+      "address": "地址",
+      "noDescription": "暂无描述",
+      "noGroup": "暂无分组数据",
+      "treeView": "树型展示",
+      "tableView": "表格展示",
+      "treeViewPlaceholder": "树型展示（开发中）",
+      "serialNumber": "序号"
+    }
   }
 }

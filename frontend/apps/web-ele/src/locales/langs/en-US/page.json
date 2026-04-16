@@ -11,5 +11,31 @@
     "title": "Dashboard",
     "analytics": "Analytics",
     "workspace": "Workspace"
+  },
+  "organization": {
+    "title": "Organization",
+    "addressBook": {
+      "title": "Address Book",
+      "description": "Organization address book management page"
+    },
+    "structure": {
+      "title": "Structure Maintenance",
+      "description": "Manage organization groups and departments",
+      "searchGroup": "Search group name",
+      "searchDepartment": "Enter department name",
+      "departmentName": "Department Name",
+      "englishName": "English Name",
+      "shortName": "Short Name",
+      "orgCode": "Org Code",
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address",
+      "noDescription": "No description",
+      "noGroup": "No group data",
+      "treeView": "Tree View",
+      "tableView": "Table View",
+      "treeViewPlaceholder": "Tree View (Coming Soon)",
+      "serialNumber": "No."
+    }
   }
 }

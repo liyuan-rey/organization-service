@@ -1,11 +1,13 @@
 import type { RouteRecordRaw } from 'vue-router';
 
+import { $t } from '#/locales';
+
 const routes: RouteRecordRaw[] = [
   {
     meta: {
       icon: 'lucide:building-2',
       order: 100,
-      title: '组织机构',
+      title: $t('page.organization.title'),
     },
     name: 'Organization',
     path: '/organization',
@@ -15,7 +17,7 @@ const routes: RouteRecordRaw[] = [
         path: '/organization/address-book',
         component: () => import('#/views/organization/address-book/index.vue'),
         meta: {
-          title: '通讯录',
+          title: $t('page.organization.addressBook.title'),
           icon: 'lucide:book-user',
         },
       },
@@ -24,7 +26,7 @@ const routes: RouteRecordRaw[] = [
         path: '/organization/structure',
         component: () => import('#/views/organization/structure/index.vue'),
         meta: {
-          title: '结构维护',
+          title: $t('page.organization.structure.title'),
           icon: 'lucide:git-branch',
         },
       },
