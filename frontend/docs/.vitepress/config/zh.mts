@@ -72,6 +72,12 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
       ],
     },
     {
+      text: '开发指南',
+      items: [
+        { link: 'module-development', text: '功能模块开发指南' },
+      ],
+    },
+    {
       text: '基础',
       items: [
         { link: 'essentials/concept', text: '基础概念' },
